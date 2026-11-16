@@ -1,14 +1,11 @@
 import {test, expect, Locator, Page} from '@playwright/test';
 import {Dashboard} from './page-object-models/dashboard';
 import {Monitoring} from './page-object-models/monitoring';
-import {restoreDatabaseSnapshot, waitForToastMessage} from './utils';
+import {loginAs, restoreDatabaseSnapshot, waitForToastMessage} from './utils';
 
 /**
- * Not covered from the QA cases:
- * - Widget size with more than 3 clocks: needs a pixel-level layout check and a flaky gridster drag-resize,
- *   so only the data half (a fourth clock is added) is asserted.
- * - Steps 7-8 (second desk member sees the saved config): the `main` snapshot has admin as the only desk member,
- *   and the other user (janedoe) is not a member and has no known password.
+ * The "more than 3 clocks" item in the QA case is only a note that the widget has to be resized on the
+ * Rearrange widgets page, so a fourth clock being added and saved is all that is asserted for it.
  */
 
 const DEFAULT_ZONES = ['Europe/London', 'Asia/Tokyo', 'Europe/Moscow'];
@@ -27,6 +24,19 @@ async function expectWidgetZones(widget: Locator, zones: Array<string>): Promise
     }
 }
 
+async function configureDigitalLondonTokyoPrague(page: Page, dashboard: Dashboard): Promise<void> {
+    await dashboard.openWidgetConfiguration('world-clock');
+    await page.getByTestId('clock-type-digital').click();
+    await withTestValue(page, page.getByTestId('your-clocks').getByTestId('clock-item'), 'Europe/Moscow')
+        .getByTestId('remove-clock')
+        .click();
+    await page.getByTestId('wizard--Available clocks').click();
+    await page.getByTestId('clock-search').fill('prague');
+    await withTestValue(page, page.getByTestId('available-clocks').getByTestId('clock-item'), 'Europe/Prague')
+        .click();
+    await dashboard.saveWidgetConfiguration();
+}
+
 async function boxOf(locator: Locator): Promise<{x: number; y: number; width: number; height: number}> {
     const box = await locator.boundingBox();
 
@@ -40,7 +50,7 @@ async function boxOf(locator: Locator): Promise<{x: number; y: number; width: nu
 test.describe('world clock widget settings', {
     annotation: [
         // World Clock Widget Settings
-        {type: 'confluence', description: '1308524876 partial'},
+        {type: 'confluence', description: '1308524876 complete'},
     ],
 }, () => {
     test.beforeEach(async ({page}) => {
@@ -215,16 +225,7 @@ test.describe('world clock widget settings', {
         const widget = dashboard.getWidget('world-clock');
         const expectedZones = ['Europe/London', 'Asia/Tokyo', 'Europe/Prague'];
 
-        await dashboard.openWidgetConfiguration('world-clock');
-        await page.getByTestId('clock-type-digital').click();
-        await withTestValue(page, page.getByTestId('your-clocks').getByTestId('clock-item'), 'Europe/Moscow')
-            .getByTestId('remove-clock')
-            .click();
-        await page.getByTestId('wizard--Available clocks').click();
-        await page.getByTestId('clock-search').fill('prague');
-        await withTestValue(page, page.getByTestId('available-clocks').getByTestId('clock-item'), 'Europe/Prague')
-            .click();
-        await dashboard.saveWidgetConfiguration();
+        await configureDigitalLondonTokyoPrague(page, dashboard);
 
         await expectWidgetZones(widget, expectedZones);
         await expect(widget.getByTestId('analog-clock')).toHaveCount(0);
@@ -241,6 +242,28 @@ test.describe('world clock widget settings', {
 
         // The dashboard is stored server side: a full reload proves it was persisted, not just kept in memory.
         await page.reload();
+        await new Monitoring(page).selectDeskOrWorkspace('Sports');
+
+        await expectWidgetZones(widget, expectedZones);
+        await expect(widget.getByTestId('analog-clock')).toHaveCount(0);
+    });
+
+    test('another member of the desk sees the saved configuration', async ({page}) => {
+        const dashboard = new Dashboard(page);
+        const widget = dashboard.getWidget('world-clock');
+        const expectedZones = ['Europe/London', 'Asia/Tokyo', 'Europe/Prague'];
+
+        await configureDigitalLondonTokyoPrague(page, dashboard);
+
+        await expectWidgetZones(widget, expectedZones);
+
+        await page.getByTestId('my-profile').click();
+        await page.getByRole('button', {name: 'Sign out'}).click();
+        await expect(page.getByTestId('login-page')).toBeVisible();
+
+        // fixture users with a known password use the username as one
+        await loginAs(page, 'samgamgee', 'samgamgee');
+
         await new Monitoring(page).selectDeskOrWorkspace('Sports');
 
         await expectWidgetZones(widget, expectedZones);
