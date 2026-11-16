@@ -1,57 +1,109 @@
-import {test, expect} from '@playwright/test';
+import {Locator, Page, test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
-import {login, restoreDatabaseSnapshot} from './utils';
+import {loginAs, restoreDatabaseSnapshot} from './utils';
+import {getLoggedOutStorageState} from './utils/storage-state';
 
 /**
- * QA case "Lock item", observed from a second session of the same user (the `main`
- * snapshot has only one desk member). The client gates locking on the session id, so
- * this reproduces the read-only view. It cannot cover the "Unlock shown/hidden by
- * privilege" branch: `LockService.can_unlock` short-circuits on `isLockedByMe`, which
- * compares user ids, so the observer always sees Unlock. That needs a second desk-member user.
+ * QA case "Lock item". The observer has to be a different user: a second session of
+ * the lock owner always gets Unlock, because `LockService.can_unlock` returns true for
+ * the owner's own user id before it looks at the `unlock` privilege. `samgamgee`
+ * (Sub Editor role, no `unlock`) is the negative branch, `admin` the positive one.
+ *
+ * The case puts the lock owner's name behind a click on their avatar; the product
+ * renders the avatar, "Locked by" and the name inline in the topbar's `locked-info`.
  */
 test.describe('locking an item that is open for editing', {
     annotation: [
-        {type: 'confluence', description: '1308524847 partial'}, // Lock item
+        {type: 'confluence', description: '1308524847 complete'}, // Lock item
     ],
 }, () => {
     const ARTICLE = 'test sports story';
+    const SECOND_USER = {username: 'samgamgee', password: 'samgamgee', displayName: 'Sam Gamgee', initials: 'SG'};
+    const ADMIN = {displayName: 'John Doe', initials: 'JD'};
 
-    test('another session gets it read-only, without an Edit action and without Save', async ({page, browser}) => {
+    // headline, slugline and editors-note carry `field-*` test ids instead of `authoring-field`
+    const FIELDS = '[data-test-id="authoring-field"], [data-test-id^="field-"]';
+
+    async function openSportsMonitoring(page: Page): Promise<{monitoring: Monitoring, item: Locator}> {
+        const monitoring = new Monitoring(page);
+
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
+
+        const item = monitoring.getArticleLocator(ARTICLE);
+
+        // The post-restore reindex briefly empties the list; wait so a click does not race it.
+        await expect(item).toBeVisible();
+
+        return {monitoring, item};
+    }
+
+    async function lockForEditing(page: Page): Promise<void> {
+        const {item} = await openSportsMonitoring(page);
+
+        await item.dblclick();
+
+        await expect(page.getByTestId('authoring-topbar').getByTestId('save')).toBeVisible();
+        await expect(item.getByTestId('article-item-locked')).toHaveCount(1);
+    }
+
+    function fieldIds(page: Page): Promise<Array<string>> {
+        return page.getByTestId('authoring').locator(FIELDS).evaluateAll((fields) => fields.map(
+            (field) => `${field.getAttribute('data-test-id')}=${field.getAttribute('data-test-value') ?? ''}`,
+        ));
+    }
+
+    async function expectReadOnly(page: Page): Promise<void> {
+        const authoring = page.getByTestId('authoring');
+        const fields = authoring.locator(FIELDS);
+        const field = (id: string) =>
+            authoring.getByTestId('authoring-field').and(page.locator(`[data-test-value="${id}"]`));
+
+        await expect(authoring).toBeVisible();
+
+        await expect(authoring.getByTestId('field--headline')).toContainText(ARTICLE);
+        await expect(field('body_html')).toContainText('test sport story body');
+        await expect(authoring.getByTestId('field-slugline')).toHaveValue(ARTICLE);
+        await expect(field('priority')).toContainText('6');
+        await expect(field('urgency')).toContainText('3');
+
+        await expect(authoring.getByTestId('field--headline').getByTestId('editor3').locator('[contenteditable]'))
+            .toHaveAttribute('contenteditable', 'false');
+        await expect(field('body_html').getByTestId('editor3').locator('[contenteditable]'))
+            .toHaveAttribute('contenteditable', 'false');
+        await expect(fields.locator('[contenteditable="true"]')).toHaveCount(0);
+        await expect(authoring.getByTestId('field-slugline')).toBeDisabled();
+        await expect(authoring.getByTestId('field-editors-note')).toBeDisabled();
+        await expect(field('priority').getByRole('button')).toBeDisabled();
+        await expect(field('urgency').getByRole('button')).toBeDisabled();
+        await expect(field('feature_media').getByTestId('upload-placeholder')).toHaveCount(0);
+
+        const topbar = page.getByTestId('authoring-topbar');
+
+        await expect(topbar.getByTestId('save')).toHaveCount(0);
+        await expect(topbar.getByTestId('close')).toBeVisible();
+    }
+
+    test('a user without the Unlock content privilege only gets it read-only', async ({page, browser}) => {
         await restoreDatabaseSnapshot();
 
-        // newContext() inherits the config's storageState, which would share one Superdesk
-        // session and leave the item unlocked for the observer; undefined forces a new session.
-        const lockOwnerContext = await browser.newContext({storageState: undefined});
+        await lockForEditing(page);
 
+        const ownerFields = await fieldIds(page);
+
+        expect(ownerFields.length).toBeGreaterThan(0);
+
+        const observerContext = await browser.newContext({storageState: getLoggedOutStorageState()});
+
+        // A context made from `browser` outlives a failed test, and its open authoring page
+        // would keep autosaving into the database the next spec restores.
         try {
-            const lockOwnerPage = await lockOwnerContext.newPage();
+            const observer = await observerContext.newPage();
 
-            await login(lockOwnerPage);
-            await lockOwnerPage.goto('/#/workspace/monitoring');
+            await loginAs(observer, SECOND_USER.username, SECOND_USER.password);
 
-            const lockOwnerMonitoring = new Monitoring(lockOwnerPage);
+            const {monitoring, item} = await openSportsMonitoring(observer);
 
-            await lockOwnerMonitoring.selectDeskOrWorkspace('Sports');
-
-            const lockOwnerItem = lockOwnerMonitoring.getArticleLocator(ARTICLE);
-
-            // The post-restore reindex briefly empties the list; wait so dblclick does not race it.
-            await expect(lockOwnerItem).toBeVisible();
-
-            await lockOwnerItem.dblclick();
-
-            await expect(lockOwnerPage.getByTestId('authoring-topbar').getByTestId('save')).toBeVisible();
-
-            await expect(lockOwnerItem.getByTestId('article-item-locked')).toHaveCount(1);
-
-            const monitoring = new Monitoring(page);
-
-            await page.goto('/#/workspace/monitoring');
-            await monitoring.selectDeskOrWorkspace('Sports');
-
-            const item = monitoring.getArticleLocator(ARTICLE);
-
-            await expect(item).toBeVisible();
             await expect(item.getByTestId('article-item-locked')).toHaveCount(1);
 
             const actionsMenu = await monitoring.openArticleActionsMenu(item);
@@ -62,48 +114,69 @@ test.describe('locking an item that is open for editing', {
 
             await actionsMenu.getByRole('button', {name: 'Open', exact: true}).click();
 
-            const authoring = page.getByTestId('authoring');
-            const topbar = page.getByTestId('authoring-topbar');
+            await expectReadOnly(observer);
+            await expect.poll(() => fieldIds(observer)).toEqual(ownerFields);
 
-            await expect(authoring).toBeVisible();
-
-            const headline = authoring.getByTestId('field--headline');
-            const body = authoring.getByTestId('authoring-field').and(page.locator('[data-test-value="body_html"]'));
-            const slugline = authoring.getByTestId('field-slugline');
-
-            await expect(headline).toContainText(ARTICLE);
-            await expect(headline.getByTestId('editor3').locator('[contenteditable]'))
-                .toHaveAttribute('contenteditable', 'false');
-
-            await expect(body).toContainText('test sport story body');
-            await expect(body.getByTestId('editor3').locator('[contenteditable]'))
-                .toHaveAttribute('contenteditable', 'false');
-
-            await expect(slugline).toHaveValue(ARTICLE);
-            await expect(slugline).toBeDisabled();
-
-            await expect(topbar.getByTestId('save')).toHaveCount(0);
-            await expect(topbar.getByTestId('close')).toBeVisible();
-
+            const topbar = observer.getByTestId('authoring-topbar');
             const lockedInfo = topbar.getByTestId('locked-info');
 
-            await expect(lockedInfo).toBeVisible();
-            await expect(lockedInfo.getByTestId('user-avatar')).toBeVisible();
-            await expect(lockedInfo).toContainText('Locked by John Doe');
-            // Presence only: Unlock shows because the owner is the same user (see header).
-            await expect(lockedInfo.getByTestId('unlock')).toBeVisible();
+            await expect(lockedInfo.getByTestId('user-avatar')).toHaveText(ADMIN.initials);
+            await expect(lockedInfo.getByTitle(ADMIN.displayName)).toBeVisible();
+            await expect(lockedInfo).toContainText(`Locked by ${ADMIN.displayName}`);
+
+            // The button stays in the DOM behind ng-show, so check visibility rather than count.
+            await expect(lockedInfo.getByTestId('unlock')).toBeHidden();
 
             await topbar.getByTestId('close').click();
-            await expect(authoring).toHaveCount(0);
+            await expect(observer.getByTestId('authoring')).toHaveCount(0);
 
             await item.dblclick();
-            await expect(authoring).toBeVisible();
-            await expect(topbar.getByTestId('locked-info')).toBeVisible();
-            await expect(topbar.getByTestId('save')).toHaveCount(0);
+            await expectReadOnly(observer);
+            await expect(lockedInfo).toContainText(`Locked by ${ADMIN.displayName}`);
+            await expect(lockedInfo.getByTestId('unlock')).toBeHidden();
         } finally {
-            // Close even on failure: the open authoring page would keep autosaving into the
-            // database the next spec restores.
-            await lockOwnerContext.close();
+            await observerContext.close();
+        }
+    });
+
+    test('a user with the Unlock content privilege can unlock it', async ({page, browser}) => {
+        await restoreDatabaseSnapshot();
+
+        const ownerContext = await browser.newContext({storageState: getLoggedOutStorageState()});
+
+        try {
+            const owner = await ownerContext.newPage();
+
+            await loginAs(owner, SECOND_USER.username, SECOND_USER.password);
+            await lockForEditing(owner);
+
+            const {item} = await openSportsMonitoring(page);
+
+            await expect(item.getByTestId('article-item-locked')).toHaveCount(1);
+
+            await item.dblclick();
+            await expectReadOnly(page);
+
+            const topbar = page.getByTestId('authoring-topbar');
+            const lockedInfo = topbar.getByTestId('locked-info');
+
+            await expect(lockedInfo.getByTestId('user-avatar')).toHaveText(SECOND_USER.initials);
+            await expect(lockedInfo).toContainText(`Locked by ${SECOND_USER.displayName}`);
+            await expect(lockedInfo.getByTestId('unlock')).toBeVisible();
+
+            await lockedInfo.getByTestId('unlock').click();
+
+            // Unlocking reopens the item for editing, so the lock moves to the unlocking user.
+            await expect(topbar.getByTestId('save')).toBeVisible();
+            await expect(topbar.getByTestId('locked-info')).toHaveCount(0);
+            await expect(page.getByTestId('authoring').getByTestId('field--headline').locator('[contenteditable]'))
+                .toHaveAttribute('contenteditable', 'true');
+
+            const dialog = owner.getByTestId('modal-confirm');
+
+            await expect(dialog).toContainText(`Item ${ARTICLE} was unlocked by ${ADMIN.displayName}.`);
+        } finally {
+            await ownerContext.close();
         }
     });
 });
