@@ -1,37 +1,33 @@
 import {test, expect, Page} from '@playwright/test';
 import {restoreDatabaseSnapshot} from './utils';
-import {MetadataSettings} from './page-object-models/settings/metadata';
+import {IDatetimeFieldConfig, MetadataSettings} from './page-object-models/settings/metadata';
 import {ContentProfileSettings} from './page-object-models/settings/content-profile';
 import {Monitoring} from './page-object-models/monitoring';
+import {Authoring} from './page-object-models/authoring';
 
 /*
  * Lifecycle of a custom datetime field under Settings -> Metadata -> Other fields, then used on an article.
  *
- * Every test sets the `auth-react` localStorage flag with `addInitScript`: without it no field types
- * are registered and the create dialog's "Field type" select is empty. Not `getStorageState`, which
- * rebuilds state keyed to localhost:9000 and leaves the session missing on slots using another port.
+ * The type is "Datetime" (`datetime`) from the datetimeField extension that e2e/client/index.js loads.
+ * The article test sets the `auth-react` localStorage flag with `addInitScript` so the field renders
+ * in authoring-react, which addresses it by id; angular renders it too, without a test id. Not
+ * `getStorageState`, which rebuilds state keyed to localhost:9000 and leaves the session missing on
+ * slots using another port.
  *
  * Deviations from the QA cases (the product is asserted):
- * - The type is labelled "Datetime (authoring-react)" (`datetime-v2`), not "Datetime".
  * - "Close button" is the footer's Cancel. The delete dialogs were redesigned (VocabularyDeletionModal.tsx).
  * - Label is single-select, per-item Edit/Remove icons are always visible, and a field can sit in only
  *   one profile section at a time (`existsInFields` in ContentProfileFieldsConfig.tsx).
- *
- * Not covered: 1335328976, 1335328978 and 1344443801 (initial time offset, time increment steps): that
- * config lives in the `datetime` type, which the e2e app never registers, and `datetime-v2` has
- * `configComponent: null`. 1344443801 step 5 (re-open to re-read the value) asserts the save response
- * instead, since a reload does not restore the editor. Date entry is not typed: the calendar input is
- * popup-only, so the test sets the time and asserts the derived date.
+ * - On a new article the field starts empty with its switch off, unless the template carries a value.
+ *   Switching it on fills in the current time plus the initial offset.
  */
 
 const FIELD_ID = 'New_other_datetime_Item_1';
 const FIELD_NAME = 'New other datetime Item 1';
-const FIELD_TYPE_LABEL = 'Datetime (authoring-react)';
-const FIELD_TYPE_ID = 'datetime-v2';
+const FIELD_TYPE_LABEL = 'Datetime';
+const FIELD_TYPE_ID = 'datetime';
 
 const FIELD_PICKER_OPTION = `${FIELD_NAME} (custom vocabulary)`;
-
-const FIELD_TIME = '14:30';
 
 const STOCK_HEADER_FIELD_OPTIONS = ['Company Codes', 'Keywords', 'Language', 'Take Key'];
 
@@ -43,31 +39,32 @@ const NEW_FIELD_VALUES = {
     helperText: 'Pick a date and a time',
 };
 
-function formatAsDateInput(date: Date): string {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+const NEW_FIELD_CONFIG: IDatetimeFieldConfig = {
+    initialOffsetMinutes: 5,
+    incrementSteps: [15],
+};
 
-    return `${day}/${month}/${date.getFullYear()}`;
+const ARTICLE_SLUGLINE = 'datetime offset story';
+
+function parseDateAndTimeInputs(date: string, time: string): number {
+    const [day, month, year] = date.split('/').map(Number);
+    const [hours, minutes] = time.split(':').map(Number);
+
+    return new Date(year, month - 1, day, hours, minutes).getTime();
 }
 
 test.describe.configure({timeout: 120000});
-
-test.beforeEach(async ({page}) => {
-    await page.addInitScript(() => {
-        window.localStorage.setItem('auth-react', 'true');
-    });
-});
 
 async function createDatetimeField(page: Page): Promise<void> {
     const metadata = new MetadataSettings(page);
 
     await metadata.openTab('Other fields');
-    await metadata.createCustomField(NEW_FIELD_VALUES);
+    await metadata.createCustomField(NEW_FIELD_VALUES, () => metadata.fillDatetimeConfig(NEW_FIELD_CONFIG));
 }
 
 test('the create dialog only saves a custom datetime field from its Save button', {
     annotation: [
-        {type: 'confluence', description: '1335328976 partial'}, // Add new custom datetime field
+        {type: 'confluence', description: '1335328976 complete'}, // Add new custom datetime field
     ],
 }, async ({page}) => {
     await restoreDatabaseSnapshot();
@@ -92,7 +89,7 @@ test('the create dialog only saves a custom datetime field from its Save button'
     await expect(dialog.getByTestId('vocabulary-edit-modal--close')).toBeVisible();
 
     await expect(
-        dialog.getByLabel('Field type').locator('option').filter({hasText: FIELD_TYPE_LABEL}),
+        dialog.getByLabel('Field type').locator('option').filter({hasText: new RegExp(`^${FIELD_TYPE_LABEL}$`)}),
     ).toHaveCount(1);
 
     await expect(metadata.getSaveButton()).toBeDisabled();
@@ -100,23 +97,44 @@ test('the create dialog only saves a custom datetime field from its Save button'
     await metadata.fillDialog(NEW_FIELD_VALUES);
     await expect(metadata.getSaveButton()).toBeEnabled();
 
+    await expect(metadata.getInitialTimeOffsetInput()).toHaveValue('0');
+    await expect(metadata.getIncrementStepRemoveButtons()).toHaveCount(0);
+
+    await metadata.getAddStepButton().click();
+    await expect(metadata.getIncrementStepRemoveButtons()).toHaveCount(1);
+    await expect(metadata.getIncrementStepInput(0)).toHaveValue('0');
+
+    await metadata.getIncrementStepInput(0).fill('30');
+    await expect(metadata.getIncrementStepInput(0)).toHaveValue('30');
+
+    await metadata.getIncrementStepRemoveButtons().first().click();
+    await expect(metadata.getIncrementStepRemoveButtons()).toHaveCount(0);
+
     // Spaces are rejected by the id pattern `^[a-zA-Z0-9-_]+$` on the ID input.
     await metadata.fillDialog({id: 'New other datetime Item 1'});
     await expect(metadata.getSaveButton()).toBeDisabled();
 
-    await metadata.fillDialog({id: FIELD_ID});
+    await metadata.fillDialog({id: FIELD_ID, name: ''});
+    await expect(metadata.getSaveButton()).toBeDisabled();
+
+    await metadata.fillDialog({name: FIELD_NAME});
+    await expect(metadata.getSaveButton()).toBeEnabled();
+
+    await metadata.fillDatetimeConfig(NEW_FIELD_CONFIG);
     await metadata.cancel();
     await expect(metadata.getAddNewButton()).toBeVisible();
     await expect(metadata.getListItem(FIELD_NAME)).toHaveCount(0);
 
     await metadata.openCreateDialog();
     await metadata.fillDialog(NEW_FIELD_VALUES);
+    await metadata.fillDatetimeConfig(NEW_FIELD_CONFIG);
     await metadata.closeWithIcon();
     await expect(metadata.getAddNewButton()).toBeVisible();
     await expect(metadata.getListItem(FIELD_NAME)).toHaveCount(0);
 
     await metadata.openCreateDialog();
     await metadata.fillDialog(NEW_FIELD_VALUES);
+    await metadata.fillDatetimeConfig(NEW_FIELD_CONFIG);
     await metadata.save();
     await expect(metadata.getListItem(FIELD_NAME)).toBeVisible();
 
@@ -128,13 +146,14 @@ test('the create dialog only saves a custom datetime field from its Save button'
         description: NEW_FIELD_VALUES.description,
         helperText: NEW_FIELD_VALUES.helperText,
     });
+    expect(await metadata.readDatetimeConfig()).toEqual(NEW_FIELD_CONFIG);
 });
 
 test('a saved custom datetime field is available to both content profile sections', {
     annotation: [
-        {type: 'confluence', description: '1335328976 partial'}, // Add new custom datetime field
-        {type: 'confluence', description: '1335328978 partial'}, // Edit custom datetime field
-        {type: 'confluence', description: '1344443801 partial'}, // Custom (other) Datetime
+        {type: 'confluence', description: '1335328976 complete'}, // Add new custom datetime field
+        {type: 'confluence', description: '1335328978 complete'}, // Edit custom datetime field
+        {type: 'confluence', description: '1344443801 complete'}, // Custom (other) Datetime
     ],
 }, async ({page}) => {
     await restoreDatabaseSnapshot();
@@ -167,7 +186,7 @@ test('a saved custom datetime field is available to both content profile section
 
 test('the edit dialog only persists changes from its Save button', {
     annotation: [
-        {type: 'confluence', description: '1335328978 partial'}, // Edit custom datetime field
+        {type: 'confluence', description: '1335328978 complete'}, // Edit custom datetime field
     ],
 }, async ({page}) => {
     await restoreDatabaseSnapshot();
@@ -182,26 +201,49 @@ test('the edit dialog only persists changes from its Save button', {
     await expect(item.getByTestId('vocabulary-item--start-removing')).toBeVisible();
 
     await metadata.openEditDialog(FIELD_NAME);
-    await expect(
-        metadata.getDialog().getByRole('heading', {name: `Edit ${FIELD_NAME}`, exact: true}),
-    ).toBeVisible();
+
+    const dialog = metadata.getDialog();
+
+    await expect(dialog.getByRole('heading', {name: `Edit ${FIELD_NAME}`, exact: true})).toBeVisible();
     await expect(page.getByTestId('vocabulary-edit--id')).toHaveJSProperty('readOnly', true);
+    await expect(page.getByTestId('vocabulary-edit-field--name')).toBeVisible();
+    await expect(dialog.getByLabel('Field type')).toBeVisible();
+    await expect(dialog.getByLabel('Description')).toBeVisible();
+    await expect(
+        dialog.getByRole('textbox', {name: 'Type to search or create a new label'}),
+    ).toBeVisible();
+    await expect(dialog.getByLabel('Helper text')).toBeVisible();
+    await expect(metadata.getInitialTimeOffsetInput()).toBeVisible();
+    await expect(metadata.getIncrementStepRemoveButtons()).toHaveCount(1);
+    await expect(metadata.getAddStepButton()).toBeVisible();
+    await expect(dialog.getByTestId('vocabulary-edit-modal--cancel')).toBeVisible();
+    await expect(dialog.getByTestId('vocabulary-edit-modal--close')).toBeVisible();
     await expect(metadata.getSaveButton()).toBeDisabled();
 
-    await metadata.fillDialog({description: 'discarded by Cancel'});
+    await metadata.getInitialTimeOffsetInput().fill('10');
     await expect(metadata.getSaveButton()).toBeEnabled();
+
+    await metadata.getAddStepButton().click();
+    await expect(metadata.getIncrementStepInput(1)).toHaveValue('0');
+    await metadata.getIncrementStepInput(1).fill('45');
+    await metadata.getIncrementStepRemoveButtons().first().click();
+    await metadata.fillDialog({description: 'discarded by Cancel'});
     await metadata.cancel();
 
     await metadata.openEditDialog(FIELD_NAME);
     expect((await metadata.readDialogValues()).description).toEqual(NEW_FIELD_VALUES.description);
+    expect(await metadata.readDatetimeConfig()).toEqual(NEW_FIELD_CONFIG);
 
+    await metadata.fillDatetimeConfig({initialOffsetMinutes: 10, incrementSteps: [20, 45]});
     await metadata.fillDialog({description: 'discarded by the close icon'});
     await metadata.closeWithIcon();
 
     await metadata.openEditDialog(FIELD_NAME);
     expect((await metadata.readDialogValues()).description).toEqual(NEW_FIELD_VALUES.description);
+    expect(await metadata.readDatetimeConfig()).toEqual(NEW_FIELD_CONFIG);
 
     await metadata.fillDialog({name: 'Renamed datetime field', helperText: 'Pick a moment'});
+    await metadata.fillDatetimeConfig({initialOffsetMinutes: 10, incrementSteps: [20, 45]});
     await metadata.save();
 
     await expect(metadata.getListItem('Renamed datetime field')).toBeVisible();
@@ -213,11 +255,12 @@ test('the edit dialog only persists changes from its Save button', {
         description: NEW_FIELD_VALUES.description,
         helperText: 'Pick a moment',
     });
+    expect(await metadata.readDatetimeConfig()).toEqual({initialOffsetMinutes: 10, incrementSteps: [20, 45]});
 });
 
 test('an unused custom datetime field is removed only after confirming', {
     annotation: [
-        {type: 'confluence', description: '1335328980 partial'}, // Remove custom datetime field
+        {type: 'confluence', description: '1335328980 complete'}, // Remove custom datetime field
     ],
 }, async ({page}) => {
     await restoreDatabaseSnapshot();
@@ -268,7 +311,7 @@ test('an unused custom datetime field is removed only after confirming', {
 
 test('a custom datetime field used in a content profile cannot be removed', {
     annotation: [
-        {type: 'confluence', description: '1335328980 partial'}, // Remove custom datetime field
+        {type: 'confluence', description: '1335328980 complete'}, // Remove custom datetime field
     ],
 }, async ({page}) => {
     await restoreDatabaseSnapshot();
@@ -309,11 +352,15 @@ test('a custom datetime field used in a content profile cannot be removed', {
     await expect(metadata.getListItem(FIELD_NAME)).toBeVisible();
 });
 
-test('a custom datetime field on the content profile is editable and saved with the article', {
+test('a new article fills the custom datetime field with the current time plus the initial offset', {
     annotation: [
-        {type: 'confluence', description: '1344443801 partial'}, // Custom (other) Datetime
+        {type: 'confluence', description: '1344443801 complete'}, // Custom (other) Datetime
     ],
 }, async ({page}) => {
+    await page.addInitScript(() => {
+        window.localStorage.setItem('auth-react', 'true');
+    });
+
     await restoreDatabaseSnapshot();
     await createDatetimeField(page);
 
@@ -326,24 +373,41 @@ test('a custom datetime field on the content profile is editable and saved with 
 
     // New articles use the boot-time dataStore profile, so reload to pick up the added field.
     const monitoring = new Monitoring(page);
+    const authoring = new Authoring(page);
 
     await page.goto('/#/workspace/monitoring');
     await page.reload();
     await monitoring.selectDeskOrWorkspace('Sports');
     await monitoring.createArticleFromTemplate('story');
 
-    const field = page
-        .getByTestId('authoring')
-        .getByTestId('authoring-field')
-        .and(page.locator(`[data-test-value="${FIELD_ID}"]`));
+    const field = authoring.fieldContainer(FIELD_ID);
+    const fieldSwitch = field.getByRole('checkbox');
+    const dateInput = field.getByRole('textbox', {name: 'Date'});
+    // TimePicker labels its input with an empty label, so it has no accessible name.
+    const timeInput = field.locator('input[type="time"]');
 
-    await expect(field).toBeVisible();
-    await expect(field.getByTestId('date-input')).toBeVisible();
-    await expect(field.getByTestId('time-input')).toBeVisible();
+    await expect(fieldSwitch).toHaveAttribute('aria-checked', 'false');
+    await expect(dateInput).toHaveCount(0);
 
-    // The date input is `inputmode="none"`; DateTimePicker.handleTimeChange seeds today when empty.
-    await field.getByTestId('time-input').fill(FIELD_TIME);
-    await expect(field.getByTestId('date-input')).toHaveValue(formatAsDateInput(new Date()));
+    const beforeSwitchingOn = Date.now();
+
+    await fieldSwitch.click();
+
+    const afterSwitchingOn = Date.now();
+
+    await expect(fieldSwitch).toHaveAttribute('aria-checked', 'true');
+
+    const shownDate = await dateInput.inputValue();
+    const shownTime = await timeInput.inputValue();
+    const shown = parseDateAndTimeInputs(shownDate, shownTime);
+    const offsetMs = NEW_FIELD_CONFIG.initialOffsetMinutes * 60000;
+
+    // The field drops the seconds, so it can read up to a minute behind the moment it was switched on.
+    expect(shown).toBeGreaterThan(beforeSwitchingOn + offsetMs - 60000);
+    expect(shown).toBeLessThanOrEqual(afterSwitchingOn + offsetMs);
+
+    await authoring.waitForAuthoringReactToInitialize();
+    await authoring.fieldContainer('slugline').getByRole('textbox').fill(ARTICLE_SLUGLINE);
 
     const toolbar = page.getByTestId('authoring').getByTestId('authoring-toolbar-1');
 
@@ -352,14 +416,21 @@ test('a custom datetime field on the content profile is editable and saved with 
             (response) => response.url().includes('/api/archive/')
                 && ['PATCH', 'PUT'].includes(response.request().method()),
         ),
-        toolbar.getByRole('button', {name: 'Save'}).click(),
+        toolbar.getByRole('button', {name: 'Save', exact: true}).click(),
     ]);
 
     expect(saveResponse.status()).toBeLessThan(400);
 
-    // Stored as a UTC instant. Compare in local time to the minute: seconds come from `new Date()`.
-    const saved = new Date((await saveResponse.json()).extra[FIELD_ID]);
+    await page.getByTestId('authoring').getByRole('button', {name: 'Close', exact: true}).click();
+    await expect(page.getByTestId('authoring')).toHaveCount(0);
 
-    expect(formatAsDateInput(saved)).toEqual(formatAsDateInput(new Date()));
-    expect(`${saved.getHours()}:${String(saved.getMinutes()).padStart(2, '0')}`).toEqual(FIELD_TIME);
+    await monitoring
+        .getGroupLocator('Sports / Working Stage')
+        .getByTestId('article-item')
+        .filter({hasText: ARTICLE_SLUGLINE})
+        .dblclick();
+
+    await expect(fieldSwitch).toHaveAttribute('aria-checked', 'true');
+    await expect(dateInput).toHaveValue(shownDate);
+    await expect(timeInput).toHaveValue(shownTime);
 });
