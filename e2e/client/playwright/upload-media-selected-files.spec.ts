@@ -7,6 +7,7 @@ import {setEditor3FieldValue} from './utils/editor3';
 import {
     AUDIO_FILE,
     AUDIO_FILES,
+    IMAGE_WITH_EMBEDDED_METADATA,
     IMAGE_FILES,
     MIXED_FILES,
     NOT_MEDIA_FILE,
@@ -37,9 +38,7 @@ import {
  * which files are picked, so the screen's own behaviour (its layout, the refusal of
  * files that are not media, the required metadata fields, Cancel) is covered once
  * by the first three tests, which every case is annotated on, and each case then
- * has one test walking its own selection from the dialog to the uploaded items. The
- * per-file progress circle is covered in the mixed-media test, which is why the
- * other five cases are annotated on it too.
+ * has one test walking its own selection from the dialog to the uploaded items.
  *
  * A case id therefore appears on several tests at two levels, and the level is a
  * statement about the case across all of them rather than about the test it is
@@ -258,6 +257,40 @@ test('uploads a single selected video file to the selected desk', {
     });
 });
 
+test('parses embedded metadata, allows edits, and creates the image on commit', async ({page}) => {
+    const upload = new MediaUpload(page);
+    const mediaEditor = new MediaEditor(page);
+    const metadata = {
+        headline: 'edited embedded headline',
+        description: 'edited embedded description',
+    };
+    const archiveCreates: Array<string> = [];
+
+    page.on('request', (request) => {
+        if (request.method() === 'POST' && new URL(request.url()).pathname.endsWith('/archive')) {
+            archiveCreates.push(request.url());
+        }
+    });
+
+    await openUploadScreen(page);
+    await expectEmptyUploadScreen(page);
+    await upload.selectFiles([IMAGE_WITH_EMBEDDED_METADATA]);
+    await expectFilesReadyToUpload(page, 1);
+
+    await expect(mediaEditor.field('field--headline')).toHaveText('The Headline (ref2014)');
+    await expect(mediaEditor.field('field--description_text'))
+        .toHaveText('The description aka caption (ref2014)');
+    expect(archiveCreates).toHaveLength(0);
+
+    await expectUploadToTargetDesk(page, {
+        fileCount: 1,
+        itemTypes: ['picture'],
+        metadata,
+    });
+
+    expect(archiveCreates).toHaveLength(1);
+});
+
 test('uploads several selected images to the selected desk', {
     annotation: [
         {type: 'confluence', description: '1315931213 complete'}, // Upload multiple images by selecting from folder
@@ -327,12 +360,7 @@ test('uploads several selected video files to the selected desk', {
     });
 });
 
-/**
- * The mixed selection is also where the per-file progress circle is covered, for
- * every select-from-folder case rather than once per media type: the circles are
- * what a three-file upload shows one by one, and holding the archive responses back
- * to observe them is the same mechanism whatever the files are.
- */
+/** The mixed selection verifies image, audio and video can be committed together. */
 test('uploads a selected image, audio file and video file in one go', {
     annotation: [
         {type: 'confluence', description: '1315931276 complete'}, // Upload different media types by selecting
@@ -361,6 +389,5 @@ test('uploads a selected image, audio file and video file in one go', {
         fileCount: MIXED_FILES.length,
         itemTypes: ['picture', 'audio', 'video'],
         metadata,
-        withProgressCircles: true,
     });
 });

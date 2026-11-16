@@ -169,11 +169,49 @@ export class Monitoring {
             .and(this.page.locator(`[data-test-value="${articleLabel}"]`));
     }
 
+    getGroupLocator(groupName: string): Locator {
+        return this.getGroupLocators().and(this.page.locator(`[data-test-value="${groupName}"]`));
+    }
+
+    getGroupLocators(): Locator {
+        return this.page.getByTestId('monitoring-view').getByTestId('monitoring-group');
+    }
+
+    /** The groups of the open view, in order, by their `data-test-value`. */
+    async expectGroups(groupNames: Array<string>): Promise<void> {
+        await expect
+            .poll(() => this.getGroupLocators()
+                .evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-test-value'))))
+            .toEqual(groupNames);
+    }
+
     getPreviewPane(): Locator {
         return this.page.getByTestId('authoring-preview');
     }
 
     async openPreviewTab(name: string): Promise<void> {
         await this.getPreviewPane().getByRole('tab', {name, exact: true}).click();
+    }
+
+    /**
+     * The right-aligned button stack of the monitoring toolbar (refresh, monitoring
+     * settings, monitoring filter buttons, create new item). The file type filters are
+     * not in here, they live in the second subnav row.
+     */
+    getToolbarActions(): Locator {
+        return this.page.getByTestId('monitoring-toolbar-actions');
+    }
+
+    /**
+     * Only rendered while a custom workspace is the active selection; on a desk the
+     * monitoring settings are reached from the desks settings page instead
+     * (see `monitoring-view.html`, `aggregate.settings.type === 'workspace'`).
+     */
+    getMonitoringSettingsButton(): Locator {
+        return this.getToolbarActions().getByTestId('monitoring-settings-button');
+    }
+
+    getCreateItemButton(): Locator {
+        return this.getToolbarActions().getByTestId('content-create');
     }
 }
