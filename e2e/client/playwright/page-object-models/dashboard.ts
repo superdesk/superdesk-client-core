@@ -21,9 +21,8 @@ export class Dashboard {
     }
 
     // Adding a widget and accepting a rearrange save via a background `PATCH /workspaces/<id>`.
-    // Wait for it: a reload aborts it and the change silently reverts, and a second PATCH
-    // while the first is in flight carries a stale etag and gets 412. Status is not filtered
-    // here so a failed save fails fast in `expectLayoutPersisted` instead of timing out.
+    // A reload aborts it (the change silently reverts) and a second PATCH while it is in flight
+    // gets 412 (stale etag). Status is not filtered so a failed save fails fast, not on timeout.
     private waitForLayoutPersisted(): Promise<Response> {
         return this.page.waitForResponse(
             (response) => /\/workspaces\/[^/]+$/.test(response.url())

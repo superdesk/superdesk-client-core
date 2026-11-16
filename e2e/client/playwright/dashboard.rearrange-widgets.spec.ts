@@ -2,12 +2,8 @@ import {test, expect, type Page} from '@playwright/test';
 import {Dashboard} from './page-object-models/dashboard';
 import {restoreDatabaseSnapshot} from './utils';
 
-/**
- * QA case "Rearrange widgets" (Workspace, Confluence 1308524872). Widgets are placed from the
- * add-widget modal with "Add This Widget" (views/workspace.html), there is no drag out of it.
- *
- * The fixture ships only a Monitor widget, so each test adds a World Clock.
- */
+// Widgets are placed from the add-widget modal, there is no drag out of it (views/workspace.html).
+// The fixture ships only a Monitor widget, so each test adds a World Clock.
 test.describe('rearranging dashboard widgets', {
     annotation: [
         {type: 'confluence', description: '1308524872 complete'}, // Rearrange widgets
@@ -103,7 +99,7 @@ test.describe('rearranging dashboard widgets', {
         await expect(worldClock).toHaveAttribute('data-col', '2');
         await expect(worldClock).toHaveAttribute('data-row', '2');
 
-        // gridster animates the push; hovering waits for the widget to settle before the drag.
+        // gridster animates the push; hovering lets the widget settle before the drag.
         await worldClock.hover();
 
         // The third column is empty above the drop, so gridster floats the widget up to row 1.
