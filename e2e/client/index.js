@@ -4,6 +4,10 @@ setTimeout(() => {
     startApp(
         [
             {
+                id: 'datetimeField',
+                load: () => import('superdesk-core/scripts/extensions/datetimeField'),
+            },
+            {
                 id: 'availability-manager',
                 load: () => import('superdesk-core/scripts/extensions/availability-manager'),
             },
