@@ -16,7 +16,7 @@ export class ContentProfileSettings {
         this.page = page;
     }
 
-    // The list replaces the field's existing options, it is not merged.
+    // The list replaces the field's existing formatting options, it is not merged.
     public async addFormattingOptionToContentProfile(options: IOptions) {
         await this.page.locator(s(`content-profile=${options.profileName}`))
             .getByRole('button', {name: 'Actions'})
@@ -26,7 +26,9 @@ export class ContentProfileSettings {
         await this.page.locator(s('content-profile-edit-view')).getByRole('tab', {name: options.sectionName}).click();
         await this.page.locator(s('content-profile-edit-view', `field=${options.fieldName}`)).click();
 
-        // Spread: an array argument is a nested path for TreeSelectDriver, and the popover closes after each pick.
+        // Spread, not passed as one array: an array argument is a nested path for
+        // TreeSelectDriver, and the tree-select popover closes after every pick, so all
+        // options but the first would be clicked against a popover that is no longer open.
         await new TreeSelectDriver(
             this.page,
             this.page.locator(s('formatting-options-input')),
@@ -77,7 +79,7 @@ export class ContentProfileSettings {
         await this.page.locator(s('content-profile-editing-modal')).getByRole('button', {name: 'Save'}).click();
     }
 
-    // `addFieldsToContentProfile` returns on Save click, before the PATCH lands.
+    // Unlike `addFieldsToContentProfile`, waits for the PATCH Save triggers.
     async addFieldsToContentProfileAndWait(
         contentProfile: string,
         fields: Array<{tabName: string; fieldId: string, fieldType?: string}>,
@@ -130,11 +132,18 @@ export class ContentProfileSettings {
             .first()
             .click();
 
-        // The popover is a zero-size portal wrapper (WithPortal in TreeMenu), never "visible". Wait on its options.
+        // The popover is a zero-size portal wrapper (TreeMenu in superdesk-ui-framework), never
+        // visible itself; wait on its options.
         const popover = this.page.getByTestId('tree-menu-popover');
 
         await expect(popover.getByRole('treeitem').first()).toBeVisible();
 
         return popover;
+    }
+
+    // While the picker is open it swallows clicks on the section tabs.
+    async closeFieldPicker(): Promise<void> {
+        await this.page.keyboard.press('Escape');
+        await expect(this.page.getByTestId('tree-menu-popover').getByRole('treeitem')).toHaveCount(0);
     }
 }

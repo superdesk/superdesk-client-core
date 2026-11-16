@@ -263,6 +263,15 @@ media uploader
 .upload-media {
     z-index: 1051;
 
+    .sd-grid-list__additional-content,
+    sd-multi-edit-additional-content {
+        display: contents;
+    }
+
+    sd-multi-edit-additional-content > p {
+        grid-column: 1 / -1;
+    }
+
     .modal__body {
         display: flex;
         flex-direction:column;

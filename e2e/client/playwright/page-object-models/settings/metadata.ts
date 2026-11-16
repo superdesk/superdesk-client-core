@@ -81,19 +81,26 @@ export class MetadataSettings {
         }
     }
 
-    async readDialogValues(): Promise<Required<Omit<ICustomFieldValues, 'fieldTypeLabel'>> & {fieldType: string}> {
+    // Only the inputs every tab has; "Field type" exists on "Other fields" only.
+    async readSharedDialogValues(): Promise<Required<Omit<ICustomFieldValues, 'fieldTypeLabel'>>> {
         const dialog = this.getDialog();
 
         return {
             id: await this.page.getByTestId('vocabulary-edit--id').inputValue(),
             name: await this.page.getByTestId('vocabulary-edit-field--name').inputValue(),
-            fieldType: await dialog.getByLabel('Field type').inputValue(),
             description: await dialog.getByLabel('Description').inputValue(),
             helperText: await dialog.getByLabel('Helper text').inputValue(),
         };
     }
 
-    // Waits for the vocabularies write so a following reload cannot race it.
+    async readDialogValues(): Promise<Required<Omit<ICustomFieldValues, 'fieldTypeLabel'>> & {fieldType: string}> {
+        return {
+            ...await this.readSharedDialogValues(),
+            fieldType: await this.getDialog().getByLabel('Field type').inputValue(),
+        };
+    }
+
+    // Waits for the write Save triggers, so a following reload cannot race it.
     async save(): Promise<void> {
         await Promise.all([
             this.page.waitForResponse(
@@ -115,11 +122,44 @@ export class MetadataSettings {
         await expect(this.getDialog()).toHaveCount(0);
     }
 
-    // The `main` snapshot has no "Other fields" entry and no fixture API, so tests create one here.
-    async createCustomField(values: ICustomFieldValues & {id: string; name: string}): Promise<void> {
+    // The `main` snapshot has no custom fields and there is no fixture API, so tests build theirs
+    // here (the atomic-precondition exception in e2e/WRITING_TESTS.md).
+    async createCustomField(
+        values: ICustomFieldValues & {id: string; name: string},
+        configureDialog?: () => Promise<void>,
+    ): Promise<void> {
         await this.openCreateDialog();
         await this.fillDialog(values);
+        await configureDialog?.();
         await this.save();
         await expect(this.getListItem(values.name)).toBeVisible();
+    }
+
+    // Save stays disabled until one type is ticked (`requireAllowedTypesSelection`). The controls
+    // are `sd-check` spans, not checkbox inputs, so click rather than check.
+    async setAllowedContentTypes(typeLabels: Array<string>): Promise<void> {
+        for (const typeLabel of typeLabels) {
+            await this.getDialog().getByLabel(typeLabel).click();
+        }
+    }
+
+    getDeletionModal(): Locator {
+        return this.page.getByTestId('vocabulary-deletion-modal--can-delete');
+    }
+
+    getDeletionRefusal(): Locator {
+        return this.page.getByTestId('vocabulary-deletion-modal--cannot-delete');
+    }
+
+    // Waits for the DELETE the confirmation triggers.
+    async confirmDeletion(fieldId: string): Promise<void> {
+        await Promise.all([
+            this.page.waitForResponse(
+                (response) => response.url().includes(`/api/vocabularies/${fieldId}`)
+                    && response.request().method() === 'DELETE',
+            ),
+            this.getDeletionModal().getByRole('button', {name: 'Delete'}).click(),
+        ]);
+        await expect(this.getDeletionModal()).toHaveCount(0);
     }
 }
