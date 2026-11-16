@@ -66,7 +66,7 @@ function APIProvider() {
                 .then((url) => {
                     config.url = url;
 
-                    if (config.method !== 'GET') {
+                    if (config.method !== 'GET' || config.cache === false) {
                         return $http(config);
                     }
 
