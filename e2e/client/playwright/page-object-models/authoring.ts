@@ -46,27 +46,33 @@ export class Authoring {
 
         await panel.getByTestId('publish').click();
 
-        // Publishing raises a "Save and send" confirm that persists pending changes
-        // before it publishes. Targeting subscribers always raises it; with no
-        // target it appears only when the item has unsaved changes, so probe first.
+        // The "Save and send" confirm appears only when the item has unsaved changes
+        // (targeting subscribers always counts); otherwise the publish goes straight
+        // through and the panel closes. Wait for whichever happens, so the confirm is
+        // never missed by a too-early visibility probe.
         const saveAndSend = page.getByTestId('modal-confirm').getByRole('button', {name: 'save and send'});
 
         if (options.subscribers.length > 0) {
             await saveAndSend.click();
-        } else if (await saveAndSend.isVisible().catch(() => false)) {
-            await saveAndSend.click();
+        } else {
+            const confirmAppeared = await Promise.race([
+                saveAndSend.waitFor({state: 'visible'}).then(() => true),
+                panel.waitFor({state: 'hidden'}).then(() => false),
+            ]);
+
+            if (confirmAppeared) {
+                await saveAndSend.click();
+            }
         }
 
-        // The panel closes asynchronously once the publish lands; wait for it so a
-        // following interaction (e.g. publishing a second item) is not intercepted
-        // by the closing overlay.
+        // Wait for the panel to finish closing, so a following interaction (e.g. a
+        // second publish) is not intercepted by the closing overlay.
         await expect(panel).toBeHidden();
     }
 
     /**
-     * Sets a leaf Subject term on the open article: opens the typeahead, narrows
-     * by typing, and clicks the matching option. Only leaf terms are supported;
-     * a parent category opens a subtree instead of committing.
+     * Sets a leaf Subject term on the open article. Only leaf terms work: a parent
+     * category opens a subtree instead of committing.
      */
     async setSubject(value: string): Promise<void> {
         const field = this.page.locator('#subjects');
