@@ -3,16 +3,14 @@ import {Dashboard} from './page-object-models/dashboard';
 import {restoreDatabaseSnapshot} from './utils';
 
 /**
- * QA case "Rearrange widgets" (Workspace, Confluence 1308524872).
- *
- * Not covered: dragging a widget from the add-widget modal onto the grid. The modal
- * is click-only, widgets are placed with "Add This Widget" (views/workspace.html).
+ * QA case "Rearrange widgets" (Workspace, Confluence 1308524872). Widgets are placed from the
+ * add-widget modal with "Add This Widget" (views/workspace.html), there is no drag out of it.
  *
  * The fixture ships only a Monitor widget, so each test adds a World Clock.
  */
 test.describe('rearranging dashboard widgets', {
     annotation: [
-        {type: 'confluence', description: '1308524872 partial'}, // Rearrange widgets
+        {type: 'confluence', description: '1308524872 complete'}, // Rearrange widgets
     ],
 }, () => {
     const MONITOR = 'aggregate';
