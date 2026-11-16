@@ -17,18 +17,27 @@ const ITEM_TYPES: Array<[string, string]> = [
     ['audio', 'audio'],
 ];
 
-// Items left by each filter for the Sports groups in the `main` snapshot. "Package Highlight 1"
-// is a highlight package, which `composite` excludes. The snapshot has no picture, graphic,
-// video or audio item, so those filters can only be shown to empty the list.
-const LISTED: Record<string, number> = {
-    'all': 5,
-    'text': 4,
-    'picture': 0,
-    'graphic': 0,
-    'composite': 0,
-    'highlight-pack': 1,
-    'video': 0,
-    'audio': 0,
+const TEXT_ITEMS = ['test sports story', 'story 2', 'Story 3', 'Story 5'];
+
+// Items left by each filter across the Sports groups of the `media-items` snapshot. "Package
+// Highlight 1" belongs to a highlight, so `composite` leaves only the plain "Shire package".
+const LISTED: Record<string, Array<string>> = {
+    'all': [
+        ...TEXT_ITEMS,
+        'Rivendell picture',
+        'Moria graphic',
+        'Shire package',
+        'Package Highlight 1',
+        'Isengard video',
+        'Lothlorien audio',
+    ],
+    'text': TEXT_ITEMS,
+    'picture': ['Rivendell picture'],
+    'graphic': ['Moria graphic'],
+    'composite': ['Shire package'],
+    'highlight-pack': ['Package Highlight 1'],
+    'video': ['Isengard video'],
+    'audio': ['Lothlorien audio'],
 };
 
 // opening monitoring can cost a reload, and each filter change waits out a 1s query debounce
@@ -36,13 +45,11 @@ test.setTimeout(120000);
 
 test.describe('monitoring item type filter buttons', {
     annotation: [
-        // partial: the snapshot has no picture/graphic/video/audio item, so those filters are
-        // only shown to exclude everything else, not to select items of their own type
-        {type: 'confluence', description: '1308524887 partial'}, // Filter buttons
+        {type: 'confluence', description: '1308524887 complete'}, // Filter buttons
     ],
 }, () => {
     test('one button per item type is offered, in a fixed order', async ({page}) => {
-        await restoreDatabaseSnapshot();
+        await restoreDatabaseSnapshot({snapshotName: 'media-items'});
 
         const monitoring = new Monitoring(page);
 
@@ -58,10 +65,10 @@ test.describe('monitoring item type filter buttons', {
         }
     });
 
-    // The group keeps the old items in the DOM until the debounced query lands, so a visibility
-    // check alone would pass against the stale list. Wait on the count first.
+    // The group keeps the old items in the DOM until the debounced query lands, so the names are
+    // polled until the whole list matches rather than checked once.
     test('the list is filtered by item type, with ALL selected by default', async ({page}) => {
-        await restoreDatabaseSnapshot();
+        await restoreDatabaseSnapshot({snapshotName: 'media-items'});
 
         const monitoring = new Monitoring(page);
 
@@ -71,13 +78,14 @@ test.describe('monitoring item type filter buttons', {
         const all = monitoring.getFileTypeFilterButton('all');
         const text = monitoring.getFileTypeFilterButton('text');
 
-        const textArticle = monitoring.getListedArticle('story 2');
-        const packageArticle = monitoring.getListedArticle('Package Highlight 1');
+        const expectListed = (names: Array<string>) => expect
+            .poll(async () => (await articles.evaluateAll(
+                (nodes) => nodes.map((node) => node.getAttribute('data-test-value')),
+            )).sort())
+            .toEqual([...names].sort());
 
         await expect(all).toHaveClass(ACTIVE);
-        await expect(articles).toHaveCount(LISTED.all);
-        await expect(textArticle).toBeVisible();
-        await expect(packageArticle).toBeVisible();
+        await expectListed(LISTED.all);
 
         for (const [itemType] of ITEM_TYPES.filter(([type]) => type !== 'all')) {
             const button = monitoring.getFileTypeFilterButton(itemType);
@@ -86,28 +94,24 @@ test.describe('monitoring item type filter buttons', {
 
             await expect(button).toHaveClass(ACTIVE);
             await expect(all).not.toHaveClass(ACTIVE);
-            await expect(articles).toHaveCount(LISTED[itemType]);
-            await expect(textArticle).toBeVisible({visible: itemType === 'text'});
-            await expect(packageArticle).toBeVisible({visible: itemType === 'highlight-pack'});
+            await expectListed(LISTED[itemType]);
 
             // clicking an active type toggle clears it, which is the same state as ALL
             await button.click();
 
             await expect(all).toHaveClass(ACTIVE);
             await expect(button).not.toHaveClass(ACTIVE);
-            await expect(articles).toHaveCount(LISTED.all);
+            await expectListed(LISTED.all);
         }
 
         await text.click();
 
-        await expect(articles).toHaveCount(LISTED.text);
+        await expectListed(LISTED.text);
 
         await all.click();
 
         await expect(all).toHaveClass(ACTIVE);
         await expect(text).not.toHaveClass(ACTIVE);
-        await expect(articles).toHaveCount(LISTED.all);
-        await expect(textArticle).toBeVisible();
-        await expect(packageArticle).toBeVisible();
+        await expectListed(LISTED.all);
     });
 });
