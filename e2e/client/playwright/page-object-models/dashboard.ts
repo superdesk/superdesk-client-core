@@ -1,6 +1,12 @@
 import {Locator, Page, Response, expect} from '@playwright/test';
 
+// Placement and size live in gridster's `data-col` / `data-row` / `data-sizex` / `data-sizey`
+// attributes, not inline styles.
 export class Dashboard {
+    // Grid step in px: widget_base_dimensions [320, 250] plus a [20, 20] margin (dashboard/grid/grid.ts).
+    static readonly COLUMN_STEP = 360;
+    static readonly ROW_STEP = 290;
+
     private page: Page;
 
     constructor(page: Page) {
@@ -14,10 +20,10 @@ export class Dashboard {
             .and(this.page.locator(`[data-test-value="${widgetId}"]`));
     }
 
-    // Adding a widget saves the dashboard in the background, so wait for it: a reload would abort the
-    // write, and a second one sent meanwhile gets a 412 on the stale etag. A desk never saved before
-    // has no workspace document yet, so its first write is a POST and later ones are PATCHes.
-    // Matches URL and method only, so a failed save is reported by `expectLayoutPersisted` and not a timeout.
+    // Adding a widget and accepting a rearrange save via a background write to `/workspaces`: a POST
+    // for a desk never saved before (it has no workspace document yet), a PATCH afterwards.
+    // A reload aborts it (the change silently reverts) and a second write while it is in flight
+    // gets 412 (stale etag). Status is not filtered so a failed save fails fast, not on timeout.
     private waitForLayoutPersisted(): Promise<Response> {
         return this.page.waitForResponse(
             (response) => /\/workspaces(\/[^/]+)?$/.test(response.url())
@@ -48,6 +54,44 @@ export class Dashboard {
         await expect(modal).not.toBeVisible();
         await expect(this.getWidget(widgetId)).toBeVisible();
         await this.expectLayoutPersisted(layoutPersisted);
+    }
+
+    async startRearranging(): Promise<void> {
+        await this.page.getByTestId('rearrange-widgets').click();
+        await expect(this.page.getByTestId('accept-rearrange')).toBeVisible();
+    }
+
+    async acceptRearranging(): Promise<void> {
+        const layoutPersisted = this.waitForLayoutPersisted();
+
+        await this.page.getByTestId('accept-rearrange').click();
+        await expect(this.page.getByTestId('rearrange-widgets')).toBeVisible();
+        await this.expectLayoutPersisted(layoutPersisted);
+    }
+
+    // The drop target is an empty cell, so `dragTo()` has nothing to aim at. The first move
+    // past gridster's threshold only starts the drag; the drop cell updates on later moves,
+    // hence `steps`.
+    async dragWidget(widgetId: string, steps: {columns: number; rows: number}): Promise<void> {
+        const widget = this.getWidget(widgetId);
+        const box = await widget.boundingBox();
+
+        if (box == null) {
+            throw new Error(`widget "${widgetId}" is not rendered`);
+        }
+
+        // Grab the header: remove and resize controls sit on the edges and corners.
+        const fromX = box.x + box.width / 2;
+        const fromY = box.y + 30;
+
+        await this.page.mouse.move(fromX, fromY);
+        await this.page.mouse.down();
+        await this.page.mouse.move(
+            fromX + steps.columns * Dashboard.COLUMN_STEP,
+            fromY + steps.rows * Dashboard.ROW_STEP,
+            {steps: 20},
+        );
+        await this.page.mouse.up();
     }
 
     async openWidgetConfiguration(widgetId: string): Promise<void> {
