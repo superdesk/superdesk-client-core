@@ -48,6 +48,17 @@ export class Monitoring {
         }
     }
 
+    async openArticleActionsMenu(item: Locator): Promise<Locator> {
+        await item.hover();
+        await item.getByTestId('context-menu-button').click();
+
+        const menu = this.page.getByTestId('context-menu');
+
+        await expect(menu).toBeVisible();
+
+        return menu;
+    }
+
     // AggregateCtrl.getDefaultGroups can run before the current desk resolves, which leaves
     // the view with no groups and no query; only a reload recovers. Keep the toPass budget well
     // under the test timeout, since toPass cannot interrupt a running attempt.
