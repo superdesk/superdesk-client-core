@@ -9,7 +9,7 @@
 
     <div class="ingest-list-holder" ng-class="{'mode-detailed': options.mode === 'detailed'}">
         <div sd-shadow>
-            <ul class="boxed-list sd-margin-all--2 sd-padding-b--4" data-test-id="related-items-list">
+            <ul class="boxed-list sd-margin-all--2 sd-padding-b--4">
                 <li ng-repeat="item in processedItems track by $index" class="boxed-list__item boxed-list__item--clickable boxed-list__item--comfortable" ng-class="{'boxed-list__item--selected': item._id === options.item._id}" ng-if="canDisplayItem(item)" data-test-id="related-items-list-item" data-test-value="{{item.slugline}}">
                     <div class="boxed-list__item-media" ng-click="view(item)">
                         <i sd-filetype-icon data-item="item"></i>

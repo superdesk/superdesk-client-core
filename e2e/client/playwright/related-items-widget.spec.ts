@@ -4,13 +4,12 @@ import {restoreDatabaseSnapshot} from './utils';
 
 /**
  * QA case "Related items" (1310294133). The widget searches on slugline only, so "same slugline or keywords"
- * is a single search.
- * Uses `authoring-header`: the widget also filters on `versioncreated >= today` and only that snapshot has a recent
- * item ("Story 3 sibling", 2099). Under `main` every search is empty.
+ * is a single search. Uses `authoring-header`: the widget also filters on `versioncreated >= today` and only
+ * that snapshot has a recent item ("Story 3 sibling", dated 2099).
  */
 
+// article and slugline are the same string, which is what the widget prefills in the search box
 const ARTICLE = 'Story 3';
-const SLUGLINE = 'Story 3';
 const MATCHING_ITEM = 'Story 3 sibling';
 
 function relatedItemsTab(page: Page) {
@@ -55,10 +54,10 @@ test.describe('related items widget', () => {
         const results = widget.getByTestId('related-items-list-item');
 
         await expect(widget.getByTestId('related-items-search')).toBeVisible();
-        await expect(searchInput).toHaveValue(SLUGLINE);
+        await expect(searchInput).toHaveValue(ARTICLE);
 
         await expect(results).toHaveCount(1);
-        await expect(results).toHaveAttribute('data-test-value', SLUGLINE);
+        await expect(results).toHaveAttribute('data-test-value', ARTICLE);
         await expect(results).toContainText(MATCHING_ITEM);
 
         await searchInput.fill('slugline nothing shares');
@@ -69,7 +68,7 @@ test.describe('related items widget', () => {
         await searchInput.fill('S');
         await expect(searchButton).toBeDisabled();
 
-        await searchInput.fill(SLUGLINE);
+        await searchInput.fill(ARTICLE);
         await expect(searchButton).toBeEnabled();
         await searchButton.click();
 
