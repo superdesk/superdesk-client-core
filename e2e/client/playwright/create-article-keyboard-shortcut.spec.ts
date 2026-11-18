@@ -219,8 +219,10 @@ test.describe('creating a new article with the Ctrl+M shortcut', {
         await expect(page.getByTestId('authoring')).toBeVisible();
         await expectArticleFields(authoring, page, {...SAVED, abstract: UPDATED_ABSTRACT});
 
-        await authoring.close();
+        // Close directly, not through `authoring.close()`, which would discard a prompt unnoticed.
+        await page.getByTestId('authoring-topbar').getByTestId('close').click();
 
+        await expect(page.getByTestId('unsaved-changes-dialog')).toHaveCount(0);
         await expect(page.getByTestId('authoring')).toBeHidden();
     });
 });
