@@ -70,3 +70,23 @@ export function getStorageState(
 export function getStorageStateFromFile(filePath: string): StorageState {
     return withSlotOrigin(JSON.parse(fs.readFileSync(filePath, 'utf-8')));
 }
+
+/**
+ * No session, for a second context that logs in as another user with `loginAs`.
+ */
+export function getLoggedOutStorageState(otherOptions?: {
+    authoringReact?: boolean,
+    appConfigPatch?: Partial<ISuperdeskGlobalConfig>,
+}): StorageState {
+    const localStorage: Array<{name: string, value: string}> = [];
+
+    if (otherOptions?.authoringReact === true) {
+        localStorage.push({name: 'auth-react', value: 'true'});
+    }
+
+    if (otherOptions?.appConfigPatch != null) {
+        localStorage.push({name: 'TEST_APP_CONFIG', value: JSON.stringify(otherOptions.appConfigPatch)});
+    }
+
+    return withSlotOrigin({cookies: [], origins: [{origin: COMMITTED_ORIGIN, localStorage}]});
+}
