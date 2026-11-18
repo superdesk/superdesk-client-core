@@ -174,8 +174,9 @@ export class Monitoring {
     }
 
     async createArticleFromDefaultTemplate(): Promise<void> {
-        await this.page.getByTestId('content-create').click();
-        await this.page.getByTestId('content-create-dropdown').getByTestId('default-desk-template').click();
+        const dropdown = await this.openContentCreateDropdown();
+
+        await dropdown.getByTestId('default-desk-template').click();
     }
 
     async openContentCreateDropdown(): Promise<Locator> {

@@ -3,17 +3,12 @@ import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot} from './utils';
 
 /**
- * QA case "Create new empty package" (1308524902). Two expected results are not covered, both blocked on the product:
- *
- * - Personal space has no package creation entry point (`InitialView`, initial-view.tsx).
- * - "Packages cannot be created in Custom Workspace": the option is offered there exactly as on a desk, so asserting
- *   it would encode the contradiction.
+ * QA case "Create new empty package" (1308524902). The product deviates from the case in two places, and the tests
+ * assert the product: Personal space has no "Create package" in the "+" menu, and a custom workspace does have it.
  */
-test.setTimeout(90000);
-
 test.describe('creating a new empty package', {
     annotation: [
-        {type: 'confluence', description: '1308524902 partial'}, // Create new empty package
+        {type: 'confluence', description: '1308524902 complete'}, // Create new empty package
     ],
 }, () => {
     const HEADLINE = 'empty package headline';
@@ -44,8 +39,7 @@ test.describe('creating a new empty package', {
         return page.getByTestId('authoring').getByTestId('field-slugline');
     }
 
-    // Waits for every group: each `sd-monitoring-group` runs its own debounced query, and a desk switch
-    // leaves the previous desk's items in the DOM until the new groups answer.
+    // A desk switch leaves the previous desk's items in the DOM until the new queries answer.
     async function openSportsMonitoring(page: Page): Promise<void> {
         const monitoring = new Monitoring(page);
 
@@ -120,8 +114,8 @@ test.describe('creating a new empty package', {
 
         await expect(page.getByTestId('authoring')).toBeHidden();
 
-        // `createEmptyPackage` posts an empty headline, so a leftover cannot be matched by HEADLINE.
-        // A discarded package stays at `version: 0`, which apps/archive/resource.py filters out.
+        // The package was posted with an empty headline when the editor opened, so a leftover would not match
+        // HEADLINE. Ignore leaves it at `version: 0`, which archive search filters out.
         await expect(monitoringItems(page)).toHaveCount(SPORTS_MONITORING_ITEMS.length);
         await expect(monitoringItem(page, HEADLINE)).toHaveCount(0);
 
@@ -176,13 +170,38 @@ test.describe('creating a new empty package', {
         // The unfiltered listing already holds the package, so only a single result proves the query ran.
         await expect(results).toHaveCount(1);
         await expect(results).toHaveAttribute('data-test-value', HEADLINE);
+        await expect(results.getByTestId('field--slugline')).toHaveText(SLUGLINE);
 
-        // Reopening is last on purpose: a reopened package intermittently reports itself dirty.
+        // Save does not cancel the 1s autosave debounce in AuthoringDirective, so an autosave of the typed
+        // fields lands after Close and the reopened package loads it (Save is enabled again). Only the search
+        // result above proves the save.
         await page.goto('/#/workspace/monitoring');
         await monitoringItem(page, HEADLINE).dblclick();
 
         await expect(page.getByTestId('authoring')).toBeVisible();
         await expect(packageHeadline(page)).toHaveValue(HEADLINE);
         await expect(packageSlugline(page)).toHaveValue(SLUGLINE);
+    });
+
+    test('Personal space has no Create package in the "+" menu', async ({page}) => {
+        await page.goto('/#/workspace/personal');
+
+        const dropdown = await new Monitoring(page).openContentCreateDropdown();
+
+        await expect(dropdown.getByTestId('default-desk-template')).toBeVisible();
+        await expect(dropdown.getByTestId('upload-media')).toBeVisible();
+        await expect(dropdown.getByTestId('create-package')).toHaveCount(0);
+    });
+
+    test('a custom workspace offers Create package in the "+" menu', async ({page}) => {
+        const monitoring = new Monitoring(page);
+
+        await restoreDatabaseSnapshot();
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Workspace 1');
+
+        const dropdown = await monitoring.openContentCreateDropdown();
+
+        await expect(dropdown.getByTestId('create-package')).toBeVisible();
     });
 });
