@@ -14,8 +14,8 @@ test.setTimeout(60000);
  *    `GET /api/formatters?criteria=can_export`).
  *  - the item is not saved as txt: the backend always serves `export.zip`, and the txt
  *    is its single entry. See `ExportDialog.submit` for how the archive arrives.
- *  - "Validate checkbox slide" is asserted as the toggle's state plus the default
- *    `validate: false` in the request; what `validate: true` does is not covered.
+ *  - "Validate checkbox slide" is asserted as the toggle state and the default `validate: false`;
+ *    `validate: true` is not exercised.
  *  - the non-text item for "text items only" is the snapshot's `Package Highlight 1`.
  */
 test('exporting a text item as NINJS from the monitoring 3-dot menu', {
@@ -70,7 +70,6 @@ test('exporting a text item as NINJS from the monitoring 3-dot menu', {
 
         await expect(exportDialog.modal).toBeVisible();
 
-        // The directive preselects the first formatter the endpoint returns.
         await expect(exportDialog.formatterSelect.locator('option').first()).toHaveText('NINJSFormatter');
         await expect(exportDialog.selectedFormatter).toHaveText('NINJSFormatter');
 
@@ -105,7 +104,7 @@ test('exporting a text item as NINJS from the monitoring 3-dot menu', {
 
         expect(requestPayload.format_type).toBe('NINJSFormatter');
 
-        // Toggle untouched: `false` is the directive's default (Export.ts init()).
+        // Toggle untouched, so the default.
         expect(requestPayload.validate).toBe(false);
         expect(requestPayload.item_ids).toHaveLength(1);
 
