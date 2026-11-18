@@ -2,11 +2,9 @@ import {test, expect} from '@playwright/test';
 import {restoreDatabaseSnapshot} from './utils';
 import {UserRolesSettings} from './page-object-models/settings/user-roles';
 
-// QA case "User roles" (Confluence 1311834342). Partial, deviations:
-// - 4 of the 11 restricted privileges (featured stories, global filters, planning item
-//   management, manage locations) come from superdesk-planning, which is not in this stack.
-// - Not checked that the restrictions block actions: a UI-created user has no password and
-//   the snapshot has no non-admin user with known credentials, so we cannot log in as one.
+// QA case "User roles" (Confluence 1311834342). Partial: 4 of the 11 restricted privileges (featured
+// stories, global filters, planning item management, manage locations) come from superdesk-planning,
+// which is not in this stack.
 
 const ROLE_NAME = 'Editor';
 
@@ -52,8 +50,7 @@ test('a role granted every privilege but the restricted ones, applied to a user'
 
     await userRoles.savePrivileges();
 
-    // Reload to prove the split was persisted server-side, not just held in the
-    // directive's scope.
+    // Reload to prove the split persisted server-side.
     await userRoles.reload();
     await userRoles.openPrivilegesTab();
 
