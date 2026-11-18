@@ -1,0 +1,52 @@
+// ui-framework has no normal-case button and no segmented tabs, so both are restyled here
+
+.ai-studio-editor {
+    .ai-studio-editor__title {
+        padding-inline-start: var(--space--2);
+
+        .side-panel__heading {
+            padding-inline-start: var(--space--1);
+        }
+    }
+
+    .side-panel__btn-group .btn {
+        text-transform: none;
+        letter-spacing: normal;
+        font-size: 1.4rem;
+    }
+}
+
+.ai-studio-segmented-tabs .sd-nav-tabs {
+    display: inline-flex;
+    height: auto;
+    padding: var(--space--0-5);
+    gap: var(--space--0-5);
+    box-shadow: none;
+    border-radius: var(--b-radius--small);
+    background-color: var(--sd-colour-panel-bg--200);
+
+    .sd-nav-tabs__tab {
+        height: 3.2rem;
+        padding-inline: var(--space--1-5);
+        border: 0;
+        border-radius: var(--b-radius--small);
+
+        span {
+            margin: 0;
+        }
+    }
+
+    .sd-nav-tabs__tab--active {
+        background-color: var(--sd-colour-panel-bg--000);
+        color: var(--sd-colour-interactive);
+        box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.16);
+    }
+}
+
+// The media slot sizes and dims anything with "icon-" in its class name, which catches the
+// illustration's `svg-icon-illustration` class too
+.ai-studio-action-item .boxed-list__item-media .svg-icon-illustration {
+    width: auto;
+    height: auto;
+    opacity: 1;
+}

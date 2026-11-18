@@ -25,6 +25,7 @@ import 'apps/search-providers';
 import 'apps/internal-destinations';
 import 'apps/production-api-keys';
 import 'apps/ai-providers';
+import 'apps/ai-studio';
 import 'apps/content-api';
 import 'apps/extension-points';
 import 'apps/contacts';
@@ -61,6 +62,7 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.internal-destinations',
     'superdesk.apps.production-api-keys',
     'superdesk.apps.ai-providers',
+    'superdesk.apps.ai-studio',
     'superdesk.apps.content-api',
     'superdesk.apps.extension-points',
     'superdesk.apps.contacts',
