@@ -25,6 +25,10 @@ services:
     mongo:
         image: mongo:6
         network_mode: "host"
+        ulimits:
+            nofile:
+                soft: 65536
+                hard: 65536
         tmpfs:
             - /data/db
         command: --replSet rs0 --port ${MONGO_PORT:?run via e2e-up.sh --slot}
