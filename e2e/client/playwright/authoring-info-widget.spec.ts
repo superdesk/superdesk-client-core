@@ -10,9 +10,6 @@ import {restoreDatabaseSnapshot} from './utils';
  * fails vs. only tags the item); the client hides the Publish tab for a flagged item (sdApi.article.canPublish),
  * which is what is asserted.
  */
-// Two article opens plus waiting for the unique name to be searchable exceed the 30s default.
-test.setTimeout(90000);
-
 test.describe('Info widget in authoring', () => {
     const ARTICLE = 'test sports story';
     const WORKING_STAGE = 'Sports / Working Stage';
