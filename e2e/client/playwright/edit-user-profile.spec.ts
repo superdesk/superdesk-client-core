@@ -1,17 +1,13 @@
 import {test, expect, Page} from '@playwright/test';
-import {restoreDatabaseSnapshot, setPasswordThroughResetEmail} from './utils';
+import {loginAs, restoreDatabaseSnapshot, setPasswordThroughResetEmail} from './utils';
+import {getLoggedOutStorageState} from './utils/storage-state';
 import {Users} from './page-object-models/users';
 
-/**
- * QA case "Edit user profile" (Confluence 1311834348).
- *
- * Not covered: downgrading through the Role field. The `main` snapshot has an
- * empty `roles` collection, so the Role select has no options.
- */
+// QA case "Edit user profile" (Confluence 1311834348).
 test.describe('editing another user profile', {
     annotation: [
         // Edit user profile (pass 02.11)
-        {type: 'confluence', description: '1311834348 partial'},
+        {type: 'confluence', description: '1311834348 complete'},
     ],
 }, () => {
     test('profile edits are saved and shown across the profile and the users list', async ({page}) => {
@@ -95,6 +91,59 @@ test.describe('editing another user profile', {
         await expect(administratorIndicator()).toBeHidden();
     });
 
+    test('downgrading the role from Administrator to Sub Editor changes the privileges', async ({page, browser}) => {
+        await restoreDatabaseSnapshot();
+
+        const users = new Users(page);
+        const roleSelect = users.detailsForm.getByTestId('field--role');
+        const janePassword = 'janedoe123.';
+        const janeContext = await browser.newContext({storageState: getLoggedOutStorageState()});
+
+        try {
+            const janePage = await janeContext.newPage();
+
+            await setPasswordThroughResetEmail(janePage, {email: 'janedoe@example.com', password: janePassword});
+
+            await users.openList();
+            await users.openFullProfile('Jane Doe');
+
+            await roleSelect.selectOption({label: 'Administrator'});
+            await users.saveProfile();
+
+            await users.openProfileSection('privileges');
+
+            for (const privilege of ['unlock', 'send_to_personal', 'archive']) {
+                await expectGrantedByRole(users, privilege, 'Administrator');
+            }
+
+            expect(await signInAndReadActivePrivileges(janePage, 'janedoe', janePassword))
+                .toMatchObject({unlock: 1, send_to_personal: 1, archive: 1});
+
+            await users.openProfileSection('overview');
+            await roleSelect.selectOption({label: 'Sub Editor'});
+            await users.saveProfile();
+
+            await users.openProfileSection('privileges');
+
+            // The role loads after the rows render, so assert what it grants before what it does not.
+            await expectGrantedByRole(users, 'archive', 'Sub Editor');
+
+            for (const privilege of ['unlock', 'send_to_personal']) {
+                await expectNotGrantedByRole(users, privilege);
+            }
+
+            await signOut(janePage);
+
+            const downgradedPrivileges = await signInAndReadActivePrivileges(janePage, 'janedoe', janePassword);
+
+            expect(downgradedPrivileges.archive).toBe(1);
+            expect(downgradedPrivileges.unlock).not.toBe(1);
+            expect(downgradedPrivileges.send_to_personal).not.toBe(1);
+        } finally {
+            await janeContext.close();
+        }
+    });
+
     test('the user loses the administrator privileges once the status is revoked', async ({page}) => {
         await restoreDatabaseSnapshot();
 
@@ -127,6 +176,42 @@ test.describe('editing another user profile', {
         await expect(profileSections).not.toContainText('Privileges');
     });
 });
+
+async function expectGrantedByRole(users: Users, privilege: string, roleName: string): Promise<void> {
+    const row = users.getPrivilegeRow(privilege);
+    const checkbox = row.getByTestId('privilege-checkbox');
+
+    await expect(checkbox).toBeChecked();
+    await expect(checkbox).toBeDisabled();
+    await expect(row.getByTestId('privilege-granted-by-role')).toHaveText(roleName);
+}
+
+// Jane has no privileges of her own in the snapshot, so nothing else ticks the box.
+async function expectNotGrantedByRole(users: Users, privilege: string): Promise<void> {
+    const row = users.getPrivilegeRow(privilege);
+    const checkbox = row.getByTestId('privilege-checkbox');
+
+    await expect(checkbox).not.toBeChecked();
+    await expect(checkbox).toBeEnabled();
+    await expect(row.getByTestId('privilege-granted-by-role')).toHaveCount(0);
+}
+
+// `active_privileges` is only exposed on the session's preferences, which the client fetches at sign-in.
+async function signInAndReadActivePrivileges(
+    page: Page,
+    username: string,
+    password: string,
+): Promise<Record<string, number>> {
+    const preferencesFetched = page.waitForResponse(
+        (response) => response.url().includes('/api/preferences/') && response.request().method() === 'GET',
+    );
+
+    await loginAs(page, username, password);
+
+    const preferences = await (await preferencesFetched).json();
+
+    return preferences.active_privileges;
+}
 
 async function toggleAdministrator(users: Users): Promise<void> {
     await users.openList();
