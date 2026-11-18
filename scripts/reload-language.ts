@@ -1,20 +1,60 @@
 import {IDENTITY_KEY, appConfig} from 'appConfig';
 import {DEFAULT_ENGLISH_TRANSLATIONS} from 'core/utils';
-import {IUser} from 'superdesk-api';
+import {ISuperdeskGlobalConfig, IUser} from 'superdesk-api';
 
 const isTestEnvironment = typeof jasmine !== 'undefined';
 
-export function getUserLanguage(): string {
+const normalizeLanguageCode = (language: string) => language.replace(/_/g, '-').toLowerCase();
+const getBaseLanguage = (language: string) => normalizeLanguageCode(language).split('-')[0];
+
+/**
+ * Profile languages are configured per instance, either with hyphens ("fr-CA")
+ * or underscores ("sv_SE"). Matches regardless of separator and case and returns the
+ * first match exactly as configured.
+ */
+function matchProfileLanguage(language: string, profileLanguages: Array<string>): string | null {
+    return profileLanguages.find(
+        (profileLanguage) => normalizeLanguageCode(profileLanguage) === normalizeLanguageCode(language),
+    ) ?? null;
+}
+
+/**
+ * Browsers report BCP 47 tags (e.g. "sv-SE", "fr-FR", "sv"), and profile languages
+ * are not always region specific (e.g. "sv_SE", "fr").
+ * Tries an exact match first, then the base language, then a regional variant of the base language
+ * if exactly one is configured (e.g. "sv" -> "sv_SE", but no guessing between "zh_CN" and "zh_TW").
+ */
+function matchBrowserLanguage(browserLanguage: string, profileLanguages: Array<string>): string | null {
+    const baseLanguage = getBaseLanguage(browserLanguage);
+    const variants = profileLanguages.filter(
+        (profileLanguage) => getBaseLanguage(profileLanguage) === baseLanguage,
+    );
+
+    return matchProfileLanguage(browserLanguage, profileLanguages)
+        ?? matchProfileLanguage(baseLanguage, profileLanguages)
+        ?? (variants.length === 1 ? variants[0] : null);
+}
+
+/**
+ * `config` must be passed explicitly from `init.ts`. The `appConfig` module is evaluated there
+ * before `/client_config` is loaded, so it would not include server config like `default_language`.
+ * The initial language would then not match the one computed later by `reloadLanguage`,
+ * causing an infinite page reload loop.
+ */
+export function getUserLanguage(config: ISuperdeskGlobalConfig = appConfig): string {
     const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
+    const browserLanguage = window.navigator.language == null
+        ? null
+        : matchBrowserLanguage(window.navigator.language, config.profileLanguages ?? []);
 
     const language =
         user?.language
         ?? localStorage.getItem('LOGGED_OUT_LANGUAGE')
-        ?? appConfig.default_language
-        ?? window.navigator.language
+        ?? config.default_language
+        ?? browserLanguage
         ?? 'en';
 
-    return appConfig.profileLanguages?.includes(language) ? language : 'en';
+    return matchProfileLanguage(language, config.profileLanguages ?? []) ?? 'en';
 }
 
 function applyTranslations(translations) {
