@@ -4,12 +4,11 @@ import {Authoring} from './page-object-models/authoring';
 import {restoreDatabaseSnapshot} from './utils';
 
 /**
- * QA case "Info button" (Confluence 1310294120). Not covered:
- * - Keywords: shown read-only (under a "Word Count" label, a product bug) and no snapshot article has any.
- * - Expiry: no desk in the `main` snapshot has auto-expiry, so the line never renders for an editable article.
- * - Target Subscribers / Target types: not in the Info widget in the current UI.
- * The QA page contradicts itself on Not For Publication (publish fails vs. only tags the item). The client
- * hides the Publish tab for a flagged item (sdApi.article.canPublish); that is what is asserted.
+ * QA case "Info button" (Confluence 1310294120). Partial: Keywords (read-only, mislabelled "Word Count", no
+ * fixture article has any) and Expiry (no `main` desk has auto-expiry) are not asserted. Target Subscribers
+ * and Target types are not in the Info widget. The QA page contradicts itself on Not For Publication (publish
+ * fails vs. only tags the item); the client hides the Publish tab for a flagged item (sdApi.article.canPublish),
+ * which is what is asserted.
  */
 // Two article opens plus waiting for the unique name to be searchable exceed the 30s default.
 test.setTimeout(90000);
