@@ -33,21 +33,60 @@ export class Authoring {
 
     async publish(options: {subscribers: Array<string>}): Promise<void> {
         const {page} = this;
+        const panel = page.getByTestId('authoring').getByTestId('interactive-actions-panel');
 
-        await page.locator(s('authoring', 'open-send-publish-pane')).click();
+        await page.getByTestId('authoring').getByTestId('open-send-publish-pane').click();
 
         if (options.subscribers.length > 0) {
             await new TreeSelectDriver(
                 page,
-                page.locator(s('target-subscribers')),
+                page.getByTestId('target-subscribers'),
             ).setValues(options.subscribers);
         }
 
-        await page.locator(s('authoring', 'interactive-actions-panel', 'publish')).click();
+        await panel.getByTestId('publish').click();
+
+        // The "Save and send" confirm appears only when the item has unsaved changes
+        // (targeting subscribers always counts); otherwise the publish goes straight
+        // through and the panel closes. Wait for whichever happens, so the confirm is
+        // never missed by a too-early visibility probe.
+        const saveAndSend = page.getByTestId('modal-confirm').getByRole('button', {name: 'save and send'});
 
         if (options.subscribers.length > 0) {
-            await page.locator(s('modal-confirm')).getByRole('button', {name: 'save and send'}).click();
+            await saveAndSend.click();
+        } else {
+            const confirmAppeared = await Promise.race([
+                saveAndSend.waitFor({state: 'visible'}).then(() => true),
+                panel.waitFor({state: 'hidden'}).then(() => false),
+            ]);
+
+            if (confirmAppeared) {
+                await saveAndSend.click();
+            }
         }
+
+        // Wait for the panel to finish closing, so a following interaction (e.g. a
+        // second publish) is not intercepted by the closing overlay.
+        await expect(panel).toBeHidden();
+    }
+
+    /**
+     * Sets a leaf Subject term on the open article. Only leaf terms work: a parent
+     * category opens a subtree instead of committing.
+     */
+    async setSubject(value: string): Promise<void> {
+        const field = this.page.locator('#subjects');
+
+        await field.getByTestId('meta-terms-toggle').click();
+        await field.getByTestId('typeahead-input').fill(value);
+
+        // The matched term renders as a button; getByRole ignores the hidden
+        // duplicates the CV tree renders in collapsed branches.
+        await field.getByRole('button', {name: value}).first().click();
+
+        await expect(
+            field.getByTestId('meta-terms-selected').getByText(value, {exact: false}),
+        ).toBeVisible();
     }
 
     async sendTo(destination: {desk: string; stage: string}): Promise<void> {
@@ -179,6 +218,59 @@ export class Authoring {
 
     field(field: string): Locator {
         return this.page.locator(s('authoring', field)).getByRole('textbox');
+    }
+
+    saveButton(): Locator {
+        return this.page.getByTestId('authoring-topbar').getByTestId('save');
+    }
+
+    /**
+     * Runs an editing action and waits for the autosave it schedules to reach the
+     * server before returning.
+     *
+     * Saving explicitly while an autosave request is still in flight leaves that
+     * record on the server: `AuthoringService.save` calls `autosave.stop`, which only
+     * cancels a timeout that has not fired yet, and then clears the client-side
+     * `_autosave` reference. Reopening the article picks the record up again, and
+     * `save_enabled()` (`$scope.dirty || item._autosave != null`) keeps the Save
+     * button active on an article nothing has been changed in.
+     */
+    async withAutosave(action: () => Promise<unknown>): Promise<void> {
+        await Promise.all([
+            this.page.waitForResponse(
+                (r) => r.url().includes('/api/archive_autosave')
+                    && ['POST', 'PATCH'].includes(r.request().method()),
+            ),
+            action(),
+        ]);
+    }
+
+    /**
+     * Clicks the topbar Save and waits for the article PATCH to land, so a caller
+     * that closes or reopens the item right after does not race the write.
+     *
+     * The response is matched on URL and method only; putting `ok()` in the
+     * predicate would make a failed save time out instead of reporting its status.
+     * `/api/archive/` also excludes the autosave writes, which go to
+     * `/api/archive_autosave/`.
+     */
+    async saveFromTopbar(): Promise<void> {
+        const {page} = this;
+
+        const [response] = await Promise.all([
+            page.waitForResponse(
+                (r) => r.url().includes('/api/archive/') && r.request().method() === 'PATCH',
+            ),
+            this.saveButton().click(),
+        ]);
+
+        expect(response.status()).toBe(200);
+        await expect(this.saveButton()).toBeDisabled();
+    }
+
+    async closeFromTopbar(): Promise<void> {
+        await this.page.getByTestId('authoring-topbar').getByTestId('close').click();
+        await expect(this.page.getByTestId('authoring-topbar')).toBeHidden();
     }
 
     /**
