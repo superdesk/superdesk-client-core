@@ -260,4 +260,19 @@ export class Monitoring {
     getCreateItemButton(): Locator {
         return this.getToolbarActions().getByTestId('content-create');
     }
+
+    getMarkedDesksIndicator(item: Locator): Locator {
+        return item.getByTestId('mark-for-desk--bell');
+    }
+
+    /** The list is rendered outside the item. */
+    async openMarkedDesks(item: Locator): Promise<Locator> {
+        await this.getMarkedDesksIndicator(item).click();
+
+        const list = this.page.getByTestId('marked-desk-list');
+
+        await expect(list).toBeVisible();
+
+        return list;
+    }
 }

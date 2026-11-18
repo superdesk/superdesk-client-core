@@ -245,7 +245,7 @@ Other datasets are separate and loaded with
 `editor3-tables`, `custom-blocks`, `availability-management`, `related-items`,
 `media-items`, `editor3-formats`, `editor3-suggestions`, `authoring-extras`,
 `saved-search-private`, `publishing`, `required-headline`,
-`association-fields`, `editor3-comments`.
+`association-fields`, `editor3-comments`, `desk-routing`.
 
 ### Publishing config in the `main` snapshot
 
@@ -458,6 +458,12 @@ snapshot when a spec needs publishing to be blocked by a missing field on the
 standard Sports items: publishing with an empty headline fails with
 "HEADLINE empty values not allowed". Saving is unaffected; required fields only
 gate publishing.
+
+### The `desk-routing` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'desk-routing'})` gives you `main` with the Desk Routing macro (`desk_routing`) set as the `incoming_macro` of every stage of Sports, Education and Finance. In `main` no stage has a macro, so closing a desk onto another changes nothing but the desk itself. Reach for this snapshot when a spec asserts what routing does to content: an item that lands on a stage of a closed desk (sent there, or fetched from ingest) gets a `marked_desks` entry for the last open desk at the end of the `closed_destination` chain, and reopening the desk removes those marks again.
+
+The macro is `access_type: "backend"`, so a plain `/api/macros` does not list it, but the Stages step of the desk settings asks for backend macros too and offers it there as "Desk Routing". Setting it that way on six stages would be a loop of UI actions, which "State reset" rules out, so the snapshot carries it. It does nothing while the stage's desk is open. `outgoing_macro` is left unset on purpose: on an item leaving a closed desk it would add a mark of its own, and a spec could no longer tell which stage produced the mark it asserts on.
 
 ### The `saved-search-private` snapshot
 

@@ -20,13 +20,14 @@ export class Dashboard {
             .and(this.page.locator(`[data-test-value="${widgetId}"]`));
     }
 
-    // Adding a widget and accepting a rearrange save via a background `PATCH /workspaces/<id>`.
-    // A reload aborts it (the change silently reverts) and a second PATCH while it is in flight
+    // Adding a widget and accepting a rearrange save via a background write to `/workspaces`: a POST
+    // for a desk never saved before (it has no workspace document yet), a PATCH afterwards.
+    // A reload aborts it (the change silently reverts) and a second write while it is in flight
     // gets 412 (stale etag). Status is not filtered so a failed save fails fast, not on timeout.
     private waitForLayoutPersisted(): Promise<Response> {
         return this.page.waitForResponse(
-            (response) => /\/workspaces\/[^/]+$/.test(response.url())
-                && response.request().method() === 'PATCH',
+            (response) => /\/workspaces(\/[^/]+)?$/.test(response.url())
+                && ['POST', 'PATCH'].includes(response.request().method()),
         );
     }
 
