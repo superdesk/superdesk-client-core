@@ -174,8 +174,24 @@ export class Monitoring {
     }
 
     async createArticleFromDefaultTemplate(): Promise<void> {
+        const dropdown = await this.openContentCreateDropdown();
+
+        await dropdown.getByTestId('default-desk-template').click();
+    }
+
+    async openContentCreateDropdown(): Promise<Locator> {
+        const dropdown = this.page.getByTestId('content-create-dropdown');
+
         await this.page.getByTestId('content-create').click();
-        await this.page.getByTestId('content-create-dropdown').getByTestId('default-desk-template').click();
+        await expect(dropdown).toBeVisible();
+
+        return dropdown;
+    }
+
+    async createEmptyPackage(): Promise<void> {
+        const dropdown = await this.openContentCreateDropdown();
+
+        await dropdown.getByTestId('create-package').click();
     }
 
     async openMediaUploadView(): Promise<void> {
