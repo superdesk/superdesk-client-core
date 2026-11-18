@@ -214,6 +214,9 @@ declare module 'superdesk-api' {
         input: React.ReactNode;
         validationError?: string;
         miniToolbar?: React.ReactNode;
+
+        // a field relying on these, like a lockable one, can not be unlocked unless the template renders them
+        labelActions?: React.ReactNode;
     }
 
     interface IPropsAuthoring<T> {
@@ -316,6 +319,23 @@ declare module 'superdesk-api' {
     export type IBooleanFieldValueOperational = boolean | null;
     export type IBooleanFieldValueStorage = IValueOperational;
     export type IBooleanFieldUserPreferences = never;
+
+    // AUTHORING-REACT FIELD TYPES - plain text
+    export type IPlainTextFieldValueOperational = string | null;
+    export type IPlainTextFieldValueStorage = IValueOperational;
+    export type IPlainTextFieldUserPreferences = never;
+    export interface IPlainTextFieldConfig extends ICommonFieldConfig {
+        maxLength?: number;
+
+        // shows the value as read-only text until the user unlocks it
+        lockable?: boolean;
+
+        // an alternative way of setting the value. Rendered only while the field is editable
+        helperComponent?: React.ComponentType<{
+            onChange: (value: string | null) => void;
+            readOnly: boolean;
+        }>;
+    }
 
     // AUTHORING-REACT FIELD TYPES - date
 
@@ -1052,6 +1072,10 @@ declare module 'superdesk-api' {
                     ruleHandlers?: {[key: string]: IIngestRuleHandlerExtension};
                 };
             };
+            /**
+             * Runs once per uploaded file, before editing, using server-extracted IPTC metadata.
+             * Hooks run sequentially on the mapped article, including the upload parent.
+             */
             iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;
             searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps<unknown>>>;
             authoring?: {
@@ -3727,6 +3751,7 @@ declare module 'superdesk-api' {
         japanese_characters_per_minute: any;
         validator_media_metadata: any;
         publish_content_expiry_minutes: any;
+        max_content_expiry_minutes?: number;
         high_priority_queue_enabled: any;
         attachments_max_size: any;
         attachments_max_files: any;
@@ -4110,6 +4135,9 @@ declare module 'superdesk-api' {
          * (it will be rendered in different DOM locations depending if field is in header or content section)
          */
         miniToolbar?: JSX.Element;
+
+        // small controls shown right after the field's label, like the sign off padlock
+        labelActions?: JSX.Element;
     }
 
     export interface IEditorComponentProps<IValue, IConfig, IEditorPreferences> {

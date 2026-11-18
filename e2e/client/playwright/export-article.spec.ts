@@ -49,7 +49,7 @@ test('exporting a text item as NINJS from the monitoring 3-dot menu', {
     await expect(packageItem).toBeVisible();
 
     await test.step('Export is offered on the text item and withheld from the package', async () => {
-        const packageMenu = await monitoring.openActionsMenu(packageItem);
+        const packageMenu = await monitoring.openArticleActionsMenu(packageItem);
 
         // Anchor on an action the package does offer, so toHaveCount(0) cannot pass on a
         // mis-targeted locator.
@@ -58,7 +58,7 @@ test('exporting a text item as NINJS from the monitoring 3-dot menu', {
 
         await monitoring.closeActionsMenu();
 
-        const textMenu = await monitoring.openActionsMenu(textItem);
+        const textMenu = await monitoring.openArticleActionsMenu(textItem);
 
         await expect(textMenu.getByRole('button', {name: 'Export', exact: true})).toBeVisible();
 

@@ -15,6 +15,8 @@ RUN rm -rf /var/lib/apt/lists/* && \
     libjpeg-dev zlib1g-dev \
     # magic
     libmagic-dev \
+    # ExifTool is used by upload-staging metadata extraction.
+    libimage-exiftool-perl \
     && rm -rf /var/lib/apt/lists/*
 
 # setup venv
