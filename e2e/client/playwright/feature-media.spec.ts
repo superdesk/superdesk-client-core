@@ -10,19 +10,18 @@ import {setEditor3FieldValue} from './utils/editor3';
 /**
  * QA case 1310851132, "Create article with image in Feature media field". Deviations from the case:
  * - Step 1: the "+" menu has no "article" entry, so the desk's default template is used (`story` on Sports).
- * - Step 6: no Save on the crop screen and no second Upload. The upload screen closes itself and the crop
- *   Save toolbar only renders while a crop is pending; Done confirms the image.
+ * - Step 6: no crop Save or second Upload; the crop Save toolbar only renders while a crop is pending and
+ *   Done confirms the image.
  * - Results 7 and 8 contradict: adding the association saves the article, so topbar Save stays disabled.
  * - Result 4: allowed types are covered by refusing a non-media file, not by uploading each type.
  * - Error messages are not in the case; the two "not media" refusals differ per entry point.
  */
 
-// Uploads run through a real POST plus the server-side rendition generation, and the
-// locked-item test drives a second Superdesk session. Neither fits the 30s default.
+// Uploads (real POST plus rendition generation) and the second-session lock test exceed the 30s default.
 test.setTimeout(120000);
 
 const CASE = [
-    {type: 'confluence', description: '1310851132 partial'}, // Create article with image in Feature media field
+    {type: 'confluence', description: '1310851132 complete'},
 ];
 
 const SOURCE_DESK = 'Sports';
@@ -41,13 +40,10 @@ const SECOND_IMAGE_FILE = testFile('image-red.jpg', 'image/jpeg');
 
 const NOT_MEDIA_FILE = testFile('not-a-media-file.txt', 'text/plain');
 
-// Clicking a notification that already removed itself is acceptable, so the click gets a short timeout.
 const NOTIFICATION_CLICK_TIMEOUT_MS = 2000;
 
-/**
- * Notifications stack over the Upload media header and swallow clicks on Cancel and Upload, so the spec
- * waits for each to leave. The click shortcuts the product's own 8s removal (notify.tsx); losing that race is fine.
- */
+// Notifications cover the Upload media header and swallow clicks on Cancel and Upload, so wait for each
+// to go. Clicking shortcuts the 8s auto-removal; a notification that already left is fine.
 async function expectErrorNotification(page: Page, text: string | RegExp): Promise<void> {
     const notification = page.getByTestId('notifications').getByTestId('notification--error')
         .filter({hasText: text});
@@ -207,9 +203,7 @@ async function lockPictureAs(
 }
 
 test('adds an image picked from a folder to Feature media and keeps it across save and reopen', {
-    annotation: [
-        {type: 'confluence', description: '1310851132 complete'},
-    ],
+    annotation: CASE,
 }, async ({page}) => {
     const authoring = new Authoring(page);
     const monitoring = new Monitoring(page);
