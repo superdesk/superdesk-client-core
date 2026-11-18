@@ -311,6 +311,33 @@ export class Authoring {
     }
 
     /**
+     * Opens the media upload dialog from an empty media association field by
+     * answering the native file chooser its drop zone opens. The file arrives in
+     * the dialog already added, so the caller continues at the metadata step.
+     */
+    async startMediaFieldUpload(fieldId: string, filePath: string): Promise<void> {
+        const [chooser] = await Promise.all([
+            this.page.waitForEvent('filechooser'),
+            this.associationField(fieldId).getByTestId('drop-zone-placeholder').click(),
+        ]);
+
+        await chooser.setFiles(filePath);
+    }
+
+    /**
+     * Opens the media upload dialog from an editor3 field's Media toolbar button.
+     * The dialog opens empty; the caller adds files through the dialog itself.
+     * The toolbar button is an icon button named by its tooltip, not a
+     * `formatting-option-button` like the text-style toggles.
+     */
+    async openBodyMediaUploadDialog(fieldId: string): Promise<void> {
+        await this.fieldContainer(fieldId)
+            .getByTestId('toolbar')
+            .getByRole('button', {name: 'Media', exact: true})
+            .click();
+    }
+
+    /**
      * A button in an editor3 field's toolbar, addressed by the formatting option it applies
      * ('bold', 'ordered list'), which is the name the content profile uses for it too.
      */
