@@ -63,7 +63,7 @@
          data-hide="shouldHideStep('searches')">
         <div class="content">
             <div class="legend" translate>Select saved searches for view</div>
-            <div sd-toggle-box data-title="{{ :: 'Global saved searches' | translate}}" data-style="circle" data-open="true">
+            <div sd-toggle-box data-title="{{ :: 'Global saved searches' | translate}}" data-style="circle" data-open="true" data-test-id="global-saved-searches">
                 <div
                     class="desk"
                     ng-repeat="search in globalSavedSearches track by search._id | orderBy: 'name'"
@@ -86,11 +86,21 @@
                     </div>
                 </div>
             </div>
-            <div sd-toggle-box data-title="{{ :: 'Private saved searches' | translate}}" data-style="circle" data-open="true" ng-if="showPrivateSavedSearches">
-                <div class="desk" ng-repeat="search in privateSavedSearches track by search._id | orderBy: 'name'" ng-if="showPrivateSavedSearches">
+            <div sd-toggle-box data-title="{{ :: 'Private saved searches' | translate}}" data-style="circle" data-open="true" ng-if="showPrivateSavedSearches" data-test-id="private-saved-searches">
+                <div
+                    class="desk"
+                    ng-repeat="search in privateSavedSearches track by search._id | orderBy: 'name'"
+                    ng-if="showPrivateSavedSearches"
+                    data-test-id="saved-search"
+                >
                     <div class="desk-title desk-title--saved-search">
                         <div class="switch">
-                            <span sd-switch  ng-model="editGroups[search._id].selected" ng-click="setSearchInfo(search._id)"></span>
+                            <span
+                                sd-switch
+                                ng-model="editGroups[search._id].selected"
+                                ng-click="setSearchInfo(search._id)"
+                                data-test-id="toggle"
+                            ></span>
                         </div>
                         <div class="desk-title__text">
                             {{:: search.name}}
@@ -107,9 +117,9 @@
         <div class="content">
             <p class="legend" translate>Reorder stages and saved searches for monitoring view</p>
             <p translate>You are changing you personal preferences. If you would like to set the default order for the desk, you can do so from the settings page.</p>
-            <ul class="groups draggable-list" sd-sort-groups>
+            <ul class="groups draggable-list" sd-sort-groups data-test-id="reorder-sections">
                 <li class="sort-item draggable-list__item draggable-list__item--small" ng-class="{'active': item.order < columnsLimit}"
-                 ng-repeat="item in getValues() track by item.order">
+                 ng-repeat="item in getValues() track by item.order" data-test-id="reorder-section">
                     <div class="group-title" ng-if="item.type === 'stage'">
                         {{deskLookup[stageLookup[item._id].desk].name}} : <span>{{labelForStage(stageLookup[item._id])}}</span>
                     </div>
@@ -129,8 +139,8 @@
          data-hide="shouldHideStep('maxitems')">
         <div class="content">
             <div class="legend" translate>Set maximum items per stages and saved searches for view</div>
-            <div class="groups">
-                <div ng-repeat="max in getValues()" class="desk desk--item-count" >
+            <div class="groups" data-test-id="items-count-sections">
+                <div ng-repeat="max in getValues()" class="desk desk--item-count" data-test-id="items-count-section">
                     <div class="desk-title" ng-if="max.type === 'stage'">
                         {{deskLookup[stageLookup[max._id].desk].name}} : <span>{{labelForStage(stageLookup[max._id])}}</span>
                     </div>
@@ -142,7 +152,7 @@
                     </div>
                     <div class="desk-title" ng-if="max.type === 'personal'" translate>Personal</div>
                     <div class="box-items-count sd-line-input sd-line-input--no-margin sd-line-input--no-label sd-line-input--boxed">
-                        <input class="sd-line-input__input" type="number" id="maxItems" ng-model="max.max_items" min="1" max="25" required>
+                        <input class="sd-line-input__input" type="number" id="maxItems" ng-model="max.max_items" min="1" max="25" data-test-id="max-items-input" required>
                     </div>
                 </div>
             </div>
@@ -152,8 +162,8 @@
 </div>
 
 <div class="modal__footer" data-test-id="footer">
-    <button id="previousBtn" class="btn btn--hollow pull-left" ng-if="step.current !== 'desks' && !displayOnlyCurrentStep" ng-click="previous()" translate>Previous</button>
-    <button class="btn" ng-click="cancel()" translate>Cancel</button>
+    <button id="previousBtn" class="btn btn--hollow pull-left" ng-if="step.current !== 'desks' && !displayOnlyCurrentStep" ng-click="previous()" translate data-test-id="previous">Previous</button>
+    <button class="btn" ng-click="cancel()" translate data-test-id="cancel">Cancel</button>
     <button class="btn btn--primary" ng-click="save()" translate data-test-id="done">Done</button>
-    <button id="nextBtn" class="btn btn--hollow" ng-if="step.current !== 'maxitems' && !displayOnlyCurrentStep" ng-click="next()" translate>Next</button>
+    <button id="nextBtn" class="btn btn--hollow" ng-if="step.current !== 'maxitems' && !displayOnlyCurrentStep" ng-click="next()" translate data-test-id="next">Next</button>
 </div>

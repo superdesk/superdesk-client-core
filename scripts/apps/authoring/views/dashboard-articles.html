@@ -1,13 +1,13 @@
 <div sd-modal data-model="active" data-close="closeDashboard()"
-    class="modal--fullscreen animate-zoom__from-bottom-left">
+    class="modal--fullscreen animate-zoom__from-bottom-left" data-test-id="'opened-articles-dashboard'">
     <div class="modal__header">
-        <button ng-click="closeDashboard()" title="{{ :: 'Close'|translate}}" class="modal__close pull-right animate-slide-in__from-right"><i class="icon-close-thick"></i></button>
+        <button ng-click="closeDashboard()" title="{{ :: 'Close'|translate}}" class="modal__close pull-right animate-slide-in__from-right" data-test-id="close"><i class="icon-close-thick"></i></button>
         <h3 class="modal__heading" translate>Currently working on</h3>        
     </div>
 
     <div class="modal__body">
         <div class="flex-grid box wrap-items small-2 medium-3 large-5 xlarge-6">
-            <div class="flex-item card-box card-box--with-click card-box--flex" ng-repeat="article in items track by article._id"  ng-class="{active: article === active}">
+            <div class="flex-item card-box card-box--with-click card-box--flex" ng-repeat="article in items track by article._id"  ng-class="{active: article === active}" data-test-id="item">
                 <a class="card-box__full-click" ng-click="edit(article, $event)" ng-href="{{ :: link(article)}}"></a>
                 <span class="close cardbox__close" ng-click="closeItem(article)"><i class="icon-close-small icon--white"></i></span>
                 <div class="card-box__header card-box__header--padded-flex">

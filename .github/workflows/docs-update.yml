@@ -1,0 +1,39 @@
+# Fires the "Docs update" Claude Code routine (SDESK-8055), which updates the user guide in
+# superdesk/superdesk-docs-user-guide for the merged pull request. A merge only fires it when the PR carries the
+# `docs` label; the manual run takes any PR number and skips that gate. The job checks out nothing, so
+# pull_request_target is safe here and gives fork PRs access to the secret.
+name: Docs update
+
+on:
+  pull_request_target:
+    types: [closed]
+    branches: [develop]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Pull request number to send to the docs routine
+        required: true
+
+jobs:
+  fire:
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged && contains(github.event.pull_request.labels.*.name, 'docs') && github.event.pull_request.user.login != 'dependabot[bot]')
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Fire the docs-update routine
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ROUTINE_FIRE_TOKEN: ${{ secrets.ROUTINE_FIRE_TOKEN }}
+          PR: ${{ github.event.inputs.pr || github.event.pull_request.number }}
+        run: |
+          read -r url title < <(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR" --jq '"\(.html_url) \(.title)"')
+          response=$(jq -n --arg text "Pull request merged: $url ($title)" '{text: $text}' | curl --silent --show-error --fail-with-body -X POST \
+            "https://api.anthropic.com/v1/claude_code/routines/trig_013vDQ2xnZLUuyaLy4qX9c4u/fire" \
+            -H "Authorization: Bearer $ROUTINE_FIRE_TOKEN" \
+            -H "anthropic-version: 2026-10-21" \
+            -H "Content-Type: application/json" \
+            -d @-)
+          echo "$response"
+          session=$(jq -r '.claude_code_session_url // empty' <<<"$response")
+          printf '## Docs update fired for PR #%s\n\n%s\n\n%s\n\nRoutine session: %s\n' "$PR" "$title" "$url" "$session" >> "$GITHUB_STEP_SUMMARY"
