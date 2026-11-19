@@ -79,6 +79,18 @@
     @include localwire-focus-ring;
 }
 
+// Search bars (Planning, Assignments): the text field is borderless and starts after the search
+// icon, so its own outer ring looked detached and spilled over the toolbar below. The ring frames
+// the whole bar instead, drawn inside because the bar sits flush in the subnav.
+.sd-searchbar:has(.sd-searchbar__input:focus-visible) {
+    @include localwire-focus-ring--inset;
+}
+
+.sd-searchbar .sd-searchbar__input:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 // The skip link: the first tab stop on every page, shown only while it has focus.
 .localwire-skip-link {
     position: fixed;
