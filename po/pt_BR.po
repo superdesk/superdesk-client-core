@@ -4863,19 +4863,19 @@ msgstr "Reexibição Atual  de Sumário"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningModal.tsx:181
 msgid "Currently Selected"
-msgstr ""
+msgstr "Selecionados no momento"
 
 #: scripts/apps/search/views/multi-image-edit.html:100
 msgid "Currently editing: {{getSelectedItemsLength()}} items"
-msgstr ""
+msgstr "Editando no momento: {{getSelectedItemsLength()}} itens"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningSelectedList.tsx:23
 msgid "Currently selected"
-msgstr ""
+msgstr "Selecionados no momento"
 
 #: scripts/core/upload/image-crop-directive.ts:254
 msgid "Currently the image size is {{width}}x{{height}})."
-msgstr ""
+msgstr "No momento, o tamanho da imagem é {{width}}x{{height}}."
 
 #: scripts/apps/authoring/views/dashboard-articles.html:5
 msgid "Currently working on"
@@ -4884,15 +4884,15 @@ msgstr "Atualmente trabalhando em"
 #: ../superdesk-planning/client/components/EventsPlanningFilters/EditFilterSchedule.tsx:237
 #: ../superdesk-planning/client/components/ExportAsArticleModal.tsx:316
 msgid "Custom Layout"
-msgstr ""
+msgstr "Layout personalizado"
 
 #: scripts/core/editor3/components/toolbar/index.tsx:358
 msgid "Custom block"
-msgstr ""
+msgstr "Bloco personalizado"
 
 #: scripts/apps/vocabularies/views/settings.html:22
 msgid "Custom blocks"
-msgstr ""
+msgstr "Blocos personalizados"
 
 #: scripts/apps/vocabularies/views/settings.html:25
 msgid "Custom date fields"
@@ -4908,7 +4908,7 @@ msgstr "Personalizar campos de texto"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:76
 msgid "Customer Installation No.:"
-msgstr ""
+msgstr "N.º da instalação do cliente:"
 
 #: scripts/apps/dashboard/index.ts:54
 msgid "Customize your widgets and views"
@@ -4916,7 +4916,7 @@ msgstr "Customize seus Widgets e Visualizações"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:69
 msgid "Cut"
-msgstr ""
+msgstr "Recortar"
 
 #: ../superdesk-planning/client/components/Main/CalendarNavigation.tsx:46
 msgid "D"
@@ -4940,35 +4940,35 @@ msgstr "Diariamente"
 
 #: ../superdesk-planning/client/utils/filters.ts:45
 msgid "Daily @ {{ time }} to {{ desk }}"
-msgstr ""
+msgstr "Diariamente às {{ time }} para {{ desk }}"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:67
 msgid "Daily at {{hour}}"
-msgstr ""
+msgstr "Diariamente às {{hour}}"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:58
 msgid "Dark Blue"
-msgstr ""
+msgstr "Azul escuro"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:47
 msgid "Dark Gray"
-msgstr ""
+msgstr "Cinza escuro"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:69
 msgid "Dark Magenta"
-msgstr ""
+msgstr "Magenta escuro"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:66
 msgid "Dark Orange"
-msgstr ""
+msgstr "Laranja escuro"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:70
 msgid "Dark Violet"
-msgstr ""
+msgstr "Violeta escuro"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:48
 msgid "Darker Gray"
-msgstr ""
+msgstr "Cinza mais escuro"
 
 #: scripts/apps/dashboard/controllers/DashboardController.ts:38
 #: scripts/apps/dashboard/index.ts:70
@@ -4978,7 +4978,7 @@ msgstr "Painel"
 
 #: scripts/apps/dashboard/views/workspace.html:59
 msgid "Dashboard is empty"
-msgstr ""
+msgstr "O painel está vazio"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:419
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:16
@@ -4992,7 +4992,7 @@ msgstr "Data"
 
 #: scripts/apps/authoring-react/fields/date/index.tsx:17
 msgid "Date (authoring-react)"
-msgstr ""
+msgstr "Data (authoring-react)"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:177
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:91
@@ -5002,11 +5002,11 @@ msgstr "Data de criação"
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:2
 #: ../superdesk-planning/client/components/fields/preview/index.ts:146
 msgid "Date Filter"
-msgstr ""
+msgstr "Filtro de data"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:3
 msgid "Date Filter:"
-msgstr ""
+msgstr "Filtro de data:"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:108
 #: ../superdesk-planning/client/components/fields/editor/RelativeDate.tsx:16
@@ -5016,37 +5016,37 @@ msgstr "Filtros de Data"
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:180
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:94
 msgid "Date Updated"
-msgstr ""
+msgstr "Data de atualização"
 
 #: scripts/apps/search/directives/DateFilters.ts:76
 msgid "Date created"
-msgstr ""
+msgstr "Data de criação"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:183
 msgid "Date field is required"
-msgstr ""
+msgstr "O campo de data é obrigatório"
 
 #: ../superdesk-planning/client/validators/planning.ts:253
 msgid "Date is in the past"
-msgstr ""
+msgstr "A data está no passado"
 
 #: scripts/apps/search/directives/DateFilters.ts:84
 msgid "Date modified"
-msgstr ""
+msgstr "Data de modificação"
 
 #: ../superdesk-planning/client/apps/Planning/SubNavDatePicker.tsx:71
 #: ../superdesk-planning/client/components/UI/Form/DateInput/index.tsx:211
 msgid "Date picker"
-msgstr ""
+msgstr "Seletor de data"
 
 #: scripts/apps/search/constants.ts:21
 #: scripts/apps/search/directives/DateFilters.ts:92
 msgid "Date published"
-msgstr ""
+msgstr "Data de publicação"
 
 #: scripts/apps/search/directives/DateFilters.ts:100
 msgid "Date scheduled"
-msgstr ""
+msgstr "Data de agendamento"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:415
 msgid "Date/Time"
@@ -5067,7 +5067,7 @@ msgstr "Subtítulo"
 
 #: scripts/apps/authoring-react/fields/dateline/index.tsx:27
 msgid "Dateline (authoring-react)"
-msgstr ""
+msgstr "Linha de data (authoring-react)"
 
 #: ../superdesk-planning/client/components/fields/editor/DatesGroup.tsx:40
 #: ../superdesk-planning/client/components/fields/index.tsx:250
@@ -5077,11 +5077,11 @@ msgstr "Datas"
 
 #: scripts/extensions/datetimeField/src/extension.tsx:27
 msgid "Datetime"
-msgstr ""
+msgstr "Data e hora"
 
 #: scripts/apps/authoring-react/fields/datetime/index.tsx:24
 msgid "Datetime (authoring-react)"
-msgstr ""
+msgstr "Data e hora (authoring-react)"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:157
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:77
@@ -5092,11 +5092,11 @@ msgstr "Dia"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:29
 msgid "Day of the Month"
-msgstr ""
+msgstr "Dia do mês"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:29
 msgid "Day(s)"
-msgstr ""
+msgstr "Dia(s)"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:4
 msgid "Days"
@@ -5104,7 +5104,7 @@ msgstr "Dias"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:68
 msgid "Deep Pink"
-msgstr ""
+msgstr "Rosa intenso"
 
 #: scripts/apps/monitoring/views/monitoring-group-header.html:31
 #: scripts/apps/monitoring/views/monitoring-group-header.html:43
@@ -5114,7 +5114,7 @@ msgstr "Padrão"
 
 #: scripts/apps/users/views/user-preferences.html:219
 msgid "Default Agenda"
-msgstr ""
+msgstr "Agenda padrão"
 
 #: scripts/apps/users/views/user-preferences.html:206
 msgid "Default Calendar"
@@ -5134,15 +5134,15 @@ msgstr "Desk Padrão"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:147
 msgid "Default Duration"
-msgstr ""
+msgstr "Duração padrão"
 
 #: scripts/apps/users/views/user-preferences.html:232
 msgid "Default Events & Planning Filter"
-msgstr ""
+msgstr "Filtro padrão de eventos e planejamento"
 
 #: ../superdesk-planning/client/components/Assignments/SelectDeskTemplate.tsx:72
 msgid "Default Template"
-msgstr ""
+msgstr "Modelo padrão"
 
 #: scripts/apps/authoring-react/toolbar/proofreading-theme-modal.tsx:96
 #: scripts/apps/authoring/views/theme-select.html:15
@@ -5152,20 +5152,20 @@ msgstr "Tema Padrão"
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldEditor.tsx:239
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:219
 msgid "Default Value"
-msgstr ""
+msgstr "Valor padrão"
 
 #: scripts/apps/users/views/settings-roles.html:54
 msgid "Default author roles"
-msgstr ""
+msgstr "Funções de autor padrão"
 
 #: scripts/apps/users/views/edit-form.html:18
 #: scripts/apps/users/views/edit-form.html:216
 msgid "Default desk"
-msgstr ""
+msgstr "Desk padrão"
 
 #: scripts/core/ui/components/content-create-dropdown/initial-view.tsx:131
 msgid "Default desk template"
-msgstr ""
+msgstr "Modelo de desk padrão"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:200
 msgid "Default language"
@@ -5173,12 +5173,12 @@ msgstr "Idioma Padrão"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldEditor.tsx:69
 msgid "Default language is a required field"
-msgstr ""
+msgstr "O idioma padrão é um campo obrigatório"
 
 #: scripts/apps/ai-providers/form-config.ts:100
 #: scripts/apps/ai-providers/form-config.ts:106
 msgid "Default model"
-msgstr ""
+msgstr "Modelo padrão"
 
 #: scripts/apps/desks/views/desk-config-modal.html:131
 msgid "Default monitoring view"
@@ -5186,11 +5186,11 @@ msgstr "Visualização de monitoramento padrão"
 
 #: scripts/extensions/availability-manager/src/settings/manage-schedule.tsx:199
 msgid "Default schedule"
-msgstr ""
+msgstr "Agendamento padrão"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:53
 msgid "Default view"
-msgstr ""
+msgstr "Visualização padrão"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:113
 msgid ""
@@ -5202,7 +5202,7 @@ msgstr ""
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:24
 #: scripts/extensions/predefinedTextField/src/config.tsx:30
 msgid "Definition"
-msgstr ""
+msgstr "Definição"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/index.tsx:204
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/index.tsx:306
@@ -5236,18 +5236,18 @@ msgstr "Remover Agenda"
 #: scripts/extensions/sams/src/store/assets/actions.ts:384
 #: scripts/extensions/sams/src/store/assets/actions.ts:393
 msgid "Delete Asset?"
-msgstr ""
+msgstr "Excluir ativo?"
 
 #: ../superdesk-planning/client/constants/tooltips.ts:36
 msgid "Delete Filter"
-msgstr ""
+msgstr "Excluir filtro"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/index.tsx:203
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/index.tsx:305
 #: ../superdesk-planning/client/components/EventsPlanningFilters/ManageFiltersModal.tsx:70
 #: ../superdesk-planning/client/components/EventsPlanningFilters/ManageFiltersModal.tsx:85
 msgid "Delete Item?"
-msgstr ""
+msgstr "Excluir item?"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:70
 msgid "Delete Rule"
@@ -5255,15 +5255,15 @@ msgstr "Remover Regra"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:33
 msgid "Delete Saved Report"
-msgstr ""
+msgstr "Excluir relatório salvo"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/FilterItem.tsx:114
 msgid "Delete Scheduled Export"
-msgstr ""
+msgstr "Excluir exportação agendada"
 
 #: scripts/extensions/sams/src/store/sets/actions.ts:114
 msgid "Delete Set?"
-msgstr ""
+msgstr "Excluir conjunto?"
 
 #: scripts/core/editor3/highlightsConfig.ts:102
 msgid "Delete empty paragraphs"
@@ -5271,16 +5271,16 @@ msgstr "Remover parágrafos vazios"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/ListElementTemplate.tsx:101
 msgid "Delete failed! Field is required by the system"
-msgstr ""
+msgstr "Falha ao excluir! O campo é obrigatório para o sistema"
 
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:248
 msgid "Delete item?"
-msgstr ""
+msgstr "Excluir item?"
 
 #: ../superdesk-planning/client/components/UI/Form/LinkInput.tsx:226
 #: ../superdesk-planning/client/components/UI/Form/LinkInput.tsx:230
 msgid "Delete link"
-msgstr ""
+msgstr "Excluir vínculo"
 
 #: scripts/apps/search/views/saved-searches.html:16
 #: scripts/apps/search/views/saved-searches.html:45
@@ -5289,11 +5289,11 @@ msgstr "Apagar pesquisa"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-list.html:35
 msgid "Delete this Schedule"
-msgstr ""
+msgstr "Excluir este agendamento"
 
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:87
 msgid "Delete vocabulary?"
-msgstr ""
+msgstr "Excluir vocabulário?"
 
 #: scripts/apps/dashboard/views/workspace.html:35
 #: scripts/apps/monitoring/views/monitoring-view.html:220
@@ -5310,7 +5310,7 @@ msgstr "Tipo de Entrega"
 
 #: scripts/apps/authoring-react/article-widgets/demo-widget.tsx:10
 msgid "Demo widget"
-msgstr ""
+msgstr "Widget de demonstração"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:169
 #: ../superdesk-planning/client/components/OrderBar/OrderDirectionIcon.tsx:20
@@ -5322,7 +5322,7 @@ msgstr "Decrescente"
 
 #: ../superdesk-analytics/client/charts/views/chart-form-options.html:49
 msgid "Descending Order"
-msgstr ""
+msgstr "Ordem decrescente"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:437
 #: ../superdesk-analytics/client/utils.js:156
@@ -5377,15 +5377,15 @@ msgstr "Descrição"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:290
 msgid "Description Long"
-msgstr ""
+msgstr "Descrição longa"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:272
 msgid "Description Short"
-msgstr ""
+msgstr "Descrição curta"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:304
 msgid "Description Text"
-msgstr ""
+msgstr "Texto da descrição"
 
 #: scripts/apps/authoring-react/fields/media/media-carousel/media-carousel.tsx:135
 msgid "Description:"
@@ -5421,7 +5421,7 @@ msgstr "Desk"
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:500
 #: ../superdesk-analytics/client/desk_activity_report/index.js:45
 msgid "Desk Activity"
-msgstr ""
+msgstr "Atividade do desk"
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:64
 msgid "Desk Assignments"
@@ -5429,7 +5429,7 @@ msgstr "Atribuições da Desk"
 
 #: scripts/apps/desks/views/desk-config-modal.html:68
 msgid "Desk Email"
-msgstr ""
+msgstr "E-mail do desk"
 
 #: scripts/core/lang/missing-translations-strings.ts:16
 msgid "Desk Management"
@@ -5442,15 +5442,15 @@ msgstr "Saída da Mesa"
 
 #: scripts/apps/dashboard/closed-desk/index.ts:152
 msgid "Desk Router"
-msgstr ""
+msgstr "Roteador de desk"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:50
 msgid "Desk Schedule Output"
-msgstr ""
+msgstr "Saída agendada do desk"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:62
 msgid "Desk Sent Output"
-msgstr ""
+msgstr "Saída enviada do desk"
 
 #: ../superdesk-planning/client/components/Assignments/SelectDeskTemplate.tsx:79
 msgid "Desk Templates"
@@ -5459,7 +5459,7 @@ msgstr "Modelo de Mesa"
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:367
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:371
 msgid "Desk Transitions"
-msgstr ""
+msgstr "Transições do desk"
 
 #: scripts/apps/desks/views/desk-config-modal.html:93
 #: scripts/apps/desks/views/settings.html:83
@@ -5476,7 +5476,7 @@ msgstr "Descrição da Desk"
 
 #: scripts/apps/desks/views/desk-config-modal.html:70
 msgid "Desk email address."
-msgstr ""
+msgstr "Endereço de e-mail do desk."
 
 #: scripts/apps/desks/services/DesksFactory.ts:425
 msgid "Desk has been modified elsewhere. Please reload the desks."
@@ -5484,7 +5484,7 @@ msgstr "A Mesa foi movida para outro lugar. Por favor atualize as mesas."
 
 #: ../superdesk-planning/client/components/Coverages/coverageRows.ts:187
 msgid "Desk is required"
-msgstr ""
+msgstr "O desk é obrigatório"
 
 #: scripts/apps/desks/views/desk-config-modal.html:114
 msgid "Desk language"
@@ -5500,12 +5500,12 @@ msgstr "Nome da Desk"
 
 #: scripts/apps/dashboard/closed-desk/index.ts:26
 msgid "Desk status is outdated, please refresh."
-msgstr ""
+msgstr "O status do desk está desatualizado, atualize a página."
 
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:167
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:88
 msgid "Desk subscription"
-msgstr ""
+msgstr "Assinatura do desk"
 
 #: scripts/apps/authoring-react/toolbar/template-modal.tsx:139
 msgid "Desk template"
@@ -5513,7 +5513,7 @@ msgstr "Modelo de mesa"
 
 #: scripts/apps/desks/directives/DeskeditBasic.ts:65
 msgid "Desk with name {{name}} already exists."
-msgstr ""
+msgstr "Já existe um desk com o nome {{name}}."
 
 #: scripts/apps/templates/views/templates.html:52
 msgid "Desk(s)"
@@ -5531,7 +5531,7 @@ msgstr "Desk:"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:111
 msgid "Desk: {{ desk }}"
-msgstr ""
+msgstr "Desk: {{ desk }}"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:109
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:383
@@ -5566,7 +5566,7 @@ msgstr "Destinos"
 
 #: scripts/apps/search/directives/SearchResults.ts:476
 msgid "Detailed information is not found for the item :"
-msgstr ""
+msgstr "Informações detalhadas não encontradas para o item:"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldEditor.tsx:152
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/GroupEditor.tsx:64
@@ -5579,7 +5579,7 @@ msgstr "Detalhes"
 
 #: scripts/apps/authoring/views/change-image.html:7
 msgid "Details / Metadata"
-msgstr ""
+msgstr "Detalhes / Metadados"
 
 #: scripts/apps/dictionaries/index.ts:33
 msgid "Dictionaries"
@@ -5615,13 +5615,13 @@ msgstr "Dicionário salvo com sucesso"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:28
 msgid "Dictionary with name {{dictionary.name}} already exists."
-msgstr ""
+msgstr "Já existe um dicionário com o nome {{dictionary.name}}."
 
 #: scripts/apps/authoring-react/compare-articles/view-difference.tsx:94
 msgid ""
 "Difference view for \"{{type}}\" fields is not implemented. Latter version "
 "is being displayed."
-msgstr ""
+msgstr "A visualização de diferenças para campos \"{{type}}\" não está implementada. A versão mais recente está sendo exibida."
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:72
 msgid "Digital/Internet"
@@ -5636,15 +5636,15 @@ msgstr "Dimensões"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:192
 msgid "Disable Item Updates"
-msgstr ""
+msgstr "Desativar atualizações de itens"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:176
 msgid "Disable selection of an entire category"
-msgstr ""
+msgstr "Desativar a seleção de uma categoria inteira"
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:549
 msgid "Disable spellchecker"
-msgstr ""
+msgstr "Desativar corretor ortográfico"
 
 #: scripts/apps/users/config.ts:76
 msgid "Disable user"
@@ -5660,28 +5660,28 @@ msgstr "Desabilitado"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:213
 msgid "Disabled Agendas"
-msgstr ""
+msgstr "Agendas desativadas"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:155
 msgid "Disabled Calendars"
-msgstr ""
+msgstr "Calendários desativados"
 
 #: scripts/extensions/sams/src/components/sets/setListPanel.tsx:83
 msgid "Disabled Sets"
-msgstr ""
+msgstr "Conjuntos desativados"
 
 #: scripts/apps/desks/views/desk-config-modal.html:197
 msgid "Disallow sending items to this desk"
-msgstr ""
+msgstr "Não permitir o envio de itens para este desk"
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:76
 msgid "Disallowed characters"
-msgstr ""
+msgstr "Caracteres não permitidos"
 
 #: ../superdesk-planning/client/components/ContentProfiles/ContentProfileModal.tsx:380
 #: ../superdesk-planning/client/components/ContentProfiles/CoverageProfileModal.tsx:210
 msgid "Discard All"
-msgstr ""
+msgstr "Descartar tudo"
 
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:206
 #: scripts/extensions/broadcasting/src/rundown-templates/template-edit.tsx:231
@@ -5690,7 +5690,7 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/rundowns/prepare-create-edit.ts:65
 #: scripts/extensions/broadcasting/src/rundowns/rundown-view-edit.tsx:199
 msgid "Discard unsaved changes?"
-msgstr ""
+msgstr "Descartar alterações não salvas?"
 
 #: scripts/core/notification/notification.ts:223
 msgid "Disconnected from Notification Server!"
@@ -5711,11 +5711,11 @@ msgstr "Exibe os atalhos de teclado ativos."
 #: ../superdesk-planning/client/components/fields/editor/NoContentLinking.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/Flags.tsx:30
 msgid "Do not link content updates"
-msgstr ""
+msgstr "Não vincular atualizações de conteúdo"
 
 #: scripts/apps/vocabularies/constants.ts:56
 msgid "Do not show"
-msgstr ""
+msgstr "Não mostrar"
 
 #: scripts/apps/settings/index.ts:20
 msgid "Do some admin chores"
@@ -5727,7 +5727,7 @@ msgstr "Deseja adicionar uma imagem à esta atualização?"
 
 #: scripts/extensions/broadcasting/src/shows/create-show-after-modal.tsx:74
 msgid "Do you want to create a rundown template for this show right away?"
-msgstr ""
+msgstr "Deseja criar agora um modelo de rundown para este programa?"
 
 #: scripts/apps/archive/index.tsx:477
 msgid "Do you want to delete the item permanently?"
@@ -5739,22 +5739,22 @@ msgstr "Você deseja apagar os itens permanentemente?"
 
 #: ../superdesk-planning/client/actions/locations.ts:66
 msgid "Do you want to delete the location \"{{ name }}\"?"
-msgstr ""
+msgstr "Deseja excluir o local \"{{ name }}\"?"
 
 #: scripts/apps/search/controllers/get-multi-actions.tsx:391
 msgid "Do you want to deschedule articles?"
-msgstr ""
+msgstr "Deseja cancelar o agendamento das matérias?"
 
 #: ../superdesk-planning/client/services/AssignmentsService.tsx:264
 msgid "Do you want to link it to that assignment ?"
-msgstr ""
+msgstr "Deseja vinculá-lo a essa atribuição?"
 
 #: scripts/apps/authoring/authoring/services/quick-publish-modal.tsx:50
 msgid "Do you want to publish the article?"
 msgid_plural "Do you want to publish {{number}} articles?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Deseja publicar a matéria?"
+msgstr[1] "Deseja publicar {{number}} matérias?"
+msgstr[2] "Deseja publicar {{number}} matérias?"
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.ts:148
 msgid "Do you want to remove Abbreviation?"
@@ -5762,7 +5762,7 @@ msgstr "Você deseja remover esta Abreviação?"
 
 #: scripts/apps/users/views/edit-form.html:361
 msgid "Do you want to reset the password for user {{user.full_name}} ?"
-msgstr ""
+msgstr "Deseja redefinir a senha do usuário {{user.full_name}}?"
 
 #: ../superdesk-planning/client/actions/multiSelect.ts:128
 msgid "Do you want to spike  item(s) ?"
@@ -5774,31 +5774,31 @@ msgstr "Cancelar suspensão da publicação?"
 
 #: scripts/extensions/sams/src/utils/assets.ts:152
 msgid "Document"
-msgstr ""
+msgstr "Documento"
 
 #: scripts/extensions/sams/src/components/assets/assetTypeFilterButtons.tsx:59
 msgid "Documents only"
-msgstr ""
+msgstr "Somente documentos"
 
 #: scripts/apps/content-filters/views/manage-filters.html:147
 msgid "Does match"
-msgstr ""
+msgstr "Corresponde"
 
 #: scripts/apps/content-filters/views/manage-filters.html:148
 msgid "Doesn't match"
-msgstr ""
+msgstr "Não corresponde"
 
 #: ../superdesk-planning/client/services/AssignmentsService.tsx:326
 msgid "Don't Fulfil Assignment"
-msgstr ""
+msgstr "Não cumprir a atribuição"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/ManageFiltersModal.tsx:273
 msgid "Don't Save"
-msgstr ""
+msgstr "Não salvar"
 
 #: ../superdesk-planning/client/components/AddToPlanningModal/index.tsx:77
 msgid "Don't add"
-msgstr ""
+msgstr "Não adicionar"
 
 #: scripts/core/auth/reset-password.html:70
 msgid "Don't have token? Get it."
@@ -5807,7 +5807,7 @@ msgstr "Não tem um token? Obtenha um."
 #: scripts/core/ui/components/ListPage/show-unsaved-changes-modal.tsx:28
 #: scripts/core/ui/components/ListPage/show-unsaved-changes-modal.tsx:49
 msgid "Don't save"
-msgstr ""
+msgstr "Não salvar"
 
 #: scripts/apps/authoring/editor/views/find-replace.html:41
 #: scripts/apps/authoring/views/change-image.html:13
@@ -5843,11 +5843,11 @@ msgstr "Download"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:74
 msgid "Download Alternate"
-msgstr ""
+msgstr "Baixar alternativa"
 
 #: scripts/apps/vocabularies/views/vocabulary-config.html:84
 msgid "Download config"
-msgstr ""
+msgstr "Baixar configuração"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/State.tsx:21
 #: ../superdesk-planning/client/components/fields/editor/WorkflowState.tsx:19
@@ -5863,7 +5863,7 @@ msgstr "Rascunho"
 
 #: scripts/extensions/sams/src/components/sets/setListPanel.tsx:61
 msgid "Draft Sets"
-msgstr ""
+msgstr "Conjuntos em rascunho"
 
 #: scripts/apps/archive/views/upload.html:64
 msgid "Drag Your Files Here"
@@ -5884,7 +5884,7 @@ msgstr ""
 
 #: scripts/apps/authoring/attachments/AttachmentsWidgetComponent.tsx:129
 msgid "Drag one or more files here to upload them, or just click here."
-msgstr ""
+msgstr "Arraste um ou mais arquivos até aqui para enviá-los ou simplesmente clique aqui."
 
 #: scripts/apps/authoring/attachments/AttachmentsWidgetComponent.tsx:105
 msgid ""
@@ -5893,15 +5893,15 @@ msgstr "Arraste um ou mais arquivos para cá ou então clique no botão abaixo."
 
 #: scripts/extensions/content-lists/src/list-editor/list-pane.tsx:95
 msgid "Drag your articles here"
-msgstr ""
+msgstr "Arraste suas matérias até aqui"
 
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEvent.tsx:101
 msgid "Drop events here"
-msgstr ""
+msgstr "Solte eventos aqui"
 
 #: ../superdesk-planning/client/components/AttachmentsInputStandalone.tsx:87
 msgid "Drop files here to upload"
-msgstr ""
+msgstr "Solte os arquivos aqui para enviar"
 
 #: scripts/apps/users/views/change-avatar.html:29
 msgid "Drop it here"
@@ -5910,29 +5910,29 @@ msgstr "Arraste aqui"
 #: scripts/apps/relations/views/related-items.html:11
 #: scripts/core/ui/components/drop-zone-3.tsx:146
 msgid "Drop items here"
-msgstr ""
+msgstr "Solte itens aqui"
 
 #: scripts/apps/authoring/views/item-association.html:12
 #: scripts/apps/authoring/views/item-carousel.html:10
 #: scripts/core/ui/components/drop-zone-3.tsx:145
 msgid "Drop items here or click to upload"
-msgstr ""
+msgstr "Solte itens aqui ou clique para enviar"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EventRelatedPlannings.tsx:184
 msgid "Drop planning items here"
-msgstr ""
+msgstr "Solte itens de planejamento aqui"
 
 #: scripts/apps/authoring-react/fields/dropdown/index.ts:21
 msgid "Dropdown (authoring-react)"
-msgstr ""
+msgstr "Lista suspensa (authoring-react)"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EventRelatedPlannings.tsx:174
 msgid "Dropped item is not a planning item"
-msgstr ""
+msgstr "O item solto não é um item de planejamento"
 
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEvent.tsx:167
 msgid "Dropped item is not an event"
-msgstr ""
+msgstr "O item solto não é um evento"
 
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/ScheduledUpdateForm.tsx:169
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.tsx:235
@@ -5988,11 +5988,11 @@ msgstr "Duplicar Conteúdo em uma Desk"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:55
 msgid "Duplicate ID: {{x}}"
-msgstr ""
+msgstr "ID duplicado: {{x}}"
 
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:239
 msgid "Duplicate In Place"
-msgstr ""
+msgstr "Duplicar no mesmo local"
 
 #: scripts/apps/archive/index.tsx:172
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:225
@@ -6005,7 +6005,7 @@ msgstr "Duplicar um item"
 
 #: scripts/core/interactive-article-actions-panel/actions/duplicate-to-action.tsx:80
 msgid "Duplicate and open"
-msgstr ""
+msgstr "Duplicar e abrir"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:97
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:78
@@ -6023,11 +6023,11 @@ msgstr "Duplicar no local"
 
 #: scripts/core/interactive-article-actions-panel/action-tabs.tsx:13
 msgid "Duplicate to"
-msgstr ""
+msgstr "Duplicar para"
 
 #: scripts/apps/archive/index.tsx:200
 msgid "Duplicate to personal"
-msgstr ""
+msgstr "Duplicar para o espaço pessoal"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:101
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:82
@@ -6036,7 +6036,7 @@ msgstr "Duplicado"
 
 #: ../superdesk-analytics/client/utils.js:152
 msgid "Duplicated From"
-msgstr ""
+msgstr "Duplicado de"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:146
 #: scripts/apps/authoring/versioning/history/views/history.html:30
@@ -6055,25 +6055,25 @@ msgstr "Duração"
 
 #: scripts/apps/authoring-react/fields/duration/index.tsx:20
 msgid "Duration (authoring-react)"
-msgstr ""
+msgstr "Duração (authoring-react)"
 
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:122
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:119
 msgid "Duration from"
-msgstr ""
+msgstr "Duração de"
 
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:140
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:132
 msgid "Duration to"
-msgstr ""
+msgstr "Duração até"
 
 #: ../superdesk-planning/client/validators/events.ts:98
 msgid "END DATE cannot be in the past"
-msgstr ""
+msgstr "A DATA FINAL não pode estar no passado"
 
 #: ../superdesk-planning/client/validators/events.ts:19
 msgid "END DATE is a required field"
-msgstr ""
+msgstr "A DATA FINAL é um campo obrigatório"
 
 #: ../superdesk-planning/client/validators/events.ts:71
 msgid "END DATE should be after START DATE"
@@ -6081,7 +6081,7 @@ msgstr "A DATA DE CONCLUSÃO deve ser posterior à DATA DE INÍCIO"
 
 #: ../superdesk-planning/client/validators/events.ts:38
 msgid "END TIME is a required field"
-msgstr ""
+msgstr "O HORÁRIO FINAL é um campo obrigatório"
 
 #: ../superdesk-planning/client/validators/events.ts:68
 msgid "END TIME should be after START TIME"
@@ -6166,19 +6166,19 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:5
 msgid "Edit \"{{name}}\" Desk"
-msgstr ""
+msgstr "Editar o desk \"{{name}}\""
 
 #: scripts/apps/products/views/products-config-modal.html:4
 msgid "Edit \"{{name}}\" Product"
-msgstr ""
+msgstr "Editar o produto \"{{name}}\""
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:4
 msgid "Edit \"{{name}}\" highlight"
-msgstr ""
+msgstr "Editar o destaque \"{{name}}\""
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:7
 msgid "Edit Abbreviations Dictionary"
-msgstr ""
+msgstr "Editar dicionário de abreviações"
 
 #: ../superdesk-planning/client/constants/tooltips.ts:23
 msgid "Edit Agenda"
@@ -6205,11 +6205,11 @@ msgstr "Editar Perfil de Conteúdo"
 
 #: ../superdesk-planning/client/constants/planning.ts:153
 msgid "Edit Coverages"
-msgstr ""
+msgstr "Editar coberturas"
 
 #: scripts/apps/authoring/views/change-image.html:4
 msgid "Edit Crops"
-msgstr ""
+msgstr "Editar cortes"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:8
 msgid "Edit Dictionary"
@@ -6217,12 +6217,12 @@ msgstr "Editar Dicionário"
 
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.tsx:115
 msgid "Edit Event"
-msgstr ""
+msgstr "Editar evento"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/FilterItem.tsx:96
 #: ../superdesk-planning/client/constants/tooltips.ts:35
 msgid "Edit Filter"
-msgstr ""
+msgstr "Editar filtro"
 
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:23
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:42
@@ -6239,19 +6239,19 @@ msgstr "Editar Fontes de Ingestão"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:75
 msgid "Edit Line"
-msgstr ""
+msgstr "Editar linha"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:190
 msgid "Edit Location"
-msgstr ""
+msgstr "Editar local"
 
 #: scripts/apps/authoring/authoring/index.ts:245
 msgid "Edit Media Metadata"
-msgstr ""
+msgstr "Editar metadados da mídia"
 
 #: ../superdesk-planning/client/planning-extension/src/planning-details-widget.tsx:148
 msgid "Edit Planning"
-msgstr ""
+msgstr "Editar planejamento"
 
 #: ../superdesk-planning/client/constants/assignments.ts:194
 msgid "Edit Priority"
@@ -6263,7 +6263,7 @@ msgstr "Editar Função"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:67
 msgid "Edit Rule"
-msgstr ""
+msgstr "Editar regra"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:30
 msgid "Edit Rule set"
@@ -6271,7 +6271,7 @@ msgstr "Editar Conjunto de Funções"
 
 #: scripts/extensions/broadcasting/src/rundowns/rundown-view-edit.tsx:404
 msgid "Edit Rundown"
-msgstr ""
+msgstr "Editar rundown"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/FilterItem.tsx:106
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:180
