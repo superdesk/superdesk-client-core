@@ -19107,7 +19107,7 @@ msgstr "Ver notificações"
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:193
 #: ../superdesk-planning/client/components/fields/state.tsx:32
 msgid "View original event"
-msgstr ""
+msgstr "Ver evento original"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:152
 msgid "View original planning item"
@@ -19116,25 +19116,25 @@ msgstr "Visualizar original do item planejamento "
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:147
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:208
 msgid "View planning item"
-msgstr ""
+msgstr "Ver item de planejamento"
 
 #: scripts/core/menu/views/menu.html:58
 msgid "View profile details"
-msgstr ""
+msgstr "Ver detalhes do perfil"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:181
 msgid "View rescheduled event"
-msgstr ""
+msgstr "Ver evento reagendado"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:58
 msgid "View schedules"
-msgstr ""
+msgstr "Ver agendamentos"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:155
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:180
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:205
 msgid "View source item"
-msgstr ""
+msgstr "Ver item de origem"
 
 #: scripts/apps/contacts/index.ts:23
 msgid "View/Manage media contacts"
@@ -19152,11 +19152,11 @@ msgstr "Gerenciamento de Vocabulário"
 
 #: scripts/apps/authoring-react/fields/dropdown/config-main.tsx:82
 msgid "Vocabulary"
-msgstr ""
+msgstr "Vocabulário"
 
 #: ../superdesk-planning/client/planning-extension/src/extension.ts:291
 msgid "Vocabulary `locators` is not configured!"
-msgstr ""
+msgstr "O vocabulário `locators` não está configurado!"
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:101
 msgid "Vocabulary saved successfully"
@@ -19165,7 +19165,7 @@ msgstr "Vocabulário salvo com sucesso"
 #: scripts/apps/users/views/user-preferences.html:20
 #: scripts/apps/users/views/user-preferences.html:248
 msgid "Vocabulary values"
-msgstr ""
+msgstr "Valores do vocabulário"
 
 #: scripts/apps/vocabularies/controllers/VocabularyConfigController.ts:243
 msgid "Vocabulary was deleted."
@@ -19173,7 +19173,7 @@ msgstr "O vocabulário foi removido"
 
 #: scripts/validate-instance-configuration.tsx:56
 msgid "Vocabulary with ID \"categories\" is required"
-msgstr ""
+msgstr "O vocabulário com ID \"categories\" é obrigatório"
 
 #: ../superdesk-planning/client/components/Main/CalendarNavigation.tsx:56
 msgid "W"
@@ -19181,7 +19181,7 @@ msgstr "W"
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:44
 msgid "WARNING unknown filter condition value: {{ value }}"
-msgstr ""
+msgstr "AVISO: valor de condição de filtro desconhecido: {{ value }}"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:91
 msgid "WE"
@@ -19207,7 +19207,7 @@ msgstr "Aviso"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:208
 msgid "Warning Sign"
-msgstr ""
+msgstr "Sinal de aviso"
 
 #: ../superdesk-planning/client/utils/filters.ts:139
 msgid "We"
@@ -19231,7 +19231,7 @@ msgstr "Fraco"
 
 #: scripts/extensions/content-lists/src/lists-grid/lists-grid.tsx:124
 msgid "Webhooks"
-msgstr ""
+msgstr "Webhooks"
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.tsx:110
 msgid "Wed"
@@ -19250,11 +19250,11 @@ msgstr "Semana"
 
 #: ../superdesk-planning/client/components/fields/editor/Days.tsx:32
 msgid "Week Days"
-msgstr ""
+msgstr "Dias da semana"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:30
 msgid "Week(s)"
-msgstr ""
+msgstr "Semana(s)"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:37
 #: ../superdesk-planning/client/components/fields/editor/ScheduleFrequency.tsx:23
@@ -19263,11 +19263,11 @@ msgstr "Semanalmente"
 
 #: ../superdesk-planning/client/utils/filters.ts:48
 msgid "Weekly @ {{ time }} to {{ desk }}"
-msgstr ""
+msgstr "Semanalmente às {{ time }} para {{ desk }}"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:71
 msgid "Weekly on {{days}} at {{hour}}"
-msgstr ""
+msgstr "Semanalmente em {{days}} às {{hour}}"
 
 #: scripts/core/directives/views/phone-home-modal-directive.html:4
 msgid "Welcome to Superdesk"
@@ -19285,17 +19285,17 @@ msgstr "Enquanto criava um pacote de destaques"
 
 #: scripts/apps/publish/views/subscribers.html:209
 msgid "When enabled it can send multiple items at the same time."
-msgstr ""
+msgstr "Quando ativado, é possível enviar vários itens ao mesmo tempo."
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:55
 msgid "White"
-msgstr ""
+msgstr "Branco"
 
 #: scripts/apps/authoring-react/widget-header-component.tsx:45
 #: scripts/apps/dashboard/views/widget.html:11
 #: scripts/apps/dashboard/views/widget.html:12
 msgid "Widget settings"
-msgstr ""
+msgstr "Preferências do widget"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:8
 msgid ""
@@ -19315,7 +19315,7 @@ msgstr "Largura"
 msgid ""
 "Width of the\n"
 "                                    popup window (in pixels)"
-msgstr ""
+msgstr "Largura da janela pop-up (em pixels)"
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:73
 msgid "Wire/Paper"
@@ -19354,7 +19354,7 @@ msgstr "Estado do Fluxo de Trabalho"
 
 #: ../superdesk-planning/client/components/fields/index.tsx:247
 msgid "Workflow States"
-msgstr ""
+msgstr "Estados do fluxo de trabalho"
 
 #: scripts/apps/desks/views/desk-config-modal.html:310
 #: scripts/apps/desks/views/desk-config-modal.html:363
@@ -19364,7 +19364,7 @@ msgstr "Etapas do Trabalho"
 
 #: scripts/extensions/availability-manager/src/settings/working-hours-grid-labels.tsx:25
 msgid "Working hours"
-msgstr ""
+msgstr "Horário de trabalho"
 
 #: scripts/apps/archive/index.tsx:94 scripts/apps/dashboard/index.ts:53
 #: scripts/apps/dashboard/views/workspace.html:24
@@ -19379,7 +19379,7 @@ msgstr "Nome da Área de Trabalho"
 
 #: scripts/apps/workspace/views/workspace-dropdown.html:1
 msgid "Workspace:"
-msgstr ""
+msgstr "Área de trabalho:"
 
 #: scripts/apps/dashboard/world-clock/world-clock.ts:209
 #: scripts/core/lang/missing-translations-strings.ts:44
@@ -19388,11 +19388,11 @@ msgstr "Relógio Mundial"
 
 #: scripts/apps/dashboard/world-clock/world-clock.ts:42
 msgid "World clock added: {{zone}}"
-msgstr ""
+msgstr "Relógio mundial adicionado: {{zone}}"
 
 #: scripts/apps/dashboard/world-clock/world-clock.ts:44
 msgid "World clock removed: {{zone}}"
-msgstr ""
+msgstr "Relógio mundial removido: {{zone}}"
 
 #: scripts/apps/dashboard/world-clock/world-clock.ts:221
 #: scripts/core/lang/missing-translations-strings.ts:45
@@ -19401,15 +19401,15 @@ msgstr "Widget de Relógio Mundial"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:338
 msgid "XMP File"
-msgstr ""
+msgstr "Arquivo XMP"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:32
 msgid "Year(s)"
-msgstr ""
+msgstr "Ano(s)"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:61
 msgid "Yellow"
-msgstr ""
+msgstr "Amarelo"
 
 #: scripts/apps/authoring-react/fields/boolean/difference.tsx:13
 #: scripts/core/ui/components/generic-form/input-types/checkbox.tsx:10
@@ -19419,35 +19419,35 @@ msgstr "Sim"
 
 #: scripts/extensions/broadcasting/src/shows/create-show-after-modal.tsx:38
 msgid "Yes, create a template"
-msgstr ""
+msgstr "Sim, criar um modelo"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:17
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:8
 msgid "Yesterday"
-msgstr ""
+msgstr "Ontem"
 
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:106
 msgid ""
 "You are about to delete the vocabulary {{name}}. This action can't be undone."
-msgstr ""
+msgstr "Você está prestes a excluir o vocabulário {{name}}. Esta ação não pode ser desfeita."
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:119
 msgid ""
 "You are changing you personal preferences. If you would like to set the "
 "default order for the desk, you can do so from the settings page."
-msgstr ""
+msgstr "Você está alterando suas preferências pessoais. Para definir a ordem padrão do desk, acesse a página de preferências."
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:249
 msgid "You are creating a new planning item."
-msgstr ""
+msgstr "Você está criando um novo item de planejamento."
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/UnlockFeaturedPlanning.tsx:73
 msgid "You are currently managing featured story in another session"
-msgstr ""
+msgstr "Você está gerenciando a matéria em destaque em outra sessão"
 
 #: scripts/validate-instance-configuration.tsx:38
 msgid "You are likely running an outdated version of auto tagging extension."
-msgstr ""
+msgstr "Você provavelmente está executando uma versão desatualizada da extensão de marcação automática."
 
 #: scripts/apps/workspace/content/services/ContentService.ts:71
 msgid "You are not allowed to create an article there."
@@ -19463,11 +19463,11 @@ msgstr ""
 msgid ""
 "You are trying to add multiple related events when only one is allowed. Only "
 "the first event({{name}}) will be added."
-msgstr ""
+msgstr "Você está tentando adicionar vários eventos relacionados, mas apenas um é permitido. Somente o primeiro evento ({{name}}) será adicionado."
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.tsx:233
 msgid "You can associate only one XMP file"
-msgstr ""
+msgstr "Você pode associar apenas um arquivo XMP"
 
 #: scripts/apps/desks/views/desk-config-modal.html:134
 msgid ""
@@ -19483,19 +19483,19 @@ msgstr ""
 msgid ""
 "You can either completely block further writing after the characterlimit is "
 "reached or highlight exceeding characters in red."
-msgstr ""
+msgstr "Você pode bloquear completamente a digitação após atingir o limite de caracteres ou destacar em vermelho os caracteres excedentes."
 
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:154
 msgid "You can't multi-edit, because these articles can't be edited"
-msgstr ""
+msgstr "Não é possível editar em lote, pois estas matérias não podem ser editadas"
 
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:35
 msgid "You cannot change workflow status"
-msgstr ""
+msgstr "Você não pode alterar o estado do fluxo de trabalho"
 
 #: scripts/core/menu/notifications/views/notifications.html:13
 msgid "You don't have any notifications"
-msgstr ""
+msgstr "Você não tem nenhuma notificação"
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:44
 msgid "You don't have the privileges to perform any action"
@@ -19503,7 +19503,7 @@ msgstr "Você não tem os privilégios necessários para executar ações."
 
 #: scripts/apps/search/views/saved-search-subscribe.html:12
 msgid "You have chosen to subscribe to"
-msgstr ""
+msgstr "Você optou por se inscrever em"
 
 #: scripts/api/highlights.ts:53 scripts/apps/search/MultiImageEdit.ts:203
 msgid "You have unsaved changes, do you want to continue?"
@@ -19511,27 +19511,27 @@ msgstr "Existem alterações não salvas, deseja continuar?"
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:93
 msgid "You have unsaved changes. Do you want to save them now?"
-msgstr ""
+msgstr "Você tem alterações não salvas. Deseja salvá-las agora?"
 
 #: scripts/core/ui/components/ListPage/show-unsaved-changes-modal.tsx:76
 msgid "You have unsaved changes. What would you like to do?"
-msgstr ""
+msgstr "Você tem alterações não salvas. O que deseja fazer?"
 
 #: scripts/extensions/ai-widget/src/extension.ts:16
 msgid "You haven't registered any services for the Ai Assistant Widget!"
-msgstr ""
+msgstr "Você não registrou nenhum serviço para o widget do assistente de IA!"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:242
 msgid ""
 "You made changes to this planning item that is part of a recurring event."
-msgstr ""
+msgstr "Você fez alterações neste item de planejamento, que faz parte de um evento recorrente."
 
 #: scripts/apps/production-api-keys/config.ts:41
 msgid ""
 "Your Client ID and Client Secret will be generated when you save. Make sure "
 "to copy the Client Secret immediately. It will only be shown once and it "
 "cannot be retrieved later."
-msgstr ""
+msgstr "Seu Client ID e Client Secret serão gerados ao salvar. Copie o Client Secret imediatamente. Ele será exibido apenas uma vez e não poderá ser recuperado depois."
 
 #: scripts/apps/users/import/views/import-user.html:11
 msgid "Your Credentials"
@@ -19545,11 +19545,11 @@ msgstr "Seu nome de usuário Slack sem a @ inicial"
 #: ../superdesk-planning/client/components/ContentProfiles/ContentProfileModal.tsx:124
 #: ../superdesk-planning/client/components/ContentProfiles/CoverageProfileModal.tsx:83
 msgid "Your changes will be lost if you close now. What would you like to do?"
-msgstr ""
+msgstr "Suas alterações serão perdidas se você fechar agora. O que deseja fazer?"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/ManageFiltersModal.tsx:285
 msgid "Your changes will be lost if you switch now. What would you like to do?"
-msgstr ""
+msgstr "Suas alterações serão perdidas se você trocar agora. O que deseja fazer?"
 
 #: scripts/apps/dashboard/world-clock/configuration.html:12
 #: scripts/apps/dashboard/world-clock/configuration.html:3
@@ -19558,7 +19558,7 @@ msgstr "Seu relógio"
 
 #: scripts/core/auth/login-modal.html:71
 msgid "Your password has expired. Please change your password."
-msgstr ""
+msgstr "Sua senha expirou. Altere sua senha."
 
 #: scripts/core/auth/login-modal.html:4
 msgid "Your session has expired."
@@ -19566,15 +19566,15 @@ msgstr "Sua sessão expirou."
 
 #: scripts/apps/vocabularies/components/UploadComplete.tsx:8
 msgid "Your upload was successful"
-msgstr ""
+msgstr "Seu envio foi concluído com sucesso"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:209
 msgid "Zoom In"
-msgstr ""
+msgstr "Aumentar zoom"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:210
 msgid "Zoom Out"
-msgstr ""
+msgstr "Diminuir zoom"
 
 #: scripts/apps/search/views/saved-searches.html:11
 msgid "[Global]"
@@ -19602,19 +19602,19 @@ msgstr "[Sem Valor]"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:103
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:97
 msgid "a Recurring Event"
-msgstr ""
+msgstr "um evento recorrente"
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:51
 msgid "a lower case letter (a-z)"
-msgstr ""
+msgstr "uma letra minúscula (a-z)"
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:53
 msgid "a number (0-9)"
-msgstr ""
+msgstr "um número (0-9)"
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:54
 msgid "a special character (!@#$%^&...)"
-msgstr ""
+msgstr "um caractere especial (!@#$%^&...)"
 
 #: scripts/apps/users/views/edit-form.html:36
 #: scripts/extensions/content-lists/src/lists-grid/list-card.tsx:260
@@ -19623,15 +19623,15 @@ msgstr "ativo"
 
 #: scripts/core/lang/missing-translations-strings.ts:38
 msgid "added new task {{subject}} of type {{type}}"
-msgstr ""
+msgstr "adicionou nova tarefa {{subject}} do tipo {{type}}"
 
 #: scripts/core/lang/missing-translations-strings.ts:35
 msgid "added new {{type}} item about \"{{subject}}\""
-msgstr ""
+msgstr "adicionou novo item {{type}} sobre \"{{subject}}\""
 
 #: scripts/core/lang/missing-translations-strings.ts:35
 msgid "added new {{type}} item with empty header/title"
-msgstr ""
+msgstr "adicionou novo item {{type}} com cabeçalho/título vazio"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:78
 msgid "added to workflow"
@@ -19656,11 +19656,11 @@ msgstr "já existe"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:91
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:97
 msgid "an Event"
-msgstr ""
+msgstr "um evento"
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:52
 msgid "an upper case letter (A-Z)"
-msgstr ""
+msgstr "uma letra maiúscula (A-Z)"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:56
 msgid "and"
@@ -19672,7 +19672,7 @@ msgstr "e '{{ user }}'"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:90
 msgid "annotation"
-msgstr ""
+msgstr "anotação"
 
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "archive"
@@ -19712,7 +19712,7 @@ msgstr "Criação"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:271
 msgid "back"
-msgstr ""
+msgstr "voltar"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:83
 msgid "bold"
@@ -19727,7 +19727,7 @@ msgstr "procurar"
 
 #: scripts/apps/search/components/SelectBox.tsx:68
 msgid "bulk actions"
-msgstr ""
+msgstr "ações em lote"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:43
 #: ../superdesk-planning/client/components/AuditInformation/index.tsx:110
@@ -19746,7 +19746,7 @@ msgstr "por"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:210
 msgid "by {{user}}"
-msgstr ""
+msgstr "por {{user}}"
 
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:284
 msgid "cancel"
@@ -19762,13 +19762,13 @@ msgstr "categorias"
 
 #: scripts/apps/users/views/edit-form.html:212
 msgid "change password"
-msgstr ""
+msgstr "alterar senha"
 
 #: scripts/core/menu/notifications/views/notifications.html:42
 msgid ""
 "changed the following original item. Please make sure to update the "
 "corresponding translated item accordingly"
-msgstr ""
+msgstr "alterou o seguinte item original. Atualize o item traduzido correspondente de acordo"
 
 #: scripts/apps/authoring/authoring/components/CharacterCount.tsx:30
 #: scripts/apps/authoring/authoring/components/CharacterCount.tsx:64
@@ -19783,7 +19783,7 @@ msgstr "cidade"
 
 #: scripts/core/ui/components/virtual-lists/select.tsx:176
 msgid "clear"
-msgstr ""
+msgstr "limpar"
 
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:116
 msgid "close"
@@ -19799,7 +19799,7 @@ msgstr "cor"
 
 #: scripts/core/editor3/components/toolbar/TableControls.tsx:102
 msgid "column"
-msgstr ""
+msgstr "coluna"
 
 #: scripts/core/menu/notifications/views/notifications.html:31
 msgid "commented on"
@@ -19869,7 +19869,7 @@ msgstr "item de planejamento criado"
 
 #: scripts/core/lang/missing-translations-strings.ts:36
 msgid "created new version {{version}} for item {{type}} about \"{{subject}}\""
-msgstr ""
+msgstr "criou a nova versão {{version}} do item {{type}} sobre \"{{subject}}\""
 
 #: scripts/core/lang/missing-translations-strings.ts:42
 msgid "created user {{user}}"
@@ -19877,7 +19877,7 @@ msgstr "usuário criado {{user}}"
 
 #: scripts/extensions/content-lists/src/list-editor/article-row.tsx:126
 msgid "created: {{date}}"
-msgstr ""
+msgstr "criado: {{date}}"
 
 #: scripts/apps/users/views/edit-form.html:380
 msgid "current"
@@ -19885,15 +19885,15 @@ msgstr "atual"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:86
 msgid "custom blocks"
-msgstr ""
+msgstr "blocos personalizados"
 
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:17
 msgid "custom vocabulary"
-msgstr ""
+msgstr "vocabulário personalizado"
 
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:8
 msgid "date"
-msgstr ""
+msgstr "data"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:41
 #: scripts/apps/desks/views/content-expiry.html:3
@@ -19931,7 +19931,7 @@ msgstr "mesa:"
 
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:455
 msgid "details"
-msgstr ""
+msgstr "detalhes"
 
 #: scripts/apps/users/views/edit-form.html:34
 #: scripts/apps/users/views/user-list-item.html:15
@@ -19953,7 +19953,7 @@ msgstr "rascunho"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:42
 msgid "due"
-msgstr ""
+msgstr "prazo"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:58
 msgid "duplicate id"
@@ -20008,15 +20008,15 @@ msgstr "embargo"
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:93
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:9
 msgid "embed"
-msgstr ""
+msgstr "incorporar"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:94
 msgid "embed articles"
-msgstr ""
+msgstr "incorporar matérias"
 
 #: scripts/extensions/availability-manager/src/utils.ts:100
 msgid "end time"
-msgstr ""
+msgstr "hora de término"
 
 #: scripts/core/lang/missing-translations-strings.ts:10
 msgid "error"
@@ -20074,11 +20074,11 @@ msgstr "busca feita em"
 #: scripts/extensions/broadcasting/src/form-validation.ts:18
 #: scripts/extensions/broadcasting/src/form-validation.ts:22
 msgid "field can not be empty"
-msgstr ""
+msgstr "o campo não pode ficar vazio"
 
 #: scripts/api/article-fetch.tsx:136
 msgid "file name"
-msgstr ""
+msgstr "nome do arquivo"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:230
 msgid "first"
@@ -20099,11 +20099,11 @@ msgstr ""
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:9
 msgid "for \"{{currentDesk.name}}\" Desk"
-msgstr ""
+msgstr "para o desk \"{{currentDesk.name}}\""
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:2
 msgid "for \"{{name}}\" Desk"
-msgstr ""
+msgstr "para o desk \"{{name}}\""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:42
 msgid "for '{{ desk }}'"
@@ -20119,15 +20119,15 @@ msgstr "parar destaque"
 
 #: ../superdesk-planning/client/utils/events.tsx:1443
 msgid "for {{ repeatCount }} repeats"
-msgstr ""
+msgstr "por {{ repeatCount }} repetições"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:87
 msgid "formatting marks"
-msgstr ""
+msgstr "marcas de formatação"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:284
 msgid "forward"
-msgstr ""
+msgstr "avançar"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:36
 #: scripts/apps/authoring/versioning/history/views/history.html:47
@@ -20149,7 +20149,7 @@ msgstr "de destaque"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:361
 msgid "from highlight: {{x}}"
-msgstr ""
+msgstr "do destaque: {{x}}"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:241
 msgid "from {{from}} to {{to}}"
@@ -20160,7 +20160,7 @@ msgstr "de {{from}} até {{to}}"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:260
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:276
 msgid "from:"
-msgstr ""
+msgstr "de:"
 
 #: scripts/apps/users/views/edit-form.html:73
 msgid "full name"
@@ -20173,11 +20173,11 @@ msgstr "gênero:"
 
 #: scripts/core/ui/components/UserPopup/UserPopup.tsx:27
 msgid "go to profile"
-msgstr ""
+msgstr "ir para o perfil"
 
 #: scripts/core/utils.tsx:285 scripts/core/utils.tsx:345
 msgid "graphic"
-msgstr ""
+msgstr "gráfico"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:66
 msgid "h1"
@@ -20217,7 +20217,7 @@ msgstr "destaques"
 
 #: scripts/core/utils.tsx:347
 msgid "highlights package"
-msgstr ""
+msgstr "pacote de destaques"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:255
 msgid "honorific"
@@ -20239,26 +20239,26 @@ msgstr "hrs"
 
 #: scripts/extensions/auto-tagging-widget/src/extension.tsx:28
 msgid "iMatrics"
-msgstr ""
+msgstr "iMatrics"
 
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:111
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:444
 msgid "iMatrics service error"
-msgstr ""
+msgstr "Erro do serviço iMatrics"
 
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:128
 msgid ""
 "iMatrics service has returned tags referencing parents that do not exist in "
 "the response."
-msgstr ""
+msgstr "O serviço iMatrics retornou tags que referenciam itens pai que não existem na resposta."
 
 #: scripts/extensions/auto-tagging-widget/src/extension.tsx:11
 msgid "iMatrics tagging"
-msgstr ""
+msgstr "Marcação iMatrics"
 
 #: scripts/core/ui/views/sd-timezone.html:10
 msgid "ie. Europe/London"
-msgstr ""
+msgstr "ex.: Europe/London"
 
 #: scripts/apps/archive/controllers/UploadController.ts:505
 #: scripts/apps/authoring-react/fields/media/editor.tsx:147
@@ -20268,7 +20268,7 @@ msgstr "foto"
 
 #: scripts/extensions/auto-tagging-widget/src/ImageTaggingComponent/ImageTaggingComponent.tsx:279
 msgid "image suggestions ({{n}})"
-msgstr ""
+msgstr "sugestões de imagens ({{n}})"
 
 #: scripts/core/ui/views/sd-timepicker-popup.html:4
 msgid "in 1 h"
@@ -20325,7 +20325,7 @@ msgstr "instagram"
 
 #: scripts/extensions/sams/src/components/attachments/samsAttachmentsList.tsx:121
 msgid "internal"
-msgstr ""
+msgstr "interno"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:82
 msgid "italic"
@@ -20333,7 +20333,7 @@ msgstr "itálico"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:429
 msgid "item"
-msgstr ""
+msgstr "item"
 
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:166
 #: scripts/apps/authoring-react/article-widgets/related-items/related-items.tsx:244
@@ -20342,11 +20342,11 @@ msgstr "item metadata associado"
 
 #: scripts/apps/master-desk/components/OverviewComponent.tsx:235
 msgid "items in production"
-msgstr ""
+msgstr "itens em produção"
 
 #: scripts/apps/master-desk/components/AssignmentsComponent.tsx:168
 msgid "items in total"
-msgstr ""
+msgstr "itens no total"
 
 #: scripts/core/lang/missing-translations-strings.ts:12
 msgid "killed"
@@ -20354,7 +20354,7 @@ msgstr "eliminado"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:111
 msgid "label"
-msgstr ""
+msgstr "rótulo"
 
 #: scripts/apps/packaging/views/sd-package-item-preview.html:24
 msgid "label: <b>{{label.name}}</b>"
@@ -20376,14 +20376,14 @@ msgstr "última atualização e último item recebidos."
 #: scripts/apps/authoring/authoring/directives/ReadingTime.ts:20
 #: scripts/apps/authoring/authoring/directives/ReadingTime.ts:54
 msgid "less than one minute read"
-msgstr ""
+msgstr "leitura de menos de um minuto"
 
 #: scripts/apps/authoring/authoring/components/line-count.tsx:21
 msgid "line"
 msgid_plural "lines"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "linha"
+msgstr[1] "linhas"
+msgstr[2] "linhas"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:77
 msgid "link"
@@ -20402,11 +20402,11 @@ msgstr "carregando"
 
 #: scripts/extensions/auto-tagging-widget/src/ImageTaggingComponent/ImageTaggingComponent.tsx:278
 msgid "loading image suggestions..."
-msgstr ""
+msgstr "carregando sugestões de imagens..."
 
 #: ../superdesk-planning/client/components/Main/ListPanel.tsx:434
 msgid "loading more items..."
-msgstr ""
+msgstr "carregando mais itens..."
 
 #: scripts/apps/desks/directives/DeskeditPeople.ts:13
 #: scripts/apps/desks/directives/DeskeditStages.ts:93
@@ -20429,7 +20429,7 @@ msgstr "baixo"
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:100
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:31
 msgid "lowercase"
-msgstr ""
+msgstr "minúsculas"
 
 #: scripts/apps/packaging/services/PackagesService.ts:24
 #: scripts/apps/packaging/services/PackagesService.ts:55
@@ -20438,7 +20438,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.tsx:268
 msgid "make this mode the default"
-msgstr ""
+msgstr "tornar este modo o padrão"
 
 #: scripts/core/views/sdSearchList.html:17
 msgid "many"
@@ -20446,7 +20446,7 @@ msgstr "muitos"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:76
 msgid "media"
-msgstr ""
+msgstr "mídia"
 
 #: scripts/core/menu/notifications/views/notifications.html:35
 msgid "mentioned you"
@@ -20484,12 +20484,12 @@ msgstr "mêses"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:85
 msgid "multi-line quote"
-msgstr ""
+msgstr "citação de várias linhas"
 
 #: scripts/apps/search/views/saved-search-subscribe.html:23
 #: scripts/extensions/content-lists/src/lists-grid/list-card.tsx:252
 msgid "never"
-msgstr ""
+msgstr "nunca"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:54
 #: scripts/apps/users/views/edit-form.html:386
@@ -20498,7 +20498,7 @@ msgstr "novo"
 
 #: scripts/core/ui/components/content-create-dropdown/content-create-dropdown.tsx:17
 msgid "new item"
-msgstr ""
+msgstr "novo item"
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:8
 #: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:444
@@ -20552,7 +20552,7 @@ msgstr "em"
 
 #: ../superdesk-planning/client/utils/events.tsx:1479
 msgid "on all week (including weekends)"
-msgstr ""
+msgstr "em todos os dias da semana (incluindo fins de semana)"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:100
 msgid "on assignment by"
@@ -20564,22 +20564,22 @@ msgstr ""
 
 #: ../superdesk-planning/client/utils/events.tsx:1476
 msgid "on week days"
-msgstr ""
+msgstr "em dias úteis"
 
 #: scripts/apps/authoring/authoring/components/text-statistics.tsx:29
 msgid "one word"
 msgid_plural "{{x}} words"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "uma palavra"
+msgstr[1] "{{x}} palavras"
+msgstr[2] "{{x}} palavras"
 
 #: scripts/core/editor3/components/article-embed/article-embed.tsx:32
 msgid "open in a new window"
-msgstr ""
+msgstr "abrir em uma nova janela"
 
 #: scripts/extensions/markForUser/src/extension.tsx:56
 msgid "open item"
-msgstr ""
+msgstr "abrir item"
 
 #: scripts/apps/archive/views/upload.html:65
 #: scripts/core/auth/login-modal.html:53
@@ -20607,11 +20607,11 @@ msgstr "outro"
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:400
 #: scripts/core/utils.tsx:346
 msgid "package"
-msgstr ""
+msgstr "pacote"
 
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:139
 msgid "parent ID"
-msgstr ""
+msgstr "ID do item pai"
 
 #: scripts/apps/ingest/views/settings/searchConfig.html:7
 #: scripts/apps/users/import/views/import-user.html:19
@@ -20714,7 +20714,7 @@ msgstr "publicado"
 
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:138
 msgid "qcode"
-msgstr ""
+msgstr "qcode"
 
 #: scripts/apps/authoring/macros/views/macros-widget.html:14
 msgid "quick list"
@@ -20727,20 +20727,20 @@ msgstr "citação"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:98
 msgid "redo"
-msgstr ""
+msgstr "refazer"
 
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:10
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:7
 msgid "related content"
-msgstr ""
+msgstr "conteúdo relacionado"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:89
 msgid "remove all format"
-msgstr ""
+msgstr "remover toda a formatação"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:88
 msgid "remove format"
-msgstr ""
+msgstr "remover formatação"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:111
 msgid "removed desk"
@@ -20752,7 +20752,7 @@ msgstr "destaque removido"
 
 #: scripts/core/lang/missing-translations-strings.ts:37
 msgid "removed item {{type}} about {{subject}}"
-msgstr ""
+msgstr "removeu o item {{type}} sobre {{subject}}"
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:6
 msgid "replace"
@@ -20760,15 +20760,15 @@ msgstr "substituir"
 
 #: scripts/core/lang/missing-translations-strings.ts:43
 msgid "replaced item {{type}} about {{subject}}"
-msgstr ""
+msgstr "substituiu o item {{type}} sobre {{subject}}"
 
 #: scripts/apps/workspace/content/components/ContentProfileFieldsConfig.tsx:181
 msgid "required"
-msgstr ""
+msgstr "obrigatório"
 
 #: scripts/apps/users/views/edit-form.html:209
 msgid "reset password"
-msgstr ""
+msgstr "redefinir senha"
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "retrying"
@@ -20797,7 +20797,7 @@ msgstr "roteado"
 
 #: scripts/core/editor3/components/toolbar/TableControls.tsx:90
 msgid "row"
-msgstr ""
+msgstr "linha"
 
 #: scripts/core/lang/missing-translations-strings.ts:12
 msgid "scheduled"
@@ -20829,7 +20829,7 @@ msgstr "selecionado"
 
 #: scripts/apps/search/components/SelectBox.tsx:63
 msgid "selection not allowed"
-msgstr ""
+msgstr "seleção não permitida"
 
 #: scripts/core/lang/missing-translations-strings.ts:9
 msgid "send"
@@ -20888,12 +20888,12 @@ msgstr "estágio:"
 
 #: scripts/extensions/availability-manager/src/utils.ts:98
 msgid "start time"
-msgstr ""
+msgstr "hora de início"
 
 #: scripts/extensions/availability-manager/src/utils.ts:102
 msgid ""
 "start time cannot be greater than end time ({{start_time}} - {{end_time}})"
-msgstr ""
+msgstr "a hora de início não pode ser posterior à hora de término ({{start_time}} - {{end_time}})"
 
 #: scripts/apps/authoring/metadata/views/meta-place-directive.html:19
 msgid "state, region, ..."
@@ -20905,7 +20905,7 @@ msgstr "status"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:80
 msgid "strikethrough"
-msgstr ""
+msgstr "tachado"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:83
 #: scripts/core/lang/missing-translations-strings.ts:11
@@ -20914,7 +20914,7 @@ msgstr "enviar"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:79
 msgid "subscript"
-msgstr ""
+msgstr "subscrito"
 
 #: scripts/core/lang/missing-translations-strings.ts:32
 msgid "subscription"
@@ -20923,7 +20923,7 @@ msgstr "assinatura"
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:16
 #: scripts/apps/search/views/search-panel.html:44
 msgid "subscriptions"
-msgstr ""
+msgstr "inscrições"
 
 #: scripts/core/lang/missing-translations-strings.ts:10
 msgid "success"
