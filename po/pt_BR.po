@@ -20931,11 +20931,11 @@ msgstr "sucesso"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:92
 msgid "suggestions"
-msgstr ""
+msgstr "sugestões"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:78
 msgid "superscript"
-msgstr ""
+msgstr "sobrescrito"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:16
 msgid "switch to grid view"
@@ -20947,19 +20947,19 @@ msgstr "mudar para visualização em lista"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:95
 msgid "tab"
-msgstr ""
+msgstr "tabulação"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:96
 msgid "tab as space"
-msgstr ""
+msgstr "tabulação como espaço"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:84
 msgid "table"
-msgstr ""
+msgstr "tabela"
 
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:137
 msgid "tag name"
-msgstr ""
+msgstr "nome da tag"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:398
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:6
@@ -20985,20 +20985,20 @@ msgstr "para atribuição de cobertura por"
 
 #: scripts/apps/authoring-react/compare-articles/compare-articles.tsx:150
 msgid "toggle difference"
-msgstr ""
+msgstr "alternar diferença"
 
 #: scripts/apps/authoring-react/compare-articles/compare-articles.tsx:134
 msgid "toggle primary"
-msgstr ""
+msgstr "alternar primário"
 
 #: scripts/apps/authoring-react/compare-articles/compare-articles.tsx:142
 msgid "toggle secondary"
-msgstr ""
+msgstr "alternar secundário"
 
 #: scripts/apps/authoring-react/toolbar-components/integration-wrapper/header-translations.tsx:150
 #: scripts/apps/authoring/views/authoring-header.html:85
 msgid "translations"
-msgstr ""
+msgstr "traduções"
 
 #: scripts/apps/contacts/constants.ts:50
 msgid "twitter"
@@ -21010,11 +21010,11 @@ msgstr "sublinhar"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:97
 msgid "undo"
-msgstr ""
+msgstr "desfazer"
 
 #: scripts/apps/ai-providers/AiProviderItem.tsx:30
 msgid "unknown error"
-msgstr ""
+msgstr "erro desconhecido"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:72
 #: scripts/core/editor3/helpers/highlights.ts:66
@@ -21031,11 +21031,11 @@ msgstr "despublicado"
 
 #: scripts/apps/packaging/views/sd-package-item-preview.html:23
 msgid "unpublished"
-msgstr ""
+msgstr "despublicado"
 
 #: ../superdesk-planning/client/utils/events.tsx:1453
 msgid "until {{until}}"
-msgstr ""
+msgstr "até {{until}}"
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "update"
@@ -21058,24 +21058,24 @@ msgstr "campos atualizados"
 
 #: scripts/core/lang/missing-translations-strings.ts:38
 msgid "updated task {{subject}} for item {{type}}"
-msgstr ""
+msgstr "atualizou a tarefa {{subject}} do item {{type}}"
 
 #: scripts/extensions/content-lists/src/webhooks/webhook-item.tsx:86
 msgid "updated {{date}}"
-msgstr ""
+msgstr "atualizado {{date}}"
 
 #: scripts/core/lang/missing-translations-strings.ts:34
 msgid "uploaded media {{name}}"
-msgstr ""
+msgstr "enviou a mídia {{name}}"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:30
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:99
 msgid "uppercase"
-msgstr ""
+msgstr "maiúsculas"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:98
 msgid "url of the search provider"
-msgstr ""
+msgstr "URL do provedor de pesquisa"
 
 #: scripts/core/lang/missing-translations-strings.ts:37
 msgid "user {{user}} has been added to desk {{desk}}: Please re-login."
@@ -21107,11 +21107,11 @@ msgstr "usuários"
 
 #: scripts/extensions/broadcasting/src/form-validation.ts:26
 msgid "value must be greater than zero"
-msgstr ""
+msgstr "o valor deve ser maior que zero"
 
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:304
 msgid "value of 0 will disable this restriction"
-msgstr ""
+msgstr "o valor 0 desativará esta restrição"
 
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-article.html:5
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-dropdown.html:13
@@ -21139,13 +21139,13 @@ msgstr "versão"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:121
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:260
 msgid "version {{n}}"
-msgstr ""
+msgstr "versão {{n}}"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:161
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:176
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:238
 msgid "version: {{n}}"
-msgstr ""
+msgstr "versão: {{n}}"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:402
 #: scripts/apps/archive/controllers/UploadController.ts:509
@@ -21192,7 +21192,7 @@ msgstr "com:"
 
 #: scripts/extensions/availability-manager/src/utils.ts:118
 msgid "working hours are not set"
-msgstr ""
+msgstr "o horário de trabalho não está definido"
 
 #: scripts/apps/search/components/ItemContainer.tsx:17
 msgid "workspace"
@@ -21231,7 +21231,7 @@ msgstr "{{ itemType }} criado"
 #: ../superdesk-planning/client/validators/planning.ts:170
 #: ../superdesk-planning/client/validators/planning.ts:210
 msgid "{{ key }} is a required field"
-msgstr ""
+msgstr "{{ key }} é um campo obrigatório"
 
 #: scripts/apps/authoring/macros/views/macros-widget.html:17
 #: scripts/apps/authoring/macros/views/macros-widget.html:26
@@ -21249,11 +21249,11 @@ msgstr[2] "{{ multi.count}} Itens selecionados"
 
 #: ../superdesk-planning/client/components/fields/calendars.tsx:45
 msgid "{{ name }} (disabled)"
-msgstr ""
+msgstr "{{ name }} (desativado)"
 
 #: ../superdesk-planning/client/components/fields/editor/base/multilingualText.tsx:150
 msgid "{{ name }} ({{ language }})"
-msgstr ""
+msgstr "{{ name }} ({{ language }})"
 
 #: ../superdesk-planning/client/validators/assignments.tsx:9
 #: ../superdesk-planning/client/validators/profile.ts:108
@@ -21278,7 +21278,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/actions/assignments/notifications.ts:380
 msgid "{{ type }} assignment '{{ slugline }}' is deleted"
-msgstr ""
+msgstr "A atribuição {{ type }} '{{ slugline }}' foi excluída"
 
 #: scripts/apps/monitoring/aggregate-widget/aggregate-widget.html:4
 msgid "{{ widget.configuration.label || widget.label }}"
@@ -21290,7 +21290,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Archive/ArchivePreview/ArchivePreviewMetadataList.tsx:16
 msgid "{{ wordCount }} words"
-msgstr ""
+msgstr "{{ wordCount }} palavras"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:25
 msgid "{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}"
@@ -21302,27 +21302,27 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:118
 msgid "{{action}} {{event}}"
-msgstr ""
+msgstr "{{action}} {{event}}"
 
 #: ../superdesk-planning/client/components/Main/ItemEditorModal/EditorModalPanel.tsx:172
 msgid "{{action}} {{type}}"
-msgstr ""
+msgstr "{{action}} {{type}}"
 
 #: scripts/apps/search/controllers/get-multi-actions.tsx:370
 msgid "{{count}} articles have been descheduled"
-msgstr ""
+msgstr "{{count}} matérias tiveram o agendamento cancelado"
 
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:287
 msgid "{{count}} item selected"
 msgid_plural "{{count}} items selected"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{{count}} item selecionado"
+msgstr[1] "{{count}} itens selecionados"
+msgstr[2] "{{count}} itens selecionados"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:123
 #: ../superdesk-analytics/client/utils.js:196
 msgid "{{days}} days"
-msgstr ""
+msgstr "{{days}} dias"
 
 #: scripts/apps/users/views/edit-form.html:144
 msgid "{{error.email}}"
@@ -21344,38 +21344,38 @@ msgstr ""
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:112
 msgid "{{field}} (optional)"
-msgstr ""
+msgstr "{{field}} (opcional)"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:420
 msgid "{{field}} cannot be earlier than now!"
-msgstr ""
+msgstr "{{field}} não pode ser anterior ao momento atual!"
 
 #: scripts/extensions/availability-manager/src/utils.ts:100
 #: scripts/extensions/availability-manager/src/utils.ts:114
 #: scripts/extensions/availability-manager/src/utils.ts:98
 msgid "{{field}} cannot be empty"
-msgstr ""
+msgstr "{{field}} não pode ficar vazio"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:408
 msgid "{{field}} date is required!"
-msgstr ""
+msgstr "A data de {{field}} é obrigatória!"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:416
 msgid "{{field}} is not a valid date!"
-msgstr ""
+msgstr "{{field}} não é uma data válida!"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:412
 msgid "{{field}} time is required!"
-msgstr ""
+msgstr "A hora de {{field}} é obrigatória!"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:118
 #: ../superdesk-analytics/client/utils.js:202
 msgid "{{hours}} hours"
-msgstr ""
+msgstr "{{hours}} horas"
 
 #: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:99
 msgid "{{hours}} hours, {{minutes}} minutes"
-msgstr ""
+msgstr "{{hours}} horas, {{minutes}} minutos"
 
 #: ../superdesk-analytics/client/charts/views/chart-colour-picker.html:2
 msgid "{{label | translate}}"
@@ -21388,49 +21388,49 @@ msgstr ""
 #: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:105
 #: ../superdesk-analytics/client/utils.js:208
 msgid "{{minutes}} minutes"
-msgstr ""
+msgstr "{{minutes}} minutos"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:133
 msgid "{{months}} months"
-msgstr ""
+msgstr "{{months}} meses"
 
 #: scripts/apps/publish/views/publish-queue.html:84
 msgid "{{multiSelectCount}} Item selected"
 msgid_plural "{{multiSelectCount}} Items selected"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{{multiSelectCount}} item selecionado"
+msgstr[1] "{{multiSelectCount}} itens selecionados"
+msgstr[2] "{{multiSelectCount}} itens selecionados"
 
 #: scripts/apps/authoring/authoring/directives/WordCount.html:1
 msgid "{{numWords}} words"
-msgstr ""
+msgstr "{{numWords}} palavras"
 
 #: scripts/api/article-fetch.tsx:118
 msgid "{{n}} images can not be fetched because they are too small."
 msgid_plural "One image can not be fetched because it is too small."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Uma imagem não pode ser buscada porque é muito pequena."
+msgstr[1] "{{n}} imagens não podem ser buscadas porque são muito pequenas."
+msgstr[2] "{{n}} imagens não podem ser buscadas porque são muito pequenas."
 
 #: scripts/apps/authoring-react/fields/media/difference.tsx:41
 msgid "{{n}} items added"
-msgstr ""
+msgstr "{{n}} itens adicionados"
 
 #: scripts/apps/authoring-react/fields/media/difference.tsx:54
 msgid "{{n}} items modified"
-msgstr ""
+msgstr "{{n}} itens modificados"
 
 #: scripts/apps/authoring-react/fields/media/difference.tsx:62
 msgid "{{n}} items re-ordered"
-msgstr ""
+msgstr "{{n}} itens reordenados"
 
 #: scripts/apps/authoring-react/fields/media/difference.tsx:47
 msgid "{{n}} items removed"
-msgstr ""
+msgstr "{{n}} itens removidos"
 
 #: scripts/apps/authoring-react/macros/interactive-macros-display.tsx:105
 msgid "{{n}} of {{total}} matches"
-msgstr ""
+msgstr "{{n}} de {{total}} correspondências"
 
 #: scripts/apps/users/views/edit-form.html:65
 msgid "{{roles[user.role].name}}"
@@ -21438,7 +21438,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/utils.js:213
 msgid "{{seconds}} seconds"
-msgstr ""
+msgstr "{{seconds}} segundos"
 
 #: scripts/apps/users/views/edit.html:19
 msgid "{{section.label}}"
@@ -21446,7 +21446,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/utils/confirmAddingRelatedItems.tsx:44
 msgid "{{some}} of {{total}} items can not be added as related"
-msgstr ""
+msgstr "{{some}} de {{total}} itens não podem ser adicionados como relacionados"
 
 #: scripts/core/lang/missing-translations-strings.ts:40
 msgid "{{status}} Ingest Channel {{name}}"
@@ -21464,19 +21464,19 @@ msgstr ""
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:44
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:45
 msgid "{{update.date}} - {{update.operation}} by {{update.user}}"
-msgstr ""
+msgstr "{{update.date}} - {{update.operation}} por {{update.user}}"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:128
 msgid "{{weeks}} weeks"
-msgstr ""
+msgstr "{{weeks}} semanas"
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper-sidebar.tsx:76
 msgid "{{widget}} (not available while the item can not be edited)"
-msgstr ""
+msgstr "{{widget}} (indisponível enquanto o item não puder ser editado)"
 
 #: scripts/apps/authoring-react/side-widget-configuration.tsx:104
 msgid "{{widget}} configuration"
-msgstr ""
+msgstr "Configuração de {{widget}}"
 
 #: scripts/extensions/sams/src/utils/ui.tsx:119
 msgid "{{width}} * {{height}}"
@@ -21484,34 +21484,34 @@ msgstr ""
 
 #: scripts/apps/authoring-react/fields/media/media-metadata.tsx:44
 msgid "{{width}} x {{height}} px"
-msgstr ""
+msgstr "{{width}} x {{height}} px"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:55
 msgid "{{wordsCount}} word"
 msgid_plural "{{ $count}} words"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{{wordsCount}} palavra"
+msgstr[1] "{{ $count}} palavras"
+msgstr[2] "{{ $count}} palavras"
 
 #: scripts/extensions/datetimeField/src/editor.tsx:138
 msgid "{{x}} hour"
 msgid_plural "{{x}} hours"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{{x}} hora"
+msgstr[1] "{{x}} horas"
+msgstr[2] "{{x}} horas"
 
 #: scripts/apps/search/components/fields/linesCount.tsx:14
 msgid "{{x}} lines"
-msgstr ""
+msgstr "{{x}} linhas"
 
 #: scripts/extensions/datetimeField/src/editor.tsx:147
 msgid "{{x}} min"
-msgstr ""
+msgstr "{{x}} min"
 
 #: scripts/apps/authoring/authoring/directives/ReadingTime.ts:22
 #: scripts/apps/authoring/authoring/directives/ReadingTime.ts:52
 msgid "{{x}} min read"
-msgstr ""
+msgstr "{{x}} min de leitura"
 
 #~ msgid "(advanced mode)"
 #~ msgstr "(modo avançado)"
