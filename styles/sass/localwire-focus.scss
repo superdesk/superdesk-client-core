@@ -91,6 +91,17 @@
     box-shadow: none !important;
 }
 
+// The monitoring and search toolbars use the older flat search bar; same treatment on its
+// handler, which holds the icon and the field.
+.flat-searchbar .search-handler:has(input:focus-visible) {
+    @include localwire-focus-ring--inset;
+}
+
+.flat-searchbar .search-handler input:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 // The skip link: the first tab stop on every page, shown only while it has focus.
 .localwire-skip-link {
     position: fixed;
