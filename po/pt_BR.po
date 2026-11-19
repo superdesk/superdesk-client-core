@@ -3500,7 +3500,7 @@ msgstr "Clique no botão \"+\" no canto superior direito para adicionar alguns w
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:171
 msgid "Click the Plus button to add languages"
-msgstr ""
+msgstr "Clique no botão de mais para adicionar idiomas"
 
 #: scripts/apps/users/views/change-avatar.html:38
 msgid ""
@@ -3511,15 +3511,15 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/components/video-thumbnail-editor.tsx:108
 msgid "Click to replace thumbnail"
-msgstr ""
+msgstr "Clique para substituir a miniatura"
 
 #: scripts/apps/production-api-keys/config.ts:55
 msgid "Client ID"
-msgstr ""
+msgstr "ID do cliente"
 
 #: scripts/apps/production-api-keys/config.ts:60
 msgid "Client Secret"
-msgstr ""
+msgstr "Segredo do cliente"
 
 #: scripts/apps/dashboard/world-clock/configuration.html:5
 msgid "Clock type"
@@ -3590,11 +3590,11 @@ msgstr "Fechar"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:70
 msgid "Close & Continue"
-msgstr ""
+msgstr "Fechar e continuar"
 
 #: scripts/extensions/ai-widget/src/headlines/headlines-widget.tsx:71
 msgid "Close Headlines"
-msgstr ""
+msgstr "Fechar manchetes"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:61
 msgid "Close Small"
@@ -3602,7 +3602,7 @@ msgstr ""
 
 #: scripts/extensions/ai-widget/src/summary/summary-widget.tsx:67
 msgid "Close Summary"
-msgstr ""
+msgstr "Fechar resumo"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:62
 msgid "Close Thick"
@@ -3610,16 +3610,16 @@ msgstr ""
 
 #: scripts/extensions/ai-widget/src/translations/translations-widget.tsx:80
 msgid "Close Translate"
-msgstr ""
+msgstr "Fechar tradução"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:68
 #: scripts/apps/authoring/views/authoring-topbar.html:69
 msgid "Close and Continue"
-msgstr ""
+msgstr "Fechar e continuar"
 
 #: scripts/apps/production-api-keys/utils.tsx:27
 msgid "Close anyway"
-msgstr ""
+msgstr "Fechar mesmo assim"
 
 #: scripts/apps/authoring/authoring/index.ts:460
 msgid "Close current item"
@@ -3627,26 +3627,26 @@ msgstr "Fechar o item atual"
 
 #: scripts/apps/dashboard/closed-desk/index.ts:159
 msgid "Close desk widget"
-msgstr ""
+msgstr "Fechar widget do desk"
 
 #: scripts/apps/authoring/views/change-image.html:156
 msgid "Close details"
-msgstr ""
+msgstr "Fechar detalhes"
 
 #: scripts/apps/contacts/views/search-panel.html:4
 #: scripts/apps/content-api/views/search-panel.html:11
 #: scripts/apps/legal-archive/views/legal_archive.html:44
 #: scripts/apps/search/views/search-panel.html:23
 msgid "Close panel"
-msgstr ""
+msgstr "Fechar painel"
 
 #: scripts/apps/search/views/item-preview.html:27
 msgid "Close preview"
-msgstr ""
+msgstr "Fechar pré-visualização"
 
 #: scripts/apps/production-api-keys/utils.tsx:17
 msgid "Close this panel?"
-msgstr ""
+msgstr "Fechar este painel?"
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:140
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:9
@@ -3656,7 +3656,7 @@ msgstr "Fechado"
 
 #: scripts/core/ui/components/ListPage/generic-list-page-item-view-edit.tsx:242
 msgid "Closing failed"
-msgstr ""
+msgstr "Falha ao fechar"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:63
 msgid "Code"
@@ -3666,11 +3666,11 @@ msgstr "Código"
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:64
 #: scripts/core/editor3/components/Editor3Component.tsx:949
 msgid "Collapse"
-msgstr ""
+msgstr "Recolher"
 
 #: scripts/apps/authoring-react/multi-edit-modal.tsx:158
 msgid "Collapse widgets"
-msgstr ""
+msgstr "Recolher widgets"
 
 #: scripts/apps/vocabularies/services/SchemaFactory.ts:8
 msgid "Color"
@@ -3682,7 +3682,7 @@ msgstr "Coluna"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:196
 msgid "Columns:"
-msgstr ""
+msgstr "Colunas:"
 
 #: scripts/apps/packaging/index.ts:93
 msgid "Combine with current"
@@ -3691,15 +3691,15 @@ msgstr "Combinar com atual"
 #: ../superdesk-planning/client/components/ExportTemplates/ManageExportTemplates.tsx:42
 #: ../superdesk-planning/client/components/fields/editor/ItemType.tsx:18
 msgid "Combined"
-msgstr ""
+msgstr "Combinado"
 
 #: scripts/apps/publish/views/subscribers.html:163
 msgid "Comma separated values"
-msgstr ""
+msgstr "Valores separados por vírgula"
 
 #: scripts/apps/products/views/products-config-modal.html:55
 msgid "Comma separated values."
-msgstr ""
+msgstr "Valores separados por vírgula."
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:65
 #: scripts/core/editor3/components/comments/Comment.tsx:95
@@ -3717,17 +3717,17 @@ msgstr "Comentários"
 
 #: ../superdesk-planning/client/components/fields/index.tsx:241
 msgid "Common"
-msgstr ""
+msgstr "Comum"
 
 #: scripts/apps/monitoring/directives/utils.ts:95
 #: scripts/apps/search/views/search.html:22
 #: scripts/apps/search/views/search.html:23
 msgid "Compact View"
-msgstr ""
+msgstr "Visualização compacta"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningSubNav.tsx:103
 msgid "Compact list"
-msgstr ""
+msgstr "Lista compacta"
 
 #: scripts/apps/search/constants.ts:16
 #: scripts/apps/workspace/content/constants.ts:18
@@ -3748,7 +3748,7 @@ msgstr "Comparar Versões"
 
 #: scripts/apps/authoring-react/toolbar/compare-article-versions.tsx:129
 msgid "Compare article versions"
-msgstr ""
+msgstr "Comparar versões da matéria"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:148
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:157
@@ -3758,7 +3758,7 @@ msgstr "Comparar versões"
 
 #: scripts/apps/authoring-react/compare-articles/compare-articles.tsx:124
 msgid "Comparing \"{{x}}\"(primary) to \"{{y}}\"(secondary)"
-msgstr ""
+msgstr "Comparando \"{{x}}\" (principal) com \"{{y}}\" (secundária)"
 
 #: ../superdesk-planning/client/constants/assignments.ts:193
 msgid "Complete Assignment"
@@ -3790,7 +3790,7 @@ msgstr "Configuração apagada."
 msgid ""
 "Configuration has changed. {{message}} Would you like to save the story to "
 "your workspace?"
-msgstr ""
+msgstr "A configuração foi alterada. {{message}} Deseja salvar a matéria na sua área de trabalho?"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:11
 #: scripts/apps/highlights/views/highlights_config_modal.html:12
@@ -3804,11 +3804,11 @@ msgstr "Configurar Temas do Editor"
 
 #: scripts/extensions/predefinedTextField/src/config.tsx:101
 msgid "Configure predefined values"
-msgstr ""
+msgstr "Configurar valores predefinidos"
 
 #: scripts/apps/authoring-react/toolbar-components/integration-wrapper/configure-theme-button.tsx:13
 msgid "Configure themes"
-msgstr ""
+msgstr "Configurar temas"
 
 #: ../superdesk-planning/client/api/coverages.ts:34
 #: ../superdesk-planning/client/api/coverages.ts:55
@@ -3836,16 +3836,16 @@ msgstr "Confirmar Disponibilidade"
 
 #: scripts/apps/authoring/authoring/components/publish-warning-confirm-modal.tsx:24
 msgid "Confirm Publish Warnings"
-msgstr ""
+msgstr "Confirmar avisos de publicação"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/unpublish-action.tsx:28
 #: scripts/apps/authoring/authoring/components/unpublish-confirm-modal.tsx:41
 msgid "Confirm Unpublishing"
-msgstr ""
+msgstr "Confirmar despublicação"
 
 #: scripts/apps/authoring/views/change-image.html:195
 msgid "Confirm crop"
-msgstr ""
+msgstr "Confirmar corte"
 
 #: scripts/core/auth/login-modal.html:78
 #: scripts/core/auth/reset-password.html:51
@@ -3858,7 +3858,7 @@ msgstr "Confirmação"
 
 #: scripts/apps/ingest/directives/authenticate-ingest-provider.tsx:20
 msgid "Connect an account"
-msgstr ""
+msgstr "Conectar uma conta"
 
 #: scripts/core/notification/notification.ts:230
 msgid "Connected to Notification Server!"
@@ -3866,11 +3866,11 @@ msgstr "Conectado ao Servidor de Notificação1"
 
 #: scripts/apps/ai-providers/AiProviderItem.tsx:34
 msgid "Connection could not be tested."
-msgstr ""
+msgstr "Não foi possível testar a conexão."
 
 #: scripts/apps/ai-providers/AiProviderItem.tsx:28
 msgid "Connection failed: {{error}}"
-msgstr ""
+msgstr "Falha na conexão: {{error}}"
 
 #: scripts/apps/publish/views/odbc-config.html:2
 #: scripts/apps/publish/views/odbc-config.html:4
@@ -3879,7 +3879,7 @@ msgstr "Frase de conexão"
 
 #: scripts/apps/ai-providers/AiProviderItem.tsx:23
 msgid "Connection successful. Models available: {{count}}."
-msgstr ""
+msgstr "Conexão bem-sucedida. Modelos disponíveis: {{count}}."
 
 #: ../superdesk-planning/client/planning-extension/src/authoring-react-fields/contact/index.tsx:23
 msgid "Contact"
@@ -3889,11 +3889,11 @@ msgstr "Contato"
 #: scripts/apps/contacts/constants.ts:72
 #: scripts/apps/contacts/views/search-panel.html:31
 msgid "Contact Type"
-msgstr ""
+msgstr "Tipo de contato"
 
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:108
 msgid "Contact type \"{{ contact_type }}\" MUST have an email"
-msgstr ""
+msgstr "O tipo de contato \"{{ contact_type }}\" DEVE ter um e-mail"
 
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/contacts.ts:10
 #: ../superdesk-planning/client/components/fields/editor/Contacts.tsx:21
@@ -3935,7 +3935,7 @@ msgstr "Expiração do Conteúdo"
 
 #: ../superdesk-planning/client/components/ContentProfiles/ContentProfileModal.tsx:332
 msgid "Content Fields"
-msgstr ""
+msgstr "Campos de conteúdo"
 
 #: scripts/apps/content-filters/views/manage-filters.html:107
 #: scripts/apps/ingest/views/settings/ingest-routing-filter.html:2
@@ -3968,15 +3968,15 @@ msgstr "Perfis de Conteúdo"
 
 #: ../superdesk-analytics/client/content_publishing_report/index.js:44
 msgid "Content Publishing"
-msgstr ""
+msgstr "Publicação de conteúdo"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:479
 msgid "Content State"
-msgstr ""
+msgstr "Estado do conteúdo"
 
 #: ../superdesk-planning/client/components/fields/editor/ContentTemplate.tsx:82
 msgid "Content Template"
-msgstr ""
+msgstr "Modelo de conteúdo"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:320
 #: scripts/apps/publish/views/publish-queue.html:107
@@ -3987,7 +3987,7 @@ msgstr "Tipo de Conteúdo"
 
 #: scripts/apps/publish/views/publish-queue.html:60
 msgid "Content Type:"
-msgstr ""
+msgstr "Tipo de conteúdo:"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:395
 #: scripts/core/lang/missing-translations-strings.ts:15
@@ -3996,19 +3996,19 @@ msgstr "Tipos de Conteúdo"
 
 #: scripts/core/activity/activity.ts:27
 msgid "Content config"
-msgstr ""
+msgstr "Configuração de conteúdo"
 
 #: scripts/apps/users/views/settings-roles.html:65
 msgid "Content creation"
-msgstr ""
+msgstr "Criação de conteúdo"
 
 #: scripts/apps/users/views/settings-roles.html:75
 msgid "Content editing"
-msgstr ""
+msgstr "Edição de conteúdo"
 
 #: scripts/apps/desks/views/content-expiry.html:53
 msgid "Content expiry can not be more than {{max}} days."
-msgstr ""
+msgstr "A expiração do conteúdo não pode ser superior a {{max}} dias."
 
 #: scripts/apps/desks/views/desk-config-modal.html:329
 msgid "Content expiry:"
@@ -4016,11 +4016,11 @@ msgstr "Expiração do conteúdo:"
 
 #: scripts/apps/workspace/content/components/ContentProfileFieldsConfig.tsx:103
 msgid "Content fields"
-msgstr ""
+msgstr "Campos de conteúdo"
 
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:31
 msgid "Content filter"
-msgstr ""
+msgstr "Filtro de conteúdo"
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:58
 msgid "Content filter saved."
@@ -4028,15 +4028,15 @@ msgstr "Filtro de conteúdo salvo."
 
 #: scripts/core/activity/activity.ts:32
 msgid "Content flow"
-msgstr ""
+msgstr "Fluxo de conteúdo"
 
 #: ../superdesk-planning/client/actions/assignments/api.ts:320
 msgid "Content item not found!"
-msgstr ""
+msgstr "Item de conteúdo não encontrado!"
 
 #: ../superdesk-planning/client/actions/assignments/api.ts:265
 msgid "Content items not found!"
-msgstr ""
+msgstr "Itens de conteúdo não encontrados!"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:75
 msgid "Content linked"
@@ -4048,17 +4048,17 @@ msgstr "Conteúdo vinculado à cobertura"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:532
 msgid "Content linked to the planning item."
-msgstr ""
+msgstr "Conteúdo vinculado ao item de planejamento."
 
 #: scripts/extensions/content-lists/src/list-editor/list-editor.tsx:372
 msgid "Content list saved."
-msgstr ""
+msgstr "Lista de conteúdo salva."
 
 #: scripts/apps/production-api-keys/config.ts:30
 #: scripts/extensions/content-lists/src/extension.ts:17
 #: scripts/extensions/content-lists/src/list-editor/list-pane.tsx:56
 msgid "Content lists"
-msgstr ""
+msgstr "Listas de conteúdo"
 
 #: ../superdesk-planning/client/apps/Assignments/AssignmentPreview.tsx:122
 msgid "Content locked"
@@ -4066,7 +4066,7 @@ msgstr "Conteúdo bloqueado"
 
 #: scripts/apps/search/components/TypeIcon.tsx:26
 msgid "Content profile: {{name}}"
-msgstr ""
+msgstr "Perfil de conteúdo: {{name}}"
 
 #: scripts/apps/search/views/search-filters.html:2
 msgid "Content types"
@@ -4079,7 +4079,7 @@ msgstr "Conteúdo não-vinculado"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/Content.tsx:24
 msgid "Content: {{ numberOfContent }}"
-msgstr ""
+msgstr "Conteúdo: {{ numberOfContent }}"
 
 #: scripts/api/article-send.tsx:93
 #: scripts/apps/desks/views/desk-config-modal.html:426
@@ -4092,23 +4092,23 @@ msgstr "Contraste"
 
 #: scripts/apps/authoring/views/change-image.html:155
 msgid "Controls"
-msgstr ""
+msgstr "Controles"
 
 #: scripts/core/editor3/components/toolbar/index.tsx:452
 msgid "Convert text to lowercase"
-msgstr ""
+msgstr "Converter texto em minúsculas"
 
 #: scripts/core/editor3/components/toolbar/index.tsx:441
 msgid "Convert text to uppercase"
-msgstr ""
+msgstr "Converter texto em maiúsculas"
 
 #: ../superdesk-planning/client/constants/events.ts:163
 msgid "Convert to Recurring Event"
-msgstr ""
+msgstr "Converter em evento recorrente"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:110
 msgid "Convert to a recurring event"
-msgstr ""
+msgstr "Converter em um evento recorrente"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:81
 msgid "Converted to recurring event"
@@ -4116,7 +4116,7 @@ msgstr "Convertido em evento recorrente"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:93
 msgid "Copied to clipboard"
-msgstr ""
+msgstr "Copiado para a área de transferência"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:67
 #: scripts/apps/archive/index.tsx:268
@@ -4130,15 +4130,15 @@ msgstr "Copiar"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:90
 msgid "Copy assignment Id"
-msgstr ""
+msgstr "Copiar ID da atribuição"
 
 #: scripts/apps/authoring/media/views/media-copy-metadata-directive.html:2
 msgid "Copy metadata"
-msgstr ""
+msgstr "Copiar metadados"
 
 #: scripts/apps/production-api-keys/config.ts:65
 msgid "Copy this now, you won't be able to access it again."
-msgstr ""
+msgstr "Copie isto agora, você não poderá acessá-lo novamente."
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:196
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:65
@@ -4201,7 +4201,7 @@ msgstr "Corrigir item"
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:87
 #: scripts/apps/search/components/fields/state.tsx:39
 msgid "Corrected"
-msgstr ""
+msgstr "Corrigido"
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:182
 msgid "Corrected by"
@@ -4209,7 +4209,7 @@ msgstr "Corrigido por"
 
 #: scripts/core/interactive-article-actions-panel/index-ui.tsx:136
 msgid "Correcting multiple items from authoring pane is not supported"
-msgstr ""
+msgstr "Corrigir vários itens a partir do painel de edição não é compatível"
 
 #: scripts/apps/search/components/fields/state.tsx:40
 #: scripts/core/lang/missing-translations-strings.ts:16
@@ -4218,24 +4218,24 @@ msgstr "Correção"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:165
 msgid "Correction Cancel by"
-msgstr ""
+msgstr "Correção cancelada por"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:485
 msgid "Correction cancelled by {{user}}"
-msgstr ""
+msgstr "Correção cancelada por {{user}}"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:467
 msgid "Correction has been removed"
-msgstr ""
+msgstr "A correção foi removida"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:495
 #: scripts/apps/authoring/versioning/history/views/history.html:171
 msgid "Correction link is removed"
-msgstr ""
+msgstr "O vínculo da correção foi removido"
 
 #: scripts/core/interactive-article-actions-panel/actions/send-correction-action.tsx:62
 msgid "Correction sent"
-msgstr ""
+msgstr "Correção enviada"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:575
 msgid "Corrections"
@@ -4243,39 +4243,39 @@ msgstr "Correções"
 
 #: scripts/extensions/content-lists/src/lists-grid/lists-grid.tsx:69
 msgid "Could not create the list."
-msgstr ""
+msgstr "Não foi possível criar a lista."
 
 #: scripts/extensions/content-lists/src/lists-grid/list-card.tsx:128
 msgid "Could not delete the list."
-msgstr ""
+msgstr "Não foi possível excluir a lista."
 
 #: scripts/extensions/content-lists/src/webhooks/manage-webhooks-modal.tsx:102
 msgid "Could not delete the webhook."
-msgstr ""
+msgstr "Não foi possível excluir o webhook."
 
 #: ../superdesk-planning/client/api/editor/item_planning.ts:127
 msgid "Could not link event - Please close the item and try linking again"
-msgstr ""
+msgstr "Não foi possível vincular o evento. Feche o item e tente vincular novamente"
 
 #: scripts/extensions/content-lists/src/list-editor/list-editor.tsx:217
 msgid "Could not load articles."
-msgstr ""
+msgstr "Não foi possível carregar as matérias."
 
 #: scripts/extensions/content-lists/src/list-editor/list-editor.tsx:159
 msgid "Could not load the content list."
-msgstr ""
+msgstr "Não foi possível carregar a lista de conteúdo."
 
 #: scripts/extensions/content-lists/src/page.tsx:100
 msgid "Could not load the content lists"
-msgstr ""
+msgstr "Não foi possível carregar as listas de conteúdo"
 
 #: scripts/apps/authoring-react/toolbar-components/integration-wrapper/header-broadcast-master.tsx:32
 msgid "Could not load the master story."
-msgstr ""
+msgstr "Não foi possível carregar a matéria principal."
 
 #: scripts/extensions/content-lists/src/lists-grid/list-card.tsx:199
 msgid "Could not load the preview"
-msgstr ""
+msgstr "Não foi possível carregar a pré-visualização"
 
 #: ../superdesk-planning/client/components/UI/Form/LinkInput.tsx:42
 #: scripts/core/ui/components/Form/LinkInput.tsx:27
@@ -4284,13 +4284,13 @@ msgstr "Não foi possível carregar o título"
 
 #: scripts/extensions/content-lists/src/webhooks/manage-webhooks-modal.tsx:80
 msgid "Could not load webhooks."
-msgstr ""
+msgstr "Não foi possível carregar os webhooks."
 
 #: ../superdesk-planning/client/actions/events/ui.ts:1028
 #: ../superdesk-planning/client/actions/events/ui.ts:1050
 #: ../superdesk-planning/client/actions/events/ui.ts:906
 msgid "Could not obtain lock on the event."
-msgstr ""
+msgstr "Não foi possível obter o bloqueio do evento."
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:245
 msgid "Could not obtain lock on the planning item."
@@ -4298,47 +4298,47 @@ msgstr "Não foi possível bloquear o item de planejamento."
 
 #: scripts/extensions/content-lists/src/page.tsx:87
 msgid "Could not refresh the content lists."
-msgstr ""
+msgstr "Não foi possível atualizar as listas de conteúdo."
 
 #: scripts/apps/authoring-react/toolbar/mark-for-desks/mark-for-desks-popover.tsx:43
 msgid "Could not remove desk."
-msgstr ""
+msgstr "Não foi possível remover o desk."
 
 #: ../superdesk-planning/client/components/editor-standalone/authoring-storage-event-http.ts:51
 msgid "Could not save event"
-msgstr ""
+msgstr "Não foi possível salvar o evento"
 
 #: scripts/extensions/content-lists/src/lists-grid/list-settings-modal.tsx:60
 msgid "Could not save list settings."
-msgstr ""
+msgstr "Não foi possível salvar as configurações da lista."
 
 #: scripts/extensions/content-lists/src/list-editor/list-editor.tsx:387
 msgid "Could not save the content list."
-msgstr ""
+msgstr "Não foi possível salvar a lista de conteúdo."
 
 #: ../superdesk-planning/client/actions/main.ts:1654
 msgid "Could not save the item."
-msgstr ""
+msgstr "Não foi possível salvar o item."
 
 #: scripts/extensions/content-lists/src/webhooks/edit-webhook-panel.tsx:60
 msgid "Could not save the webhook."
-msgstr ""
+msgstr "Não foi possível salvar o webhook."
 
 #: ../superdesk-planning/client/actions/assignments/api.ts:364
 msgid "Could not unlock the assignment."
-msgstr ""
+msgstr "Não foi possível desbloquear a atribuição."
 
 #: ../superdesk-planning/client/actions/main.ts:1650
 msgid "Could not unlock the item."
-msgstr ""
+msgstr "Não foi possível desbloquear o item."
 
 #: scripts/apps/highlights/services/HighlightsService.ts:126
 msgid "Couldn't mark item"
-msgstr ""
+msgstr "Não foi possível marcar o item"
 
 #: scripts/apps/highlights/services/HighlightsService.ts:126
 msgid "Couldn't unmark item"
-msgstr ""
+msgstr "Não foi possível desmarcar o item"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:288
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:136
@@ -4357,16 +4357,16 @@ msgstr "Cobertura"
 
 #: ../superdesk-planning/client/components/Assignments/EditCoverageAssignmentModal.tsx:81
 msgid "Coverage Assignment Details"
-msgstr ""
+msgstr "Detalhes da atribuição da cobertura"
 
 #: ../superdesk-planning/client/components/fields/editor/AssignedCoverage.tsx:37
 #: ../superdesk-planning/client/components/fields/preview/index.ts:49
 msgid "Coverage Assignment Status"
-msgstr ""
+msgstr "Status da atribuição da cobertura"
 
 #: ../superdesk-planning/client/utils/assignments.ts:213
 msgid "Coverage Contact"
-msgstr ""
+msgstr "Contato da cobertura"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.tsx:234
 msgid "Coverage Provider"
@@ -4394,7 +4394,7 @@ msgstr "Tipo de Cobertura"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddInlineForm.tsx:194
 msgid "Coverage Types"
-msgstr ""
+msgstr "Tipos de cobertura"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:85
 msgid "Coverage added to workflow"
@@ -4432,19 +4432,19 @@ msgstr "Cobertura editada"
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.tsx:324
 #: ../superdesk-planning/client/components/Coverages/CoverageAddInlineForm.tsx:143
 msgid "Coverage enabled"
-msgstr ""
+msgstr "Cobertura ativada"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.tsx:317
 msgid "Coverage has been added to workflow"
-msgstr ""
+msgstr "A cobertura foi adicionada ao fluxo de trabalho"
 
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:28
 msgid "Coverage must be assigned to a desk"
-msgstr ""
+msgstr "A cobertura deve ser atribuída a um desk"
 
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:24
 msgid "Coverage must be in draft status"
-msgstr ""
+msgstr "A cobertura deve estar com status de rascunho"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:25
 msgid "Coverage of type {{ type }} created"
@@ -4468,11 +4468,11 @@ msgstr "Cobertura removida"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.tsx:201
 msgid "Coverage type"
-msgstr ""
+msgstr "Tipo de cobertura"
 
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:20
 msgid "Coverage was cancelled"
-msgstr ""
+msgstr "A cobertura foi cancelada"
 
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:77
 #: ../superdesk-planning/client/components/Coverages/CoverageArrayInput.tsx:218
@@ -4486,7 +4486,7 @@ msgstr "Coberturas"
 
 #: ../superdesk-planning/client/api/planning.ts:299
 msgid "Coverages added to workflow."
-msgstr ""
+msgstr "Coberturas adicionadas ao fluxo de trabalho."
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:433
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:219
@@ -4518,15 +4518,15 @@ msgstr "Criar Transmissão"
 
 #: ../superdesk-analytics/client/utils.js:175
 msgid "Create Highlight"
-msgstr ""
+msgstr "Criar destaque"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/CreateNewGeoLookup.tsx:180
 msgid "Create Location"
-msgstr ""
+msgstr "Criar local"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:189
 msgid "Create New Location"
-msgstr ""
+msgstr "Criar novo local"
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:45
 msgid "Create New Task"
@@ -4539,7 +4539,7 @@ msgstr "Criar Pacote"
 
 #: ../superdesk-planning/client/components/Editor/EditorBookmarksBar.tsx:64
 msgid "Create Planning"
-msgstr ""
+msgstr "Criar planejamento"
 
 #: ../superdesk-planning/client/constants/events.ts:157
 msgid "Create Planning Item"
@@ -4548,7 +4548,7 @@ msgstr "Criar Item de Planejamento"
 #: ../superdesk-planning/client/components/EventsPlanningFilters/FilterItem.tsx:105
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:179
 msgid "Create Scheduled Export"
-msgstr ""
+msgstr "Criar exportação agendada"
 
 #: scripts/apps/monitoring/index.ts:126
 msgid "Create a broadcast"
@@ -4557,7 +4557,7 @@ msgstr "Criar uma Transmissão"
 #: ../superdesk-planning/client/components/Locations/LocationsSubNav.tsx:49
 #: ../superdesk-planning/client/components/Locations/LocationsSubNav.tsx:50
 msgid "Create a new location"
-msgstr ""
+msgstr "Criar um novo local"
 
 #: ../superdesk-planning/client/constants/events.ts:158
 msgid "Create and Open Planning Item"
@@ -4566,7 +4566,7 @@ msgstr "Criar e Abrir Item de Planejamento"
 #: scripts/extensions/ai-widget/src/summary/summary.tsx:91
 #: scripts/extensions/ai-widget/src/translations/translations-body.tsx:148
 msgid "Create article"
-msgstr ""
+msgstr "Criar matéria"
 
 #: scripts/apps/highlights/views/settings.html:11
 msgid "Create configuration"
@@ -4582,7 +4582,7 @@ msgstr "Criar Configuração de Destaque"
 
 #: scripts/extensions/content-lists/src/lists-grid/lists-grid.tsx:187
 msgid "Create list"
-msgstr ""
+msgstr "Criar lista"
 
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:45
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:55
@@ -4594,7 +4594,7 @@ msgstr "Criar novo"
 
 #: scripts/extensions/broadcasting/src/page.tsx:275
 msgid "Create new Show"
-msgstr ""
+msgstr "Criar novo programa"
 
 #: scripts/apps/desks/views/desk-config-modal.html:297
 msgid "Create new Stage"
@@ -4606,7 +4606,7 @@ msgstr "Criar nova Área de Trabalho"
 
 #: scripts/extensions/content-lists/src/lists-grid/lists-grid.tsx:142
 msgid "Create new content list"
-msgstr ""
+msgstr "Criar nova lista de conteúdo"
 
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:110
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:114
@@ -4626,19 +4626,19 @@ msgstr "Criar novo item de planejamento"
 
 #: scripts/extensions/broadcasting/src/shows/create-show-after-modal.tsx:44
 msgid "Create new rundown template"
-msgstr ""
+msgstr "Criar novo modelo de rundown"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:55
 msgid "Create new schedule"
-msgstr ""
+msgstr "Criar novo agendamento"
 
 #: scripts/extensions/broadcasting/src/shows/create-show-modal.tsx:85
 msgid "Create new show"
-msgstr ""
+msgstr "Criar novo programa"
 
 #: scripts/extensions/sams/src/components/assets/assetEditor.tsx:135
 msgid "Create new tag: \"{{ tag }}\""
-msgstr ""
+msgstr "Criar nova tag: \"{{ tag }}\""
 
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:261
 msgid "Create new template"
@@ -4646,7 +4646,7 @@ msgstr "Criar Modelo"
 
 #: scripts/extensions/content-lists/src/webhooks/manage-webhooks-modal.tsx:205
 msgid "Create new webhook"
-msgstr ""
+msgstr "Criar novo webhook"
 
 #: scripts/apps/packaging/index.ts:50 scripts/apps/packaging/index.ts:59
 #: scripts/core/ui/components/content-create-dropdown/initial-view.tsx:199
@@ -4659,27 +4659,27 @@ msgstr "Criar planejamento"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:259
 msgid "Create planning for all events or just this one?"
-msgstr ""
+msgstr "Criar planejamento para todos os eventos ou apenas para este?"
 
 #: scripts/extensions/broadcasting/src/rundowns/create-rundown-from-template.tsx:103
 msgid "Create rundown"
-msgstr ""
+msgstr "Criar rundown"
 
 #: scripts/extensions/broadcasting/src/shows/create-show-after-modal.tsx:28
 msgid "Create rundown template"
-msgstr ""
+msgstr "Criar modelo de rundown"
 
 #: scripts/extensions/broadcasting/src/rundown-templates/template-edit.tsx:317
 msgid "Create rundowns automatically"
-msgstr ""
+msgstr "Criar rundowns automaticamente"
 
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:415
 msgid "Create template"
-msgstr ""
+msgstr "Criar modelo"
 
 #: scripts/extensions/content-lists/src/lists-grid/lists-grid.tsx:159
 msgid "Create the first one and add articles to it."
-msgstr ""
+msgstr "Crie a primeira e adicione matérias a ela."
 
 #: scripts/apps/users/views/list.html:3
 msgid "Create user"
@@ -4710,11 +4710,11 @@ msgstr "Criado"
 
 #: ../superdesk-planning/client/components/UI/List/CreatedUpdatedColumn.tsx:28
 msgid "Created : {{ datetime }}"
-msgstr ""
+msgstr "Criado: {{ datetime }}"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:158
 msgid "Created From"
-msgstr ""
+msgstr "Criado de"
 
 #: scripts/core/lang/missing-translations-strings.ts:39
 msgid "Created Ingest Channel {{name}}"
@@ -4722,15 +4722,15 @@ msgstr "Canal de Ingestão criado por {{name}}"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:162
 msgid "Created To"
-msgstr ""
+msgstr "Criado até"
 
 #: scripts/extensions/broadcasting/src/rundowns/rundowns-list.tsx:187
 msgid "Created at {{date}}"
-msgstr ""
+msgstr "Criado em {{date}}"
 
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:165
 msgid "Created at {{time}} by {{user}}"
-msgstr ""
+msgstr "Criado às {{time}} por {{user}}"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:96
 #: scripts/apps/authoring/versioning/history/views/history.html:6
@@ -4739,7 +4739,7 @@ msgstr "Criado por"
 
 #: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:111
 msgid "Created by this user"
-msgstr ""
+msgstr "Criado por este usuário"
 
 #: scripts/apps/search/directives/DateFilters.ts:77
 msgid "Created from"
@@ -4751,15 +4751,15 @@ msgstr "Criado a partir de 'atualizar repetições'"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:105
 msgid "Created from a planning item"
-msgstr ""
+msgstr "Criado a partir de um item de planejamento"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:37
 msgid "Created from content"
-msgstr ""
+msgstr "Criado a partir de conteúdo"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:32
 msgid "Created from event"
-msgstr ""
+msgstr "Criado a partir de evento"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:127
 msgid "Created from highlight"
@@ -4767,7 +4767,7 @@ msgstr "Criado a partir de destaque"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:380
 msgid "Created from highlight({{x}}) by {{user}}"
-msgstr ""
+msgstr "Criado a partir do destaque ({{x}}) por {{user}}"
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:2
 msgid "Created on"
@@ -4775,23 +4775,23 @@ msgstr "Criado em"
 
 #: scripts/apps/search/directives/DateFilters.ts:78
 msgid "Created to"
-msgstr ""
+msgstr "Criado até"
 
 #: scripts/extensions/sams/src/components/common/versionUserDateLines.tsx:36
 msgid "Created {{ datetime }}"
-msgstr ""
+msgstr "Criado {{ datetime }}"
 
 #: scripts/extensions/sams/src/components/common/versionUserDateLines.tsx:41
 msgid "Created {{ datetime }} by"
-msgstr ""
+msgstr "Criado {{ datetime }} por"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:129
 msgid "Creation Date"
-msgstr ""
+msgstr "Data de criação"
 
 #: ../superdesk-planning/client/components/fields/editor/DatesGroup.tsx:80
 msgid "Creation date"
-msgstr ""
+msgstr "Data de criação"
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:17
 #: scripts/apps/search/constants.ts:11
@@ -4801,7 +4801,7 @@ msgstr "Autor"
 
 #: scripts/apps/production-api-keys/config.ts:50
 msgid "Credentials"
-msgstr ""
+msgstr "Credenciais"
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:210
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:73
@@ -4831,11 +4831,11 @@ msgstr "Erros críticos"
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:68
 #: scripts/apps/authoring/views/change-image.html:206
 msgid "Crop"
-msgstr ""
+msgstr "Cortar"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:189
 msgid "Crop coordinates are not defined for {{cropName}} picture crop."
-msgstr ""
+msgstr "As coordenadas de corte não estão definidas para o corte de imagem {{cropName}}."
 
 #: scripts/apps/profiling/views/profiling.html:35
 msgid "Cumulative time"
@@ -4847,7 +4847,7 @@ msgstr "Tempo acumulativo por chamada"
 
 #: ../superdesk-planning/client/constants/assignments.ts:209
 msgid "Current Assignments"
-msgstr ""
+msgstr "Atribuições atuais"
 
 #: ../superdesk-planning/client/components/Events/EventScheduleSummary/index.tsx:78
 msgid "Current Date"
@@ -4855,7 +4855,7 @@ msgstr "Data Atual"
 
 #: ../superdesk-planning/client/components/Events/EventScheduleSummary/index.tsx:82
 msgid "Current Date (Based on Event timezone)"
-msgstr ""
+msgstr "Data atual (com base no fuso horário do evento)"
 
 #: ../superdesk-planning/client/components/Events/RepeatEventSummary/index.tsx:14
 msgid "Current Repeat Summary"
