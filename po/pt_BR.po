@@ -14894,19 +14894,19 @@ msgstr "Pesquisar usuários"
 
 #: scripts/extensions/content-lists/src/list-editor/picker-pane.tsx:95
 msgid "Search articles"
-msgstr ""
+msgstr "Pesquisar matérias"
 
 #: scripts/apps/master-desk/components/FilterPanelComponent.tsx:109
 msgid "Search desk"
-msgstr ""
+msgstr "Pesquisar desk"
 
 #: ../superdesk-analytics/client/email_report/views/email-recipients-input.html:9
 msgid "Search emails"
-msgstr ""
+msgstr "Pesquisar e-mails"
 
 #: ../superdesk-planning/client/components/Contacts/SelectSearchContactsField/SelectListPopup.tsx:226
 msgid "Search for a contact"
-msgstr ""
+msgstr "Pesquisar um contato"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/AddGeoLookupInput.tsx:289
 msgid "Search for a location"
@@ -14914,7 +14914,7 @@ msgstr "Pesquisar localidade"
 
 #: scripts/apps/authoring-react/article-widgets/related-items/related-items.tsx:350
 msgid "Search for an item to relate"
-msgstr ""
+msgstr "Pesquisar um item para relacionar"
 
 #: scripts/apps/dashboard/world-clock/configuration.html:34
 msgid "Search for clock"
@@ -14922,11 +14922,11 @@ msgstr "Buscar por relógio"
 
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/GroupEditor.tsx:91
 msgid "Search icons...."
-msgstr ""
+msgstr "Pesquisar ícones..."
 
 #: scripts/extensions/content-lists/src/list-editor/list-pane.tsx:73
 msgid "Search in list"
-msgstr ""
+msgstr "Pesquisar na lista"
 
 #: scripts/apps/content-api/index.ts:22
 msgid "Search items is content API"
@@ -14939,11 +14939,11 @@ msgstr "Planejamento de pesquisa"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.tsx:208
 msgid "Search provider contacts"
-msgstr ""
+msgstr "Pesquisar contatos de provedores"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-list.html:6
 msgid "Search saved reports"
-msgstr ""
+msgstr "Pesquisar relatórios salvos"
 
 #: scripts/apps/search/views/saved-searches.html:3
 msgid "Search saved searches"
@@ -14951,11 +14951,11 @@ msgstr "Buscar em pesquisas salvas"
 
 #: scripts/apps/search/views/save-search-dialog.html:18
 msgid "Search shortcut"
-msgstr ""
+msgstr "Atalho de pesquisa"
 
 #: ../superdesk-planning/client/components/PlanningTemplatesModal/PlanningTemplatesModal.tsx:81
 msgid "Search templates"
-msgstr ""
+msgstr "Pesquisar modelos"
 
 #: scripts/apps/search/directives/SaveSearch.ts:72
 msgid "Search was saved successfully"
@@ -14973,15 +14973,15 @@ msgstr ""
 
 #: scripts/apps/authoring-react/article-widgets/related-items/related-items.tsx:346
 msgid "Searching"
-msgstr ""
+msgstr "Pesquisando"
 
 #: scripts/core/ui/views/sd-timepicker-popup.html:21
 msgid "Seconds"
-msgstr ""
+msgstr "Segundos"
 
 #: scripts/apps/publish/views/amazon-sqs-fifo-config.html:50
 msgid "Secret Access Key"
-msgstr ""
+msgstr "Chave de acesso secreta"
 
 #: scripts/apps/publish/views/http-push-config.html:13
 msgid "Secret Token"
@@ -15007,11 +15007,11 @@ msgstr "Selecionar todos"
 
 #: scripts/extensions/sams/src/components/assets/selectAssetModal.tsx:162
 msgid "Select Asset(s)"
-msgstr ""
+msgstr "Selecionar ativo(s)"
 
 #: ../superdesk-planning/client/components/Assignments/DesksSubNavDropDown.tsx:49
 msgid "Select Assignments From:"
-msgstr ""
+msgstr "Selecionar atribuições de:"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:257
 msgid "Select Calendar"
@@ -15019,7 +15019,7 @@ msgstr "Selecionar Calendário"
 
 #: scripts/apps/vocabularies/components/drop-zone.tsx:76
 msgid "Select Files"
-msgstr ""
+msgstr "Selecionar arquivos"
 
 #: scripts/apps/archive/views/resend-configuration.html:10
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:55
@@ -15043,46 +15043,46 @@ msgid ""
 "Select a default template for new articles. If you don't see any, first make "
 "sure that there is at least one content profile. Each time a profile is "
 "created, Superdesk creates a template with the same name."
-msgstr ""
+msgstr "Selecione um modelo padrão para novas matérias. Se não vir nenhum, verifique primeiro se existe pelo menos um perfil de conteúdo. Cada vez que um perfil é criado, o Superdesk cria um modelo com o mesmo nome."
 
 #: ../superdesk-planning/client/components/Coverages/CoverageFieldsRow.tsx:56
 #: scripts/core/ui/components/generic-form/input-types/desk-single-value.tsx:40
 msgid "Select a desk"
-msgstr ""
+msgstr "Selecione um desk"
 
 #: scripts/core/ui/components/generic-form/input-types/macro-single-value.tsx:27
 #: scripts/core/ui/components/generic-form/input-types/stage-single-value.tsx:42
 msgid "Select a desk first"
-msgstr ""
+msgstr "Selecione um desk primeiro"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageFieldsRow.tsx:91
 msgid "Select a language"
-msgstr ""
+msgstr "Selecione um idioma"
 
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:240
 msgid "Select a show from the dropdown above."
-msgstr ""
+msgstr "Selecione um programa na lista acima."
 
 #: ../superdesk-planning/client/components/Coverages/CoverageFieldsRow.tsx:108
 msgid "Select a status"
-msgstr ""
+msgstr "Selecione um status"
 
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:317
 msgid "Select a template from the sidebar."
-msgstr ""
+msgstr "Selecione um modelo na barra lateral."
 
 #: scripts/core/ui/components/SelectUser.tsx:116
 #: scripts/core/ui/components/SelectUser.tsx:66
 msgid "Select a user"
-msgstr ""
+msgstr "Selecione um usuário"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-vocabulary/config.tsx:27
 msgid "Select a vocabulary"
-msgstr ""
+msgstr "Selecione um vocabulário"
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:110
 msgid "Select a vocabulary for predefined snippets"
-msgstr ""
+msgstr "Selecione um vocabulário para os trechos predefinidos"
 
 #: ../superdesk-planning/client/components/MultiSelectActions.tsx:341
 msgid "Select all"
@@ -15098,16 +15098,16 @@ msgstr "Selecionar Atribuição"
 
 #: scripts/apps/authoring-react/toolbar/multi-edit-toolbar-action.tsx:35
 msgid "Select articles"
-msgstr ""
+msgstr "Selecionar matérias"
 
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:70
 msgid "Select at most 1 file to upload."
-msgstr ""
+msgstr "Selecione no máximo 1 arquivo para enviar."
 
 #: scripts/apps/archive/controllers/UploadController.ts:413
 #: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:207
 msgid "Select at most {{maxUploads}} files to upload."
-msgstr ""
+msgstr "Selecione no máximo {{maxUploads}} arquivos para enviar."
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:20
 msgid "Select color"
@@ -15119,7 +15119,7 @@ msgstr "Selecionar versão atual"
 
 #: scripts/apps/search/views/edit-time-interval.html:5
 msgid "Select days"
-msgstr ""
+msgstr "Selecionar dias"
 
 #: scripts/apps/users/views/user-preferences.html:161
 msgid "Select default categories only"
@@ -15128,7 +15128,7 @@ msgstr "Selecionar apeas categorias padrão"
 #: scripts/apps/authoring-react/toolbar/mark-for-desks/mark-for-desks-modal.tsx:119
 #: scripts/apps/master-desk/components/HeaderComponent.tsx:224
 msgid "Select desks"
-msgstr ""
+msgstr "Selecionar desks"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:18
 msgid "Select desks for view"
@@ -15136,20 +15136,20 @@ msgstr "Selecionar desks para visualização"
 
 #: ../superdesk-planning/client/components/Locations/LocationsSubNav.tsx:41
 msgid "Select either Search or Browse the locations"
-msgstr ""
+msgstr "Selecione Pesquisar ou Navegar pelos locais"
 
 #: scripts/extensions/predefinedTextField/src/editor.tsx:53
 msgid "Select from a predefined value"
-msgstr ""
+msgstr "Selecionar a partir de um valor predefinido"
 
 #: scripts/apps/search/views/edit-time-interval.html:19
 msgid "Select hours"
-msgstr ""
+msgstr "Selecionar horas"
 
 #: ../superdesk-planning/client/components/SelectItemModal.tsx:29
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-inner-dropdown.html:2
 msgid "Select item"
-msgstr ""
+msgstr "Selecionar item"
 
 #: scripts/apps/monitoring/index.ts:117
 msgid "Select next item on focused stage or group"
@@ -15157,7 +15157,7 @@ msgstr "Selecionar próximo item do estágio ou grupo em foco"
 
 #: scripts/apps/publish-preview/previewModal.tsx:87
 msgid "Select preview target"
-msgstr ""
+msgstr "Selecionar destino da pré-visualização"
 
 #: scripts/apps/monitoring/index.ts:119
 msgid "Select previous item on focused stage or group"
@@ -15169,7 +15169,7 @@ msgstr "Selecionar pesquisas salvas para visualização"
 
 #: scripts/extensions/broadcasting/src/rundowns/components/select-show.tsx:53
 msgid "Select show"
-msgstr ""
+msgstr "Selecionar programa"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:7
 msgid "Select source"
@@ -15186,7 +15186,7 @@ msgstr "Selecione-os da pasta"
 
 #: scripts/apps/authoring/authoring/components/video-thumbnail-editor.tsx:122
 msgid "Select thumbnail"
-msgstr ""
+msgstr "Selecionar miniatura"
 
 #: scripts/extensions/auto-tagging-widget/src/new-item.tsx:141
 msgid "Select type"
@@ -15194,13 +15194,13 @@ msgstr "Selecionar o tipo"
 
 #: scripts/apps/authoring-react/toolbar/version-header.tsx:29
 msgid "Select version"
-msgstr ""
+msgstr "Selecionar versão"
 
 #: ../superdesk-planning/client/components/Events/EventMetadata/RelatedEventListItem.tsx:105
 #: ../superdesk-planning/client/components/RelatedPlannings/PlanningMetaData/RelatedPlanningListItem.tsx:116
 #: scripts/core/editor3/components/toolbar/FloatingCharacterCount.tsx:46
 msgid "Selected"
-msgstr ""
+msgstr "Selecionado"
 
 #: scripts/core/views/sdSearchList.html:21
 msgid "Selected item"
@@ -15217,7 +15217,7 @@ msgstr "Texto selecionado:"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningModal.tsx:200
 msgid "Selections automatically removed"
-msgstr ""
+msgstr "Seleções removidas automaticamente"
 
 #: scripts/core/directives/views/phone-home-modal-directive.html:39
 #: scripts/core/interactive-article-actions-panel/actions/send-to-action.tsx:170
@@ -15226,7 +15226,7 @@ msgstr "Enviar"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:94
 msgid "Send & duplicate"
-msgstr ""
+msgstr "Enviar e duplicar"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/send-correction.tsx:14
 #: scripts/apps/authoring/views/authoring-topbar.html:220
@@ -15235,7 +15235,7 @@ msgstr "Enviar Correção"
 
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:117
 msgid "Send Email"
-msgstr ""
+msgstr "Enviar e-mail"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:227
 msgid "Send Kill"
@@ -15243,7 +15243,7 @@ msgstr "Enviar Eliminação"
 
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:7
 msgid "Send Report via Email"
-msgstr ""
+msgstr "Enviar relatório por e-mail"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:234
 msgid "Send Takedown"
@@ -15254,20 +15254,20 @@ msgstr "Enviar Anotação"
 #: scripts/apps/authoring/views/authoring-topbar.html:91
 #: scripts/apps/authoring/views/authoring-topbar.html:92
 msgid "Send and duplicate"
-msgstr ""
+msgstr "Enviar e duplicar"
 
 #: scripts/core/interactive-article-actions-panel/actions/send-to-action.tsx:157
 msgid "Send and open"
-msgstr ""
+msgstr "Enviar e abrir"
 
 #: scripts/core/interactive-article-actions-panel/actions/publish-action.tsx:307
 #: scripts/core/interactive-article-actions-panel/actions/send-correction-action.tsx:144
 msgid "Send correction"
-msgstr ""
+msgstr "Enviar correção"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/send-kill-action.tsx:14
 msgid "Send kill"
-msgstr ""
+msgstr "Enviar eliminação"
 
 #: scripts/core/lang/missing-translations-strings.ts:14
 msgid "Send notifications via email"
@@ -15275,22 +15275,22 @@ msgstr "Enviar notificações por e-mail"
 
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:70
 msgid "Send only after publish schedule"
-msgstr ""
+msgstr "Enviar somente após o agendamento de publicação"
 
 #: scripts/core/interactive-article-actions-panel/actions/send-to-action.tsx:183
 msgid "Send package and items"
 msgid_plural "Send packages and items"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Enviar pacote e itens"
+msgstr[1] "Enviar pacotes e itens"
+msgstr[2] "Enviar pacotes e itens"
 
 #: scripts/apps/packaging/index.ts:110
 msgid "Send package to"
-msgstr ""
+msgstr "Enviar pacote para"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/send-takedown-action.tsx:14
 msgid "Send takedown"
-msgstr ""
+msgstr "Enviar retirada"
 
 #: scripts/apps/authoring/authoring/index.ts:268
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:201
@@ -15307,11 +15307,11 @@ msgstr "Enviar para/Publicar"
 
 #: scripts/apps/authoring/authoring/index.ts:283
 msgid "Send to Personal Space"
-msgstr ""
+msgstr "Enviar para o espaço pessoal"
 
 #: scripts/apps/users/components/EmailNotificationPreferences.tsx:24
 msgid "Send {{name}} notifications"
-msgstr ""
+msgstr "Enviar notificações de {{name}}"
 
 #: scripts/core/lang/missing-translations-strings.ts:22
 msgid "Sending"
@@ -15319,23 +15319,23 @@ msgstr "Enviando"
 
 #: scripts/apps/workspace/content/constants.ts:68
 msgid "Sent Desk Output"
-msgstr ""
+msgstr "Saída do desk enviada"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:443
 msgid "Sent From"
-msgstr ""
+msgstr "Enviado de"
 
 #: scripts/apps/monitoring/controllers/AggregateCtrl.ts:41
 msgid "Sent Items"
-msgstr ""
+msgstr "Itens enviados"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:436
 msgid "Sent To"
-msgstr ""
+msgstr "Enviado para"
 
 #: scripts/api/article-send.tsx:257
 msgid "Sent successfully"
-msgstr ""
+msgstr "Enviado com sucesso"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:19
 msgid "Sent/Queued as"
@@ -15343,7 +15343,7 @@ msgstr "Enviado / Enfileirado como"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/transmission-details.tsx:89
 msgid "Sent/Queued as {{name}} to {{destination}} at {{date}}"
-msgstr ""
+msgstr "Enviado/enfileirado como {{name}} para {{destination}} em {{date}}"
 
 #: scripts/apps/publish/views/publish-queue.html:104
 msgid "Sequence No"
@@ -15374,18 +15374,18 @@ msgstr "Definir"
 
 #: scripts/extensions/sams/src/components/sets/setPreviewPanel.tsx:127
 msgid "Set Details"
-msgstr ""
+msgstr "Detalhes do conjunto"
 
 #: scripts/extensions/sams/src/components/attachments/samsAttachmentsList.tsx:129
 msgid "Set Disabled"
-msgstr ""
+msgstr "Desativar conjunto"
 
 #: scripts/apps/publish/views/amazon-sqs-fifo-config.html:42
 #: scripts/apps/publish/views/amazon-sqs-fifo-config.html:59
 #: scripts/apps/publish/views/ftp-config.html:12
 #: scripts/apps/publish/views/http-push-config.html:14
 msgid "Set and hidden thereafter"
-msgstr ""
+msgstr "Definido e oculto depois"
 
 #: scripts/apps/users/views/settings-roles.html:50
 msgid "Set as default"
@@ -15393,15 +15393,15 @@ msgstr "Definir como padrão"
 
 #: scripts/extensions/sams/src/api/sets.ts:46
 msgid "Set created successfully"
-msgstr ""
+msgstr "Conjunto criado com sucesso"
 
 #: scripts/extensions/sams/src/api/sets.ts:98
 msgid "Set deleted successfully"
-msgstr ""
+msgstr "Conjunto excluído com sucesso"
 
 #: scripts/apps/highlights/components/SetHighlightsForMultipleArticlesModal.tsx:90
 msgid "Set highlights"
-msgstr ""
+msgstr "Definir destaques"
 
 #: scripts/apps/archive/index.tsx:219
 msgid "Set label in current package"
@@ -15419,23 +15419,23 @@ msgid ""
 "sensible name, select a saved search or desk or its workflow stages. Monitor "
 "anything, anywhere, anytime. You can have as many Monitor widgets as you "
 "wish."
-msgstr ""
+msgstr "Configure diferentes monitores para acompanhar qualquer assunto do ingest ou da produção, saídas de desks ou qualquer parte do fluxo de trabalho. Basta dar um nome apropriado e selecionar uma pesquisa salva, um desk ou seus estágios do fluxo de trabalho. Monitore qualquer coisa, em qualquer lugar, a qualquer hora. Você pode ter quantos widgets de monitoramento quiser."
 
 #: scripts/extensions/sams/src/api/sets.ts:76
 msgid "Set updated successfully"
-msgstr ""
+msgstr "Conjunto atualizado com sucesso"
 
 #: scripts/extensions/sams/src/notifications/sets.ts:50
 msgid "Set was deleted by another user."
-msgstr ""
+msgstr "O conjunto foi excluído por outro usuário."
 
 #: scripts/extensions/sams/src/notifications/sets.ts:28
 msgid "Set was updated by another user."
-msgstr ""
+msgstr "O conjunto foi atualizado por outro usuário."
 
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:206
 msgid "Sets"
-msgstr ""
+msgstr "Conjuntos"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:171
 #: scripts/apps/settings/index.ts:19 scripts/apps/settings/settings.tsx:32
@@ -15448,11 +15448,11 @@ msgstr "Preferências"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:172
 msgid "Share Alternate"
-msgstr ""
+msgstr "Compartilhar alternativa"
 
 #: scripts/apps/search/views/item-preview.html:3
 msgid "Shift preview"
-msgstr ""
+msgstr "Alternar pré-visualização"
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:37
 msgid "Short"
@@ -15460,12 +15460,12 @@ msgstr "Curto"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:145
 msgid "Shortcuts"
-msgstr ""
+msgstr "Atalhos"
 
 #: ../superdesk-planning/client/validators/planning.ts:305
 #: ../superdesk-planning/client/validators/planning.ts:307
 msgid "Should be after the previous scheduled update/coverage"
-msgstr ""
+msgstr "Deve ser posterior à atualização agendada/cobertura anterior"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:56
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:31
@@ -15476,16 +15476,16 @@ msgstr "Mostrar"
 #: ../superdesk-planning/client/components/fields/related_events.tsx:46
 msgid "Show 1 event"
 msgid_plural "Show {{n}} events"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Mostrar 1 evento"
+msgstr[1] "Mostrar {{n}} eventos"
+msgstr[2] "Mostrar {{n}} eventos"
 
 #: ../superdesk-planning/client/components/fields/related_plannings.tsx:35
 msgid "Show 1 planning item"
 msgid_plural "Show {{n}} planning items"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Mostrar 1 item de planejamento"
+msgstr[1] "Mostrar {{n}} itens de planejamento"
+msgstr[2] "Mostrar {{n}} itens de planejamento"
 
 #: scripts/apps/archive/views/provider-menu.html:9
 msgid "Show All"
@@ -15493,7 +15493,7 @@ msgstr "Mostrar Tudo"
 
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/GroupEditor.tsx:121
 msgid "Show Bookmark"
-msgstr ""
+msgstr "Mostrar favorito"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:332
 msgid "Show Crops"
@@ -15501,7 +15501,7 @@ msgstr "Mostrar cortes"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:186
 msgid "Show Floating Character Count"
-msgstr ""
+msgstr "Mostrar contagem flutuante de caracteres"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:352
 msgid "Show Image Title"
@@ -15515,7 +15515,7 @@ msgstr "Mostrar tudo"
 
 #: ../superdesk-planning/client/components/fields/editor/Language.tsx:96
 msgid "Show all language fields"
-msgstr ""
+msgstr "Mostrar campos de todos os idiomas"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:93
 msgid "Show all messages"
@@ -15523,11 +15523,11 @@ msgstr "Mostrar todas as mensagens"
 
 #: scripts/extensions/broadcasting/src/shows/manage-shows.tsx:31
 msgid "Show code"
-msgstr ""
+msgstr "Mostrar código"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:48
 msgid "Show crops for pictures"
-msgstr ""
+msgstr "Mostrar cortes das imagens"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:101
 msgid "Show error messages"
@@ -15535,23 +15535,23 @@ msgstr "Mostrar mensagens de erro"
 
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:509
 msgid "Show image suggestions"
-msgstr ""
+msgstr "Mostrar sugestões de imagens"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:30
 msgid "Show in embedded form"
-msgstr ""
+msgstr "Mostrar em formato incorporado"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:263
 msgid "Show in preview"
-msgstr ""
+msgstr "Mostrar na pré-visualização"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:120
 msgid "Show input for editing description"
-msgstr ""
+msgstr "Mostrar campo para editar a descrição"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:110
 msgid "Show input for editing title"
-msgstr ""
+msgstr "Mostrar campo para editar o título"
 
 #: ../superdesk-planning/client/components/Archive/ArchivePreview/index.tsx:42
 #: ../superdesk-planning/client/components/Contacts/ContactMetaData.tsx:93
@@ -15559,19 +15559,19 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEventItem.tsx:94
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/RelatedPlanningItem.tsx:109
 msgid "Show less"
-msgstr ""
+msgstr "Mostrar menos"
 
 #: ../superdesk-planning/client/components/Archive/ArchivePreview/index.tsx:42
 #: ../superdesk-planning/client/components/Contacts/ContactMetaData.tsx:93
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEventItem.tsx:94
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/RelatedPlanningItem.tsx:109
 msgid "Show more"
-msgstr ""
+msgstr "Mostrar mais"
 
 #: scripts/extensions/broadcasting/src/shows/create-show.tsx:95
 #: scripts/extensions/broadcasting/src/shows/manage-shows.tsx:25
 msgid "Show name"
-msgstr ""
+msgstr "Nome do programa"
 
 #: ../superdesk-planning/client/components/Location/index.tsx:54
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:93
@@ -15580,11 +15580,11 @@ msgstr "Mostrar no mapa"
 
 #: scripts/apps/workspace/content/components/WidgetsConfig.tsx:69
 msgid "Show or hide the widgets in the right toolbar in the editor workspace."
-msgstr ""
+msgstr "Mostra ou oculta os widgets da barra de ferramentas direita na área de edição."
 
 #: scripts/apps/search/components/fields/nested-link.tsx:28
 msgid "Show previous items"
-msgstr ""
+msgstr "Mostrar itens anteriores"
 
 #: scripts/apps/search/index.ts:138
 msgid "Show search modal"
@@ -15598,16 +15598,16 @@ msgstr "Mostrar itens enviados/enfileirados"
 msgid ""
 "Show to users\n"
 "                                as"
-msgstr ""
+msgstr "Mostrar aos usuários\n                                como"
 
 #: scripts/apps/archive/views/item-crops.html:1
 #: scripts/apps/authoring-react/fields/media/media-carousel/image-crops.tsx:22
 msgid "Show/hide crops"
-msgstr ""
+msgstr "Mostrar/ocultar cortes"
 
 #: scripts/apps/users/views/change-avatar.html:17
 msgid "Shows your initials instead"
-msgstr ""
+msgstr "Mostra suas iniciais no lugar"
 
 #: scripts/apps/authoring-react/field-adapters/sign_off.tsx:95
 #: scripts/apps/workspace/content/constants.ts:40
@@ -15621,11 +15621,11 @@ msgstr "Entrar como um usuário diferente"
 
 #: scripts/apps/authoring/views/article-edit.html:473
 msgid "Sign off"
-msgstr ""
+msgstr "Assinatura final"
 
 #: scripts/core/menu/views/menu.html:73
 msgid "Sign out"
-msgstr ""
+msgstr "Sair"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:160
 #: scripts/apps/users/views/edit-form.html:255
@@ -15646,11 +15646,11 @@ msgstr "Sinal"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:10
 msgid "Single Day"
-msgstr ""
+msgstr "Dia único"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:122
 msgid "Single Line"
-msgstr ""
+msgstr "Linha única"
 
 #: scripts/core/editor3/components/media/MediaBlock.tsx:13
 msgid "Single Usage"
@@ -15663,7 +15663,7 @@ msgstr "Linha única"
 
 #: scripts/apps/vocabularies/constants.ts:48
 msgid "Single selection"
-msgstr ""
+msgstr "Seleção única"
 
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:141
 #: scripts/extensions/sams/src/components/assets/assetPreviewPanel.tsx:173
@@ -15674,17 +15674,17 @@ msgstr "Tamanho"
 
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:320
 msgid "Size From:"
-msgstr ""
+msgstr "Tamanho de:"
 
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:334
 msgid "Size To:"
-msgstr ""
+msgstr "Tamanho até:"
 
 #: scripts/extensions/sams/src/components/assets/assetEditor.tsx:179
 #: scripts/extensions/sams/src/components/assets/assetGridItem.tsx:155
 #: scripts/extensions/sams/src/components/assets/assetListItem.tsx:137
 msgid "Size:"
-msgstr ""
+msgstr "Tamanho:"
 
 #: scripts/core/directives/views/phone-home-modal-directive.html:41
 msgid "Skip"
@@ -15692,15 +15692,15 @@ msgstr "Pular"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:174
 msgid "Skip Next"
-msgstr ""
+msgstr "Pular para o próximo"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:175
 msgid "Skip Previous"
-msgstr ""
+msgstr "Pular para o anterior"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:203
 msgid "Skip config test"
-msgstr ""
+msgstr "Ignorar teste de configuração"
 
 #: scripts/apps/desks/views/desk-config-modal.html:59
 msgid "Slack Channel Name"
@@ -15771,38 +15771,38 @@ msgstr "Sms"
 
 #: ../superdesk-planning/client/components/fields/editor/AssignedCoverage.tsx:24
 msgid "Some Coverages Assigned"
-msgstr ""
+msgstr "Algumas coberturas atribuídas"
 
 #: scripts/apps/authoring/multiedit/multiedit.ts:85
 msgid "Some articles failed to unlock"
-msgstr ""
+msgstr "Algumas matérias não puderam ser desbloqueadas"
 
 #: scripts/apps/authoring-react/toolbar/mark-for-desks/mark-for-desks-modal.tsx:99
 msgid "Some desks could not be updated."
-msgstr ""
+msgstr "Alguns desks não puderam ser atualizados."
 
 #: ../superdesk-planning/client/planning-extension/src/extension.ts:57
 msgid "Some items are linked to in-progress planning coverage."
-msgstr ""
+msgstr "Alguns itens estão vinculados a coberturas de planejamento em andamento."
 
 #: scripts/api/article-send.tsx:135
 msgid ""
 "Some packages contain the following published items that can not be sent:"
-msgstr ""
+msgstr "Alguns pacotes contêm os seguintes itens publicados que não podem ser enviados:"
 
 #: ../superdesk-planning/client/actions/main.ts:477
 msgid "Some related planning item post validation failed"
-msgstr ""
+msgstr "A validação da publicação de alguns itens de planejamento relacionados falhou"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.ts:458
 msgid ""
 "Some selected items have not yet been posted. All selections must be visible "
 "to subscribers."
-msgstr ""
+msgstr "Alguns itens selecionados ainda não foram publicados. Todas as seleções devem estar visíveis para os assinantes."
 
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:124
 msgid "Some tags can not be displayed"
-msgstr ""
+msgstr "Algumas tags não podem ser exibidas"
 
 #: scripts/core/upload/crop-directive.ts:57
 msgid "Sorry, but avatar must be at least 200x200 pixels big."
@@ -15819,12 +15819,12 @@ msgstr ""
 
 #: scripts/core/upload/image-crop-directive.ts:251
 msgid "Sorry, but image must be at least {{width}}x{{height}}."
-msgstr ""
+msgstr "Desculpe, mas a imagem deve ter pelo menos {{width}}x{{height}}."
 
 #: scripts/apps/authoring/attachments/AttachmentsWidget.tsx:38
 msgid ""
 "Sorry, but some files \"{{filenames}}\" are bigger than limit ({{limit}})"
-msgstr ""
+msgstr "Desculpe, mas alguns arquivos \"{{filenames}}\" excedem o limite ({{limit}})"
 
 #: scripts/apps/templates/views/create-template.html:23
 msgid "Sorry, but template name must be unique."
@@ -15851,7 +15851,7 @@ msgstr "Usuário não encontrado."
 
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:163
 msgid "Sort By"
-msgstr ""
+msgstr "Ordenar por"
 
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-preview.html:28
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-report-preview.html:15
@@ -15859,13 +15859,13 @@ msgstr ""
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-preview.html:24
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-preview.html:28
 msgid "Sort Order"
-msgstr ""
+msgstr "Ordem de classificação"
 
 #: scripts/apps/monitoring/views/monitoring-group-header.html:37
 #: scripts/apps/search/views/item-sortbar.html:12
 #: scripts/apps/search/views/item-sortbar.html:6
 msgid "Sort by"
-msgstr ""
+msgstr "Ordenar por"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:239
 msgid "Sort by:"
@@ -15873,19 +15873,19 @@ msgstr "Ordenar por:"
 
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:410
 msgid "Sort by: {{ field }}"
-msgstr ""
+msgstr "Ordenar por: {{ field }}"
 
 #: scripts/apps/search/views/item-sortbar.html:19
 msgid "Sort order"
-msgstr ""
+msgstr "Ordem de classificação"
 
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:424
 msgid "Sort order: Ascending"
-msgstr ""
+msgstr "Ordem de classificação: crescente"
 
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:425
 msgid "Sort order: Descending"
-msgstr ""
+msgstr "Ordem de classificação: decrescente"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:29
 msgid "Sorting"
@@ -15893,7 +15893,7 @@ msgstr "Classificação"
 
 #: scripts/apps/monitoring/views/monitoring-group-header.html:28
 msgid "Sorting:"
-msgstr ""
+msgstr "Ordenação:"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:586
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:455
@@ -15928,7 +15928,7 @@ msgstr "Estados da Fonte"
 
 #: scripts/extensions/auto-tagging-widget/src/tag-popover.tsx:29
 msgid "Source:"
-msgstr ""
+msgstr "Fonte:"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:133
 #: scripts/apps/search/views/search-filters.html:44
@@ -15964,7 +15964,7 @@ msgstr "Suspender Monitoramento"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:138
 msgid "Spike Planning Item"
-msgstr ""
+msgstr "Suspender item de planejamento"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:150
 msgid "Spike State"
@@ -15984,7 +15984,7 @@ msgstr "Suspender planejamento"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:72
 msgid "Spike {{event}}"
-msgstr ""
+msgstr "Suspender {{event}}"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:45
 #: ../superdesk-planning/client/components/fields/editor/WorkflowState.tsx:40
@@ -16007,7 +16007,7 @@ msgstr "Itens Suspensos"
 
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:177
 msgid "Spiked Only"
-msgstr ""
+msgstr "Somente suspensos"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:221
 #: scripts/apps/authoring/versioning/history/views/history.html:63
@@ -16016,7 +16016,7 @@ msgstr "Suspenso por"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:4
 msgid "Spiked items"
-msgstr ""
+msgstr "Itens suspensos"
 
 #: scripts/apps/search/views/search-parameters.html:153
 msgid "Spiked only content"
@@ -16024,7 +16024,7 @@ msgstr "Conteúdos apenas suspensos"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:108
 msgid "Spline"
-msgstr ""
+msgstr "Spline"
 
 #: scripts/core/editor3/highlightsConfig.ts:83
 msgid "Split paragraph"
@@ -16069,11 +16069,11 @@ msgstr "Etapas"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:177
 msgid "Star"
-msgstr ""
+msgstr "Estrela"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:178
 msgid "Star Empty"
-msgstr ""
+msgstr "Estrela vazia"
 
 #: scripts/apps/publish/views/subscribers.html:92
 msgid "Start Date"
@@ -16089,25 +16089,25 @@ msgstr "Iniciar Trabalho"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:174
 msgid "Start date cannot be greater than today"
-msgstr ""
+msgstr "A data de início não pode ser posterior a hoje"
 
 #: ../superdesk-planning/client/validators/events.ts:87
 msgid "Start date is in the past"
-msgstr ""
+msgstr "A data de início está no passado"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:160
 msgid "Start date is required"
-msgstr ""
+msgstr "A data de início é obrigatória"
 
 #: scripts/apps/dashboard/closed-desk/views/close-desk-widget.html:33
 msgid "Start routing"
-msgstr ""
+msgstr "Iniciar encaminhamento"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:87
 #: scripts/apps/search/views/item-searchbar.html:19
 #: scripts/core/ui/components/SearchBar/index.tsx:109
 msgid "Start search"
-msgstr ""
+msgstr "Iniciar pesquisa"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:571
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:123
@@ -16165,11 +16165,11 @@ msgstr "Estado: não atribuído"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:143
 msgid "Status: {{ state }}"
-msgstr ""
+msgstr "Status: {{ state }}"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:11
 msgid "Status: {{filter}}"
-msgstr ""
+msgstr "Status: {{filter}}"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:179
 msgid "Stop"
@@ -16177,25 +16177,25 @@ msgstr "Parar"
 
 #: scripts/apps/dashboard/closed-desk/views/close-desk-widget.html:40
 msgid "Stop routing"
-msgstr ""
+msgstr "Parar encaminhamento"
 
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:342
 #: scripts/extensions/sams/src/components/sets/setPreviewPanel.tsx:154
 msgid "Storage Destination"
-msgstr ""
+msgstr "Destino de armazenamento"
 
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:348
 #: scripts/extensions/sams/src/components/sets/setPreviewPanel.tsx:159
 msgid "Storage Provider"
-msgstr ""
+msgstr "Provedor de armazenamento"
 
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:311
 msgid "Storage Unit"
-msgstr ""
+msgstr "Unidade de armazenamento"
 
 #: scripts/extensions/sams/src/components/sets/setListItem.tsx:85
 msgid "Storage:"
-msgstr ""
+msgstr "Armazenamento:"
 
 #: scripts/apps/publish/views/odbc-config.html:11
 #: scripts/apps/publish/views/odbc-config.html:9
@@ -16218,24 +16218,24 @@ msgstr "A história está associada como uma atualização"
 
 #: ../superdesk-planning/client/reducers/featuredPlanning.ts:177
 msgid "Story with slugline \"{{ slugline }}\" is added to the list"
-msgstr ""
+msgstr "A matéria com slugline \"{{ slugline }}\" foi adicionada à lista"
 
 #: ../superdesk-planning/client/reducers/featuredPlanning.ts:195
 #: ../superdesk-planning/client/reducers/featuredPlanning.ts:215
 msgid "Story with slugline \"{{ slugline }}\" is removed from the list"
-msgstr ""
+msgstr "A matéria com slugline \"{{ slugline }}\" foi removida da lista"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:180
 msgid "Stream"
-msgstr ""
+msgstr "Stream"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:534
 msgid "Street Address"
-msgstr ""
+msgstr "Endereço"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:533
 msgid "Street Address, PO Box, Company Name"
-msgstr ""
+msgstr "Endereço, caixa postal, nome da empresa"
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:65
 msgid "Strength"
