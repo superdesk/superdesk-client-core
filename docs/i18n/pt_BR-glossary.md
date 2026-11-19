@@ -48,7 +48,38 @@ Use Brazilian Portuguese (pt-BR) as it is written in Brazilian newsrooms and sof
 - language -> idioma
 - translation -> tradução
 
+- asset -> ativo (follows the existing `URL de Ativos`)
+- set (of assets) -> conjunto
+- feature media -> mídia principal
+- featured stories -> matérias em destaque
+- rendition -> versão
+- rundown -> rundown
+- show (broadcast programme) -> programa
+- provider -> provedor
+- subscriber -> assinante
+- subscription -> assinatura
+- workflow -> fluxo de trabalho
+- status -> status
+- widget -> widget
+- webhook -> webhook
+- tag -> tag
+- crop -> corte
+- thumbnail -> miniatura
+- timezone -> fuso horário
+- timeline -> linha do tempo
+- trash -> lixeira
+- mobile -> celular
+- embed -> incorporar
+
 ## Actions
+
+- upload -> enviar
+- exclude (a filter) -> omitir (keeps `excluir` for delete)
+- include -> incluir
+- toggle -> alternar
+- unlink -> desvincular
+- unpin -> desafixar
+- fulfil (an assignment) -> cumprir
 
 - publish -> publicar
 - unpublish -> despublicar
