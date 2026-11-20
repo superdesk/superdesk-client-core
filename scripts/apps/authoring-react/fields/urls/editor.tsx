@@ -6,8 +6,9 @@ import {
     IUrlsFieldUserPreferences,
     IUrlObject,
 } from 'superdesk-api';
-import {Button, IconButton, Input} from 'superdesk-ui-framework/react';
-import {SpacerBlock, Spacer} from 'core/ui/components/Spacer';
+import {Button, IconButton} from 'superdesk-ui-framework/react';
+import classNames from 'classnames';
+import {SpacerBlock} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 
 type IProps = IEditorComponentProps<IUrlsFieldValueOperational, IUrlsFieldConfig, IUrlsFieldUserPreferences>;
@@ -34,49 +35,53 @@ export class Editor extends React.PureComponent<IProps> {
 
         return (
             <Container>
-                {urls.map((urlObj, i) => (
-                    <Spacer h gap="16" justifyContent="space-between" noWrap key={i}>
-                        <div style={{flexGrow: 1}}>
-                            <Input
-                                inlineLabel
-                                labelHidden
-                                type="text"
-                                label=""
-                                value={urlObj.url}
-                                onChange={(val) => {
-                                    this.handleUrlUpdate(i, {...urlObj, url: val});
-                                }}
-                                disabled={readOnly}
-                            />
-                            {this.props.config.hideDescription !== true && (
-                                <>
-                                    <SpacerBlock v gap="8" />
-                                    <textarea
-                                        value={urlObj.description}
-                                        onChange={(event) => {
-                                            this.handleUrlUpdate(i, {...urlObj, description: event.target.value});
-                                        }}
-                                        placeholder={gettext('Description')}
-                                        readOnly={readOnly}
-                                        style={{resize: 'vertical'}}
-                                    />
-                                </>
+                <div className="authoring-urls-field">
+                    {urls.map((urlObj, i) => (
+                        <div
+                            key={i}
+                            data-test-id="url-item"
+                            className={classNames(
+                                'authoring-urls-field__item',
+                                {'authoring-urls-field__item--read-only': readOnly},
                             )}
-                        </div>
-                        {!readOnly && (
-                            <div>
+                        >
+                            <input
+                                type="text"
+                                className="authoring-field-box"
+                                data-test-id="url"
+                                aria-label={gettext('URL')}
+                                placeholder={gettext('URL')}
+                                value={urlObj.url}
+                                onChange={(event) => {
+                                    this.handleUrlUpdate(i, {...urlObj, url: event.target.value});
+                                }}
+                                readOnly={readOnly}
+                            />
+                            {!readOnly && (
                                 <IconButton
                                     icon="remove-sign"
                                     ariaValue={gettext('Remove')}
                                     onClick={() => {
                                         this.props.onChange(urls.filter((_, j) => j !== i));
                                     }}
-                                    disabled={readOnly}
                                 />
-                            </div>
-                        )}
-                    </Spacer>
-                ))}
+                            )}
+                            {this.props.config.hideDescription !== true && (
+                                <textarea
+                                    className="authoring-field-box"
+                                    data-test-id="url-description"
+                                    rows={1}
+                                    value={urlObj.description}
+                                    onChange={(event) => {
+                                        this.handleUrlUpdate(i, {...urlObj, description: event.target.value});
+                                    }}
+                                    placeholder={gettext('Description')}
+                                    readOnly={readOnly}
+                                />
+                            )}
+                        </div>
+                    ))}
+                </div>
                 {!readOnly && (
                     <div>
                         <SpacerBlock v gap="16" />

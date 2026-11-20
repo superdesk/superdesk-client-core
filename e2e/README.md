@@ -38,6 +38,9 @@ Notes for running several slots:
 `npm run playwright` - runs all tests in headless mode
 `npm run playwright-interactive` - starts playwright IDE that allows to run tests individually and inspect the timeline
 
+After changing `e2e/server/Dockerfile` or server requirements, rebuild and
+recreate the backend with `./e2e/scripts/e2e-up.sh --rebuild-server`.
+
 
 ### Test databases
 

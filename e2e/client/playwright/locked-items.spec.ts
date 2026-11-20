@@ -11,10 +11,7 @@ import {dropArticle} from './utils/drag-and-drop';
  * is granted, and what publishing does when an item's association is locked.
  *
  * The base "Lock item" case (1308524847) is covered by `lock-item.spec.ts` and
- * is not repeated here. That spec could not reach the privilege branch of the
- * lock UI, because it observes with a second session of the same user and
- * `LockService.can_unlock` short-circuits to true on `isLockedByMe`. These tests
- * close that gap with the second-actor users the `main` snapshot now carries.
+ * is not repeated here; it uses the same second-actor users from the `main` snapshot.
  *
  * Product wording that diverges from the cases, asserted as the product renders it:
  *
