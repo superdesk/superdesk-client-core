@@ -288,7 +288,14 @@ test.describe('authoring-react secondary row: spell checker', () => {
 
     test('is not offered when no spellchecker covers the item language', async ({page}) => {
         await restoreDatabaseSnapshot();
+
+        // the button shows up only once the dictionaries have been checked, so a missing one proves nothing before
+        const dictionariesChecked = page.waitForResponse(
+            (response) => response.url().includes('/api/dictionaries') && response.url().includes('language_id'),
+        );
+
         await openTestSportsStory(page);
+        await (await dictionariesChecked).finished();
 
         const row = new Authoring(page).secondaryToolbar();
 
