@@ -1,4 +1,4 @@
-import {Locator, Page, expect} from '@playwright/test';
+import {Locator, Page, Response, expect} from '@playwright/test';
 import {s} from '../utils';
 import {TreeSelectDriver} from '../utils/tree-select-driver';
 
@@ -130,6 +130,22 @@ export class Authoring {
         await expect(panel).toBeVisible();
 
         return panel;
+    }
+
+    // Resolves once `POST /api/macros` settles. Status is left unchecked: failing macros answer with an error status.
+    async runMacro(macroLabel: string): Promise<Response> {
+        const {page} = this;
+        const macro = page.getByTestId('authoring-widget-panel')
+            .getByTestId('macro-item')
+            .filter({hasText: macroLabel});
+
+        const [response] = await Promise.all([
+            page.waitForResponse((res) =>
+                res.url().includes('/api/macros') && res.request().method() === 'POST'),
+            macro.click(),
+        ]);
+
+        return response;
     }
 
     async openSendPublishPane(): Promise<Locator> {
