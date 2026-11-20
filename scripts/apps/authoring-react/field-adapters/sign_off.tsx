@@ -4,28 +4,24 @@ import {
     IArticle,
     IAuthoringFieldV2,
     IFieldAdapter,
-    IEditor3Config,
+    IPlainTextFieldConfig,
+    IPlainTextFieldValueOperational,
     IRestApiResponse,
     ITreeWithLookup,
     IUser,
-    IEditor3ValueOperational,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {retrieveStoredValueEditor3Generic, storeEditor3ValueBase} from '.';
 import {appConfig} from 'appConfig';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {ReactNode} from 'react';
 import React from 'react';
 import {MultiSelectTreeWithTemplate} from 'core/ui/components/MultiSelectTreeWithTemplate';
-import {convertToRaw, ContentState} from 'draft-js';
-import {editor3ToOperationalFormat} from '../fields/editor3';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {Spacer} from 'superdesk-ui-framework/react';
 
 interface IProps {
-    onChange: (value: IEditor3ValueOperational) => void;
+    onChange: (value: IPlainTextFieldValueOperational) => void;
     readOnly: boolean;
-    language: string;
 }
 
 class UsersDropdown extends React.Component<IProps> {
@@ -63,16 +59,7 @@ class UsersDropdown extends React.Component<IProps> {
                     }}
                     values={[] as Array<IUser>}
                     onChange={(value) => {
-                        const val = editor3ToOperationalFormat(
-                            {
-                                rawContentState: convertToRaw(
-                                    ContentState.createFromText(value[0][appConfig.user.sign_off_mapping]),
-                                ),
-                            },
-                            this.props.language,
-                        );
-
-                        this.props.onChange(val);
+                        this.props.onChange(value[0][appConfig.user.sign_off_mapping]);
                     }}
                     readOnly={this.props.readOnly}
                     optionTemplate={
@@ -92,56 +79,43 @@ class UsersDropdown extends React.Component<IProps> {
 }
 
 export const sign_off: IFieldAdapter<IArticle> = {
-    getFieldV2: (fieldEditor, fieldSchema) => {
+    getFieldV2: (_fieldEditor, fieldSchema) => {
         const allowUserDropdown = appConfig.user != null && appConfig.user.sign_off_mapping;
 
-        const fieldConfig: IEditor3Config = {
-            minLength: fieldSchema?.minlength,
+        const fieldConfig: IPlainTextFieldConfig = {
+            lockable: true,
             maxLength: fieldSchema?.maxlength,
-            maxSoftLength: fieldEditor?.maxSoftLength,
-            showFloatingCount: fieldEditor?.showFloatingCount,
-            singleLine: true,
             helperComponent: allowUserDropdown
-                ? ({onChange, language, readOnly}) => {
-                    return (
-                        <UsersDropdown
-                            onChange={onChange}
-                            language={language}
-                            readOnly={readOnly}
-                        />
-                    );
-                } : undefined,
+                ? ({onChange, readOnly}) => <UsersDropdown onChange={onChange} readOnly={readOnly} />
+                : undefined,
         };
 
         const fieldV2: IAuthoringFieldV2 = {
             id: 'sign_off',
             name: gettext('Sign Off'),
-            fieldType: 'editor3',
+            fieldType: 'plain-text',
             fieldConfig,
         };
 
         return fieldV2;
     },
 
-    retrieveStoredValue: (item: IArticle, authoringStorage, config: IEditor3Config) =>
-        retrieveStoredValueEditor3Generic(
-            'sign_off',
-            item,
-            authoringStorage,
-            config,
-        ),
+    retrieveStoredValue: (item: IArticle) => item.sign_off ?? null,
 
-    storeValue: (value, item, config) => {
-        const result = storeEditor3ValueBase(
-            'sign_off',
-            item,
-            value,
-            config,
-        );
+    storeValue: (value: IPlainTextFieldValueOperational, item) => {
+        // a `null` written over a missing value would be sent on save, and the server skips the append
+        // whenever `sign_off` is in the update
+        const articleUpdated: IArticle = value == null && item.sign_off == null
+            ? {...item}
+            : {...item, sign_off: value};
 
-        const articleUpdated = {...result.article};
+        // Left over from when sign off was an editor3 field. The server rebuilds any field in `fields_meta`
+        // as HTML on save, which would wrap sign off in `<p>` and skip the append.
+        if (item.fields_meta?.sign_off != null) {
+            const {sign_off: _removed, ...fieldsMetaRest} = item.fields_meta;
 
-        articleUpdated.sign_off = result.stringValue;
+            articleUpdated.fields_meta = fieldsMetaRest;
+        }
 
         return articleUpdated;
     },
