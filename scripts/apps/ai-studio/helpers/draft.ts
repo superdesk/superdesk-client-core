@@ -1,4 +1,5 @@
 import {gettext} from 'core/utils';
+import type {IAIProvider} from 'apps/ai-providers/interfaces';
 import type {
     IAIAction,
     IAIActionDraft,
@@ -18,22 +19,26 @@ function textOrNull(value: string | null | undefined): string | null {
     return value == null || value.trim() === '' ? null : value;
 }
 
-/**
- * ui-framework's number `Input` reports an emptied field as `0` (and an unparsable one as `NaN`),
- * so neither can be told apart from "no value". Both are invalid for every number on this form.
- */
+/** The number `Input` reports an emptied field as `0` and an unparsable one as `NaN`, both invalid here */
 export function numberInputToValue(value: number | null | undefined): number | null {
     return value == null || value === 0 || Number.isNaN(value) ? null : value;
 }
 
-export function getNewDraft(): IAIActionDraft {
+/** The provider a new action starts with: the only active one, if there is exactly one */
+export function getDefaultProvider(providers: Array<IAIProvider>): string | null {
+    const active = providers.filter(({active}) => active);
+
+    return active.length === 1 ? active[0]._id : null;
+}
+
+export function getNewDraft(provider: string | null = null): IAIActionDraft {
     return {
         name: '',
         active: true,
         content_profiles: [],
         input_fields: [],
         output_field: null,
-        provider: null,
+        provider,
         model: null,
         max_characters: null,
         suggestions_count: DEFAULT_SUGGESTIONS_COUNT,
@@ -41,11 +46,7 @@ export function getNewDraft(): IAIActionDraft {
     };
 }
 
-/**
- * A stored action can leave out any value that is empty (the server drops `null`s from a create
- * response), so every empty value is normalised to `null` here, keeping comparisons with the draft
- * free of `undefined` / `null` / `''` mismatches.
- */
+/** The server leaves out empty values, so they are normalised to `null` to keep comparisons simple */
 export function actionToDraft(action: IAIAction): IAIActionDraft {
     const parameters = action.parameters ?? {};
 
@@ -87,9 +88,8 @@ export function withProvider(draft: IAIActionDraft, provider: string | null): IA
 }
 
 /**
- * The PATCH body for saving `draft` over `original`, holding only what changed. Parameters are
- * merged by the server, so a cleared parameter is sent as `null` rather than left out.
- * `suggestions_count` is left out for types that don't use it. An empty object means no change.
+ * Only what changed; empty means no change. The server merges parameters, so a cleared one is
+ * sent as `null`.
  */
 export function buildPatch(
     original: IAIAction,
@@ -189,9 +189,8 @@ export function buildCreatePayload(
     return payload;
 }
 
-/** Whether a new action's draft differs from an untouched form */
-export function isNewDraftDirty(draft: IAIActionDraft): boolean {
-    const initial = getNewDraft();
+/** Whether a new action's draft differs from the form it was opened with */
+export function isNewDraftDirty(draft: IAIActionDraft, initial: IAIActionDraft = getNewDraft()): boolean {
     const current = normaliseDraft(draft);
 
     return (Object.keys(initial) as Array<keyof IAIActionDraft>).some((key) => {

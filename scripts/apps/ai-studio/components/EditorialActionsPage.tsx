@@ -31,7 +31,7 @@ interface IEditing {
     action: IAIAction | null;
     actionType: IAIActionType;
 
-    /** Identifies a new action's form, so asking for another new one starts from a blank form */
+    /** Changes for each new form, so a second "new" starts blank */
     newFormId?: number;
 }
 
@@ -56,27 +56,31 @@ function toErrorMessage(error: unknown): string {
         : gettext('The server could not be reached.');
 }
 
-export class EditorialActionsPage extends React.PureComponent<{}, IState> {
-    private lastNewFormId = 0;
+const INITIAL_STATE: IState = {
+    loading: true,
+    loadError: null,
+    options: null,
+    actions: [],
+    providers: [],
+    filter: ALL_TYPES,
+    editing: null,
+    dirty: false,
+};
 
-    constructor(props: {}) {
-        super(props);
+export function EditorialActionsPage() {
+    const [state, setState] = React.useState<IState>(INITIAL_STATE);
+    const lastNewFormId = React.useRef(0);
 
-        this.state = {
-            loading: true,
-            loadError: null,
-            options: null,
-            actions: [],
-            providers: [],
-            filter: ALL_TYPES,
-            editing: null,
-            dirty: false,
-        };
+    // For handlers that run after a prompt or a request, when the state may have changed
+    const stateRef = React.useRef(state);
 
-        this.reloadEditedAction = this.reloadEditedAction.bind(this);
-    }
+    stateRef.current = state;
 
-    componentDidMount() {
+    const updateState = (changes: Partial<IState>) => {
+        setState((previous) => ({...previous, ...changes}));
+    };
+
+    React.useEffect(() => {
         Promise.all([
             getActionOptions(),
             getActions(),
@@ -86,28 +90,41 @@ export class EditorialActionsPage extends React.PureComponent<{}, IState> {
             ng.get('vocabularies').getAllActiveVocabularies(),
         ])
             .then(([options, actions, providers]) => {
-                this.setState({loading: false, options, actions: sortByName(actions), providers});
+                updateState({loading: false, options, actions: sortByName(actions), providers});
             })
             .catch((error) => {
-                this.setState({loading: false, loadError: toErrorMessage(error)});
+                updateState({loading: false, loadError: toErrorMessage(error)});
             });
-    }
 
-    private reloadActions() {
+        const reloadProviders = () => {
+            getProviders()
+                .then((providers) => updateState({providers}))
+                .catch((error) => notify.error(toErrorMessage(error)));
+        };
+
+        // A provider added in another tab (the editor links there) shows up on return
+        window.addEventListener('focus', reloadProviders);
+
+        return () => {
+            window.removeEventListener('focus', reloadProviders);
+        };
+    }, []);
+
+    const reloadActions = () => {
         return getActions()
-            .then((actions) => this.setState({actions: sortByName(actions)}))
+            .then((actions) => updateState({actions: sortByName(actions)}))
             .catch((error) => notify.error(toErrorMessage(error)));
-    }
+    };
 
     /** Asks first when the open form has unsaved changes */
-    private openEditor(editing: IEditing | null) {
-        const current = this.state.editing?.action;
+    const openEditor = (editing: IEditing | null) => {
+        const current = stateRef.current.editing?.action;
 
         if (current != null && editing?.action != null && current._id === editing.action._id) {
             return;
         }
 
-        const proceed = this.state.editing != null && this.state.dirty
+        const proceed = stateRef.current.editing != null && stateRef.current.dirty
             ? showConfirmationPrompt({
                 title: gettext('Discard changes?'),
                 message: gettext('The action you are editing has unsaved changes.'),
@@ -117,33 +134,37 @@ export class EditorialActionsPage extends React.PureComponent<{}, IState> {
 
         proceed.then((confirmed) => {
             if (confirmed) {
-                this.setState({editing, dirty: false});
+                updateState({editing, dirty: false});
             }
         });
-    }
+    };
 
-    private replaceAction(action: IAIAction) {
-        const exists = this.state.actions.some(({_id}) => _id === action._id);
+    const replaceAction = (action: IAIAction) => {
+        setState((previous) => {
+            const exists = previous.actions.some(({_id}) => _id === action._id);
 
-        this.setState({
-            actions: sortByName(
-                exists
-                    ? this.state.actions.map((item) => item._id === action._id ? action : item)
-                    : [...this.state.actions, action],
-            ),
+            return {
+                ...previous,
+                actions: sortByName(
+                    exists
+                        ? previous.actions.map((item) => item._id === action._id ? action : item)
+                        : [...previous.actions, action],
+                ),
+            };
         });
-    }
+    };
 
-    private removeAction(id: IAIAction['_id']) {
-        this.setState({
-            actions: this.state.actions.filter(({_id}) => _id !== id),
-            editing: this.state.editing?.action?._id === id ? null : this.state.editing,
-            dirty: this.state.editing?.action?._id === id ? false : this.state.dirty,
-        });
-    }
+    const removeAction = (id: IAIAction['_id']) => {
+        setState((previous) => ({
+            ...previous,
+            actions: previous.actions.filter(({_id}) => _id !== id),
+            editing: previous.editing?.action?._id === id ? null : previous.editing,
+            dirty: previous.editing?.action?._id === id ? false : previous.dirty,
+        }));
+    };
 
-    private reloadEditedAction() {
-        const action = this.state.editing?.action;
+    const reloadEditedAction = () => {
+        const action = stateRef.current.editing?.action;
 
         if (action == null) {
             return;
@@ -151,20 +172,20 @@ export class EditorialActionsPage extends React.PureComponent<{}, IState> {
 
         getAction(action._id)
             .then((fresh) => {
-                this.replaceAction(fresh);
-                this.setState({editing: {action: fresh, actionType: fresh.action_type}, dirty: false});
+                replaceAction(fresh);
+                updateState({editing: {action: fresh, actionType: fresh.action_type}, dirty: false});
             })
             .catch((error) => {
                 if (error instanceof AIStudioRequestError && error.status === 404) {
                     notify.error(gettext('The action has been deleted.'));
-                    this.removeAction(action._id);
+                    removeAction(action._id);
                 } else {
                     notify.error(toErrorMessage(error));
                 }
             });
-    }
+    };
 
-    private delete(action: IAIAction) {
+    const deleteWithPrompt = (action: IAIAction) => {
         showConfirmationPrompt({
             title: gettext('Delete AI action'),
             message: gettext('Delete "{{name}}"? Editors will no longer be offered it.', {name: action.name}),
@@ -177,7 +198,7 @@ export class EditorialActionsPage extends React.PureComponent<{}, IState> {
             deleteAction(action)
                 .then(() => {
                     notify.success(gettext('AI action deleted.'));
-                    this.removeAction(action._id);
+                    removeAction(action._id);
                 })
                 .catch((error) => {
                     if (error instanceof AIStudioRequestError && error.status === 412) {
@@ -185,16 +206,16 @@ export class EditorialActionsPage extends React.PureComponent<{}, IState> {
                             // eslint-disable-next-line max-len
                             gettext('Someone else changed this action, so it was not deleted. The list has been reloaded.'),
                         );
-                        this.reloadActions();
+                        reloadActions();
                     } else {
                         notify.error(toErrorMessage(error));
                     }
                 });
         });
-    }
+    };
 
-    private renderHeader() {
-        const {options, filter} = this.state;
+    const renderHeader = () => {
+        const {options, filter} = state;
         const types = options?.action_types ?? [];
 
         return (
@@ -209,7 +230,7 @@ export class EditorialActionsPage extends React.PureComponent<{}, IState> {
                                 label: getActionTypeFilterLabel(action_type),
                             })),
                         ]}
-                        onChange={(value: IAIActionType | typeof ALL_TYPES) => this.setState({filter: value})}
+                        onChange={(value: IAIActionType | typeof ALL_TYPES) => updateState({filter: value})}
                         data-test-id="ai-action-type-filter"
                     />
                 </div>
@@ -225,10 +246,10 @@ export class EditorialActionsPage extends React.PureComponent<{}, IState> {
                                             {getActionTypeLabel(action_type)}
                                         </span>
                                     ),
-                                    onSelect: () => this.openEditor({
+                                    onSelect: () => openEditor({
                                         action: null,
                                         actionType: action_type,
-                                        newFormId: ++this.lastNewFormId,
+                                        newFormId: ++lastNewFormId.current,
                                     }),
                                 }))}
                             >
@@ -242,10 +263,10 @@ export class EditorialActionsPage extends React.PureComponent<{}, IState> {
                 )}
             </SubNav>
         );
-    }
+    };
 
-    private renderList() {
-        const {actions, filter, editing, loading, loadError} = this.state;
+    const renderList = () => {
+        const {actions, filter, editing, loading, loadError} = state;
 
         if (loading) {
             return <Loader overlay={false} />;
@@ -288,51 +309,49 @@ export class EditorialActionsPage extends React.PureComponent<{}, IState> {
                             action={action}
                             profiles={sdApi.contentProfiles.getAll()}
                             selected={editing?.action?._id === action._id}
-                            onEdit={() => this.openEditor({action, actionType: action.action_type})}
-                            onDelete={() => this.delete(action)}
+                            onEdit={() => openEditor({action, actionType: action.action_type})}
+                            onDelete={() => deleteWithPrompt(action)}
                         />
                     ))}
                 </BoxedList>
             </div>
         );
-    }
+    };
 
-    render() {
-        const {editing, options, providers} = this.state;
+    const {editing, options, providers} = state;
 
-        return (
-            <div
-                data-test-id="ai-studio-editorial-actions"
-                style={{display: 'flex', flexDirection: 'column', flexGrow: 1, minWidth: 0}}
-            >
-                <Layout.PageLayout
-                    fullHeight
-                    header={this.renderHeader()}
-                    main={this.renderList()}
-                    rightPanelOpen={editing != null}
-                    rightPanel={editing != null && options != null && (
-                        <ActionEditor
-                            // A new key resets the form, after a save or a reload
-                            key={editing.action == null
-                                ? `new-${editing.newFormId}`
-                                : `${editing.action._id}-${editing.action._etag}`}
-                            action={editing.action}
-                            actionType={editing.actionType}
-                            options={options}
-                            providers={providers}
-                            profiles={sdApi.contentProfiles.getAll()}
-                            customFieldVocabularies={sdApi.vocabularies.getCustomFieldVocabularies()}
-                            onDirtyChange={(dirty) => this.setState({dirty})}
-                            onCancel={() => this.setState({editing: null, dirty: false})}
-                            onSaved={(saved) => {
-                                this.replaceAction(saved);
-                                this.setState({editing: {action: saved, actionType: saved.action_type}, dirty: false});
-                            }}
-                            onConflict={this.reloadEditedAction}
-                        />
-                    )}
-                />
-            </div>
-        );
-    }
+    return (
+        <div
+            data-test-id="ai-studio-editorial-actions"
+            style={{display: 'flex', flexDirection: 'column', flexGrow: 1, minWidth: 0}}
+        >
+            <Layout.PageLayout
+                fullHeight
+                header={renderHeader()}
+                main={renderList()}
+                rightPanelOpen={editing != null}
+                rightPanel={editing != null && options != null && (
+                    <ActionEditor
+                        // A new key resets the form, after a save or a reload
+                        key={editing.action == null
+                            ? `new-${editing.newFormId}`
+                            : `${editing.action._id}-${editing.action._etag}`}
+                        action={editing.action}
+                        actionType={editing.actionType}
+                        options={options}
+                        providers={providers}
+                        profiles={sdApi.contentProfiles.getAll()}
+                        customFieldVocabularies={sdApi.vocabularies.getCustomFieldVocabularies()}
+                        onDirtyChange={(dirty) => updateState({dirty})}
+                        onCancel={() => updateState({editing: null, dirty: false})}
+                        onSaved={(saved) => {
+                            replaceAction(saved);
+                            updateState({editing: {action: saved, actionType: saved.action_type}, dirty: false});
+                        }}
+                        onConflict={reloadEditedAction}
+                    />
+                )}
+            />
+        </div>
+    );
 }

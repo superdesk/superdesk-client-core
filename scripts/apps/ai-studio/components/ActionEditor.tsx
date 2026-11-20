@@ -5,11 +5,13 @@ import {
     ButtonGroup,
     FormLabel,
     Input,
+    Label,
     Option,
     Select,
     SvgIconIllustration,
     Switch,
     Text,
+    TextArea,
     TreeSelect,
 } from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
@@ -36,6 +38,7 @@ import {
     actionToDraft,
     buildCreatePayload,
     buildPatch,
+    getDefaultProvider,
     getNewDraft,
     isNewDraftDirty,
     numberInputToValue,
@@ -46,10 +49,11 @@ import {getFieldOptions, getProfileOptions, withSelectedOptions} from '../helper
 import {getErrorMessage, mapIssues} from '../helpers/issues';
 import {getActionTypeIllustration, getActionTypeLabel, getUserActionLabel} from '../helpers/labels';
 import {PROVIDER_DEFAULT_MODEL, getModelOptions, getModelWarning, getProviderOptions} from '../helpers/model-options';
-import {TextAreaInput} from './TextAreaInput';
 import './style.scss';
 
 type ITab = 'configuration' | 'ai-settings';
+
+const AI_PROVIDERS_URL = '#/settings/ai-providers';
 
 const AI_SETTINGS_FIELDS: Array<IAIActionDraftField> = ['provider', 'model', 'extra_instructions'];
 
@@ -69,104 +73,100 @@ interface IProps {
     onConflict(): void;
 }
 
-interface IState {
-    draft: IAIActionDraft;
-    errors: IAIActionDraftErrors;
-    tab: ITab;
-    saving: boolean;
-}
-
-/**
- * ui-framework's number `Input` types its value as a number, but an empty field needs `''`;
- * `undefined` would turn it into an uncontrolled input that keeps showing the old number.
- */
+/** The number `Input` needs `''` when empty; `undefined` would keep showing the old number */
 function toNumberInputValue(value: number | null): number {
     return value ?? ('' as unknown as number);
 }
 
-export class ActionEditor extends React.PureComponent<IProps, IState> {
-    private mounted = false;
+export function ActionEditor(props: IProps) {
+    const {action, actionType, options, providers, profiles, customFieldVocabularies} = props;
 
-    constructor(props: IProps) {
-        super(props);
+    // So an automatically picked provider does not count as a change
+    const initialDraft = React.useRef(getNewDraft(getDefaultProvider(providers)));
+    const [draft, setDraft] = React.useState<IAIActionDraft>(
+        () => action == null ? initialDraft.current : actionToDraft(action),
+    );
+    const [errors, setErrors] = React.useState<IAIActionDraftErrors>({});
+    const [tab, setTab] = React.useState<ITab>('configuration');
+    const [saving, setSaving] = React.useState(false);
+    const mounted = React.useRef(false);
+    const notifiedDraft = React.useRef(draft);
 
-        this.state = {
-            draft: props.action == null ? getNewDraft() : actionToDraft(props.action),
-            errors: {},
-            tab: 'configuration',
-            saving: false,
+    React.useEffect(() => {
+        mounted.current = true;
+
+        return () => {
+            mounted.current = false;
         };
+    }, []);
 
-        this.getFieldLabel = this.getFieldLabel.bind(this);
-        this.save = this.save.bind(this);
-    }
+    const typeOption = options.action_types.find(({action_type}) => action_type === actionType);
 
-    componentDidMount() {
-        this.mounted = true;
-    }
+    const dirty = action == null
+        ? isNewDraftDirty(draft, initialDraft.current)
+        : Object.keys(buildPatch(action, draft, typeOption)).length > 0;
 
-    componentWillUnmount() {
-        this.mounted = false;
-    }
+    // Providers reload when the browser tab regains focus, so one added in another tab is picked too
+    React.useEffect(() => {
+        if (action == null && draft.provider == null) {
+            const provider = getDefaultProvider(providers);
 
-    componentDidUpdate(_prevProps: IProps, prevState: IState) {
-        if (prevState.draft !== this.state.draft) {
-            this.props.onDirtyChange(this.isDirty());
+            if (provider != null) {
+                initialDraft.current = {...initialDraft.current, provider};
+                setDraft((current) => withProvider(current, provider));
+            }
         }
-    }
+    }, [providers]);
 
-    private getTypeOption() {
-        return this.props.options.action_types.find(({action_type}) => action_type === this.props.actionType);
-    }
+    // Not on mount, only once the draft has changed
+    React.useEffect(() => {
+        if (notifiedDraft.current !== draft) {
+            notifiedDraft.current = draft;
+            props.onDirtyChange(dirty);
+        }
+    }, [draft]);
 
-    private isDirty(): boolean {
-        const {action} = this.props;
+    const getFieldLabel = (fieldId: string): string => {
+        return getLabelForFieldId(fieldId, customFieldVocabularies);
+    };
 
-        return action == null
-            ? isNewDraftDirty(this.state.draft)
-            : Object.keys(buildPatch(action, this.state.draft, this.getTypeOption())).length > 0;
-    }
+    const update = (changes: Partial<IAIActionDraft>) => {
+        setDraft((current) => ({...current, ...changes}));
+        setErrors((current) => Object.keys(changes).reduce<IAIActionDraftErrors>(
+            (cleared, field) => ({...cleared, [field]: undefined}),
+            current,
+        ));
+    };
 
-    private getFieldLabel(fieldId: string): string {
-        return getLabelForFieldId(fieldId, this.props.customFieldVocabularies);
-    }
-
-    private update(changes: Partial<IAIActionDraft>) {
-        const cleared = Object.keys(changes).reduce<IAIActionDraftErrors>(
-            (errors, field) => ({...errors, [field]: undefined}),
-            this.state.errors,
-        );
-
-        this.setState({draft: {...this.state.draft, ...changes}, errors: cleared});
-    }
-
-    private showErrors(errors: IAIActionDraftErrors) {
-        const fields = Object.keys(errors).filter((field) => errors[field] != null) as Array<IAIActionDraftField>;
+    const showErrors = (nextErrors: IAIActionDraftErrors) => {
+        const fields = Object.keys(nextErrors)
+            .filter((field) => nextErrors[field] != null) as Array<IAIActionDraftField>;
         const onConfiguration = fields.some((field) => !AI_SETTINGS_FIELDS.includes(field));
         const onAiSettings = fields.some((field) => AI_SETTINGS_FIELDS.includes(field));
-        const visibleOnCurrentTab = this.state.tab === 'configuration' ? onConfiguration : onAiSettings;
 
-        this.setState({
-            errors,
-            tab: visibleOnCurrentTab ? this.state.tab : (onConfiguration ? 'configuration' : 'ai-settings'),
+        setErrors(nextErrors);
+        setTab((current) => {
+            const visibleOnCurrentTab = current === 'configuration' ? onConfiguration : onAiSettings;
+
+            return visibleOnCurrentTab ? current : (onConfiguration ? 'configuration' : 'ai-settings');
         });
 
         if (onConfiguration && onAiSettings) {
             notify.error(gettext('Some fields need attention on both the Configuration and AI Settings tabs.'));
         }
-    }
+    };
 
-    private handleSaveError(error: unknown) {
+    const handleSaveError = (error: unknown) => {
         if (!(error instanceof AIStudioRequestError)) {
             notify.error(gettext('The action could not be saved. Check your connection and try again.'));
             return;
         }
 
-        if (error.status === 412 && this.props.action != null) {
+        if (error.status === 412 && action != null) {
             notify.warning(
                 gettext('Someone else changed this action. It has been reloaded, so make your changes again.'),
             );
-            this.props.onConflict();
+            props.onConflict();
             return;
         }
 
@@ -174,7 +174,7 @@ export class ActionEditor extends React.PureComponent<IProps, IState> {
         const {fields, other} = mapIssues(body?._issues);
 
         if (Object.keys(fields).length > 0) {
-            this.showErrors(fields);
+            showErrors(fields);
         }
 
         if (other.length > 0) {
@@ -184,16 +184,13 @@ export class ActionEditor extends React.PureComponent<IProps, IState> {
         if (Object.keys(fields).length < 1 && other.length < 1) {
             notify.error(getErrorMessage(error.body));
         }
-    }
+    };
 
-    save() {
-        const {action, actionType} = this.props;
-        const {draft} = this.state;
-        const typeOption = this.getTypeOption();
-        const errors = validateDraft(draft, typeOption);
+    const save = () => {
+        const validationErrors = validateDraft(draft, typeOption);
 
-        if (Object.keys(errors).length > 0) {
-            this.showErrors(errors);
+        if (Object.keys(validationErrors).length > 0) {
+            showErrors(validationErrors);
             return;
         }
 
@@ -201,45 +198,41 @@ export class ActionEditor extends React.PureComponent<IProps, IState> {
             ? createAction(buildCreatePayload(actionType, draft, typeOption))
             : patchAction(action, buildPatch(action, draft, typeOption));
 
-        this.setState({saving: true});
+        setSaving(true);
 
         request
             .then((saved) => {
-                // The stored action is read back whole, so nothing is merged with what the form held
+                // Read back whole, so nothing is merged with what the form held
                 return getAction(saved._id).catch(() => saved);
             })
             .then((saved) => {
                 notify.success(gettext('AI action saved.'));
-                this.props.onSaved(saved);
+                props.onSaved(saved);
             })
             .catch((error) => {
-                this.handleSaveError(error);
+                handleSaveError(error);
             })
             .finally(() => {
-                if (this.mounted) {
-                    this.setState({saving: false});
+                if (mounted.current) {
+                    setSaving(false);
                 }
             });
-    }
+    };
 
-    private renderConfiguration() {
-        const {draft, errors} = this.state;
-        const {options, profiles, customFieldVocabularies} = this.props;
-        const typeOption = this.getTypeOption();
-
+    const renderConfiguration = () => {
         const profileOptions = getProfileOptions(profiles, draft.content_profiles);
         const fieldOptions = getFieldOptions({
             builtInTextFields: options.built_in_text_fields,
             customFieldVocabularies,
             profiles,
             selectedProfileIds: draft.content_profiles,
-            getLabel: this.getFieldLabel,
+            getLabel: getFieldLabel,
         });
-        const inputOptions = withSelectedOptions(fieldOptions.input, draft.input_fields, this.getFieldLabel);
+        const inputOptions = withSelectedOptions(fieldOptions.input, draft.input_fields, getFieldLabel);
         const outputOptions = withSelectedOptions(
             fieldOptions.output,
             draft.output_field == null ? [] : [draft.output_field],
-            this.getFieldLabel,
+            getFieldLabel,
         );
         const userActions = (typeOption?.user_actions ?? []).map(getUserActionLabel);
 
@@ -253,7 +246,7 @@ export class ActionEditor extends React.PureComponent<IProps, IState> {
                     <Switch
                         label={{content: gettext('Active')}}
                         value={draft.active}
-                        onChange={(active) => this.update({active})}
+                        onChange={(active) => update({active})}
                     />
                 </div>
 
@@ -263,7 +256,7 @@ export class ActionEditor extends React.PureComponent<IProps, IState> {
                     required
                     value={draft.name}
                     error={errors.name}
-                    onChange={(name) => this.update({name})}
+                    onChange={(name) => update({name})}
                     data-test-id="ai-action-name"
                 />
 
@@ -277,7 +270,7 @@ export class ActionEditor extends React.PureComponent<IProps, IState> {
                     getId={({id}) => id}
                     getLabel={({label}) => label}
                     error={errors.content_profiles}
-                    onChange={(selected) => this.update({content_profiles: selected.map(({id}) => id)})}
+                    onChange={(selected) => update({content_profiles: selected.map(({id}) => id)})}
                     data-test-id="ai-action-content-profiles"
                 />
 
@@ -294,7 +287,7 @@ export class ActionEditor extends React.PureComponent<IProps, IState> {
                     getId={({id}) => id}
                     getLabel={({label}) => label}
                     error={errors.input_fields}
-                    onChange={(selected) => this.update({input_fields: selected.map(({id}) => id)})}
+                    onChange={(selected) => update({input_fields: selected.map(({id}) => id)})}
                     data-test-id="ai-action-input-fields"
                 />
 
@@ -308,7 +301,7 @@ export class ActionEditor extends React.PureComponent<IProps, IState> {
                     required
                     value={draft.output_field ?? ''}
                     error={errors.output_field}
-                    onChange={(value) => this.update({output_field: value === '' ? null : value})}
+                    onChange={(value) => update({output_field: value === '' ? null : value})}
                     data-test-id="ai-action-output-field"
                 >
                     {draft.output_field == null && <Option value="">{gettext('Select a field')}</Option>}
@@ -326,7 +319,7 @@ export class ActionEditor extends React.PureComponent<IProps, IState> {
                             info={gettext('Leave empty to use the maximum length of the output field in the content profile.')}
                             value={toNumberInputValue(draft.max_characters)}
                             error={errors.max_characters}
-                            onChange={(value) => this.update({max_characters: numberInputToValue(value)})}
+                            onChange={(value) => update({max_characters: numberInputToValue(value)})}
                             data-test-id="ai-action-max-characters"
                         />
                     </div>
@@ -343,7 +336,7 @@ export class ActionEditor extends React.PureComponent<IProps, IState> {
                                 required
                                 value={toNumberInputValue(draft.suggestions_count)}
                                 error={errors.suggestions_count}
-                                onChange={(value) => this.update({suggestions_count: numberInputToValue(value)})}
+                                onChange={(value) => update({suggestions_count: numberInputToValue(value)})}
                                 data-test-id="ai-action-suggestions-count"
                             />
                         </div>
@@ -352,51 +345,85 @@ export class ActionEditor extends React.PureComponent<IProps, IState> {
 
                 <div data-test-id="ai-action-user-actions">
                     <FormLabel text={gettext('User actions')} />
-                    <Text>
-                        {
-                            typeOption == null
-                                ? gettext('Editors are not offered actions of this type yet.')
-                                : gettext('Editors can: {{actions}}', {actions: userActions.join(', ')})
-                        }
-                    </Text>
+                    {typeOption == null ? (
+                        <Text>{gettext('Editors are not offered actions of this type yet.')}</Text>
+                    ) : (
+                        <>
+                            <div className="ai-studio-user-actions">
+                                {userActions.map((label) => (
+                                    <Label key={label} text={label} style="translucent" noTransform />
+                                ))}
+                            </div>
+                            <div className="sd-input__hint">
+                                {gettext('What editors can do with each answer. Set by the action type.')}
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         );
-    }
+    };
 
-    private renderAiSettings() {
-        const {draft, errors} = this.state;
-        const {providers} = this.props;
+    const renderAiSettings = () => {
         const provider = providers.find(({_id}) => _id === draft.provider) ?? null;
         const modelWarning = getModelWarning(provider, draft.model);
+        const providerOptions = getProviderOptions(providers, draft.provider);
+        const providersLink = (
+            // A new tab, so the action being edited is not lost
+            <a
+                className="text-link"
+                href={AI_PROVIDERS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-test-id="ai-action-providers-link"
+            >
+                {gettext('Open AI Providers')}
+            </a>
+        );
 
         return (
             <div style={{display: 'flex', flexDirection: 'column', gap: 24}}>
-                <Select
-                    label={gettext('Provider')}
-                    required
-                    value={draft.provider ?? ''}
-                    error={errors.provider}
-                    onChange={(value) => {
-                        this.setState({
-                            draft: withProvider(this.state.draft, value === '' ? null : value),
-                            errors: {...this.state.errors, provider: undefined, model: undefined},
-                        });
-                    }}
-                    data-test-id="ai-action-provider"
-                >
-                    {draft.provider == null && <Option value="">{gettext('Select a provider')}</Option>}
-                    {getProviderOptions(providers, draft.provider).map(({id, label}) => (
-                        <Option key={id} value={id}>{label}</Option>
-                    ))}
-                </Select>
+                {providerOptions.length < 1 ? (
+                    <div data-test-id="ai-action-no-providers">
+                        <FormLabel text={gettext('Provider')} />
+                        <Alert type="warning" style="hollow" size="small" margin="none">
+                            <span>
+                                {gettext('There are no active AI providers yet.')}{' '}
+                                {providersLink}
+                            </span>
+                        </Alert>
+                    </div>
+                ) : (
+                    <div>
+                        <Select
+                            label={gettext('Provider')}
+                            required
+                            value={draft.provider ?? ''}
+                            error={errors.provider}
+                            onChange={(value) => {
+                                setDraft((current) => withProvider(current, value === '' ? null : value));
+                                setErrors((current) => ({...current, provider: undefined, model: undefined}));
+                            }}
+                            data-test-id="ai-action-provider"
+                        >
+                            {draft.provider == null && <Option value="">{gettext('Select a provider')}</Option>}
+                            {providerOptions.map(({id, label}) => (
+                                <Option key={id} value={id}>{label}</Option>
+                            ))}
+                        </Select>
+                        <div className="sd-input__hint ai-studio-providers-hint">
+                            {gettext('Providers are managed in the settings.')}{' '}
+                            {providersLink}
+                        </div>
+                    </div>
+                )}
 
                 {provider != null && (
                     <Select
                         label={gettext('Model')}
                         value={draft.model ?? PROVIDER_DEFAULT_MODEL}
                         error={errors.model}
-                        onChange={(value) => this.update({model: value === PROVIDER_DEFAULT_MODEL ? null : value})}
+                        onChange={(value) => update({model: value === PROVIDER_DEFAULT_MODEL ? null : value})}
                         data-test-id="ai-action-model"
                     >
                         {getModelOptions(provider, draft.model).map(({id, label}) => (
@@ -411,7 +438,7 @@ export class ActionEditor extends React.PureComponent<IProps, IState> {
                     </div>
                 )}
 
-                <TextAreaInput
+                <TextArea
                     label={gettext('Extra instructions')}
                     info={gettext(
                         // eslint-disable-next-line max-len
@@ -420,74 +447,71 @@ export class ActionEditor extends React.PureComponent<IProps, IState> {
                     value={draft.extra_instructions ?? ''}
                     maxLength={EXTRA_INSTRUCTIONS_MAX_LENGTH}
                     rows={6}
+                    autoHeight
+                    maxRows={20}
                     error={errors.extra_instructions}
-                    onChange={(value) => this.update({extra_instructions: value})}
+                    onChange={(value) => update({extra_instructions: value})}
                     data-test-id="ai-action-extra-instructions"
                 />
             </div>
         );
-    }
+    };
 
-    render() {
-        const {actionType} = this.props;
-        const {tab, saving} = this.state;
-
-        return (
-            <Layout.Panel
-                side="right"
-                size="large"
-                open
-                className="ai-studio-editor"
-                data-test-id="ai-action-editor"
-            >
-                {/* Built from the panel header's classes, as `Layout.PanelHeader` only takes a text title */}
-                <div className="side-panel__header side-panel__header--border-b side-panel__header--darker">
-                    <div className="side-panel__header-wrapper">
-                        <div className="side-panel__header-inner ai-studio-editor__title">
-                            <SvgIconIllustration illustration={getActionTypeIllustration(actionType)} />
-                            <h3 className="side-panel__heading">{getActionTypeLabel(actionType)}</h3>
-                        </div>
-                        <ButtonGroup align="end" className="side-panel__btn-group">
-                            <Button
-                                text={gettext('Cancel')}
-                                type="default"
-                                onClick={() => this.props.onCancel()}
-                                data-test-id="ai-action-cancel"
-                            />
-                            <Button
-                                text={gettext('Save')}
-                                type="primary"
-                                disabled={saving || !this.isDirty()}
-                                isLoading={saving}
-                                onClick={this.save}
-                                data-test-id="ai-action-save"
-                            />
-                        </ButtonGroup>
+    return (
+        <Layout.Panel
+            side="right"
+            size="large"
+            open
+            className="ai-studio-editor"
+            data-test-id="ai-action-editor"
+        >
+            {/* Built from the panel header's classes, as `Layout.PanelHeader` only takes a text title */}
+            <div className="side-panel__header side-panel__header--border-b side-panel__header--darker">
+                <div className="side-panel__header-wrapper">
+                    <div className="side-panel__header-inner ai-studio-editor__title">
+                        <SvgIconIllustration illustration={getActionTypeIllustration(actionType)} />
+                        <h3 className="side-panel__heading">{getActionTypeLabel(actionType)}</h3>
                     </div>
+                    <ButtonGroup align="end" className="side-panel__btn-group">
+                        <Button
+                            text={dirty ? gettext('Cancel') : gettext('Close')}
+                            type="default"
+                            onClick={() => props.onCancel()}
+                            data-test-id="ai-action-cancel"
+                        />
+                        <Button
+                            text={gettext('Save')}
+                            type="primary"
+                            disabled={saving || !dirty}
+                            isLoading={saving}
+                            onClick={save}
+                            data-test-id="ai-action-save"
+                        />
+                    </ButtonGroup>
                 </div>
+            </div>
 
-                <Layout.PanelContent>
-                    <Layout.PanelContentBlock>
-                        <div style={{display: 'flex', flexDirection: 'column', gap: 24}}>
-                            <div className="ai-studio-segmented-tabs">
-                                <TabList
-                                    // The tab list only reads the selected tab on mount
-                                    key={tab}
-                                    tabs={[
-                                        {id: 'configuration', label: gettext('Configuration')},
-                                        {id: 'ai-settings', label: gettext('AI Settings')},
-                                    ]}
-                                    selectedTabId={tab}
-                                    onChange={(next: ITab) => this.setState({tab: next})}
-                                    data-test-id="ai-action-tabs"
-                                />
-                            </div>
-
-                            {tab === 'configuration' ? this.renderConfiguration() : this.renderAiSettings()}
+            <Layout.PanelContent>
+                <Layout.PanelContentBlock>
+                    <div style={{display: 'flex', flexDirection: 'column', gap: 24}}>
+                        <div className="ai-studio-segmented-tabs">
+                            <TabList
+                                // The tab list only reads the selected tab on mount
+                                key={tab}
+                                tabs={[
+                                    {id: 'configuration', label: gettext('Configuration')},
+                                    {id: 'ai-settings', label: gettext('AI Settings')},
+                                ]}
+                                selectedTabId={tab}
+                                onChange={(next: ITab) => setTab(next)}
+                                data-test-id="ai-action-tabs"
+                            />
                         </div>
-                    </Layout.PanelContentBlock>
-                </Layout.PanelContent>
-            </Layout.Panel>
-        );
-    }
+
+                        {tab === 'configuration' ? renderConfiguration() : renderAiSettings()}
+                    </div>
+                </Layout.PanelContentBlock>
+            </Layout.PanelContent>
+        </Layout.Panel>
+    );
 }

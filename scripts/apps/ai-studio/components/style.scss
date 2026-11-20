@@ -43,10 +43,30 @@
     }
 }
 
-// The media slot sizes and dims anything with "icon-" in its class name, which catches the
-// illustration's `svg-icon-illustration` class too
-.ai-studio-action-item .boxed-list__item-media .svg-icon-illustration {
-    width: auto;
-    height: auto;
-    opacity: 1;
+.ai-studio-action-item .boxed-list__item-media {
+    justify-content: center;
+
+    // The media slot sizes and dims anything with "icon-" in its class name, this one included
+    .svg-icon-illustration {
+        width: auto;
+        height: auto;
+        opacity: 1;
+    }
+}
+
+// An inline svg sits on the text baseline, leaving a gap below it that pushes the drawing up
+.ai-studio-editor__title .svg-icon-illustration svg,
+.ai-studio-action-item .svg-icon-illustration svg {
+    display: block;
+}
+
+.ai-studio-user-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-block: 0.4rem;
+}
+
+.ai-studio-providers-hint {
+    margin-block-start: 0.5rem;
 }

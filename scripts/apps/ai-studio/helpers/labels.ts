@@ -25,7 +25,6 @@ export function getActionTypeLabel(actionType: IAIActionType | string): string {
     }
 }
 
-/** A name from ui-framework's icon font */
 type IIllustration = ComponentProps<typeof SvgIconIllustration>['illustration'];
 
 /** The same illustrations the AI widget in the editor shows for these action types */

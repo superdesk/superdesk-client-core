@@ -2,13 +2,10 @@ import {httpRequestRawLocal} from 'core/helpers/network';
 import type {IAIProvider} from 'apps/ai-providers/interfaces';
 import type {IAIAction, IAIActionOptions, IAIActionPayload} from './interfaces';
 
-/** Largest page the server returns; lists are read page by page until every item is in */
+/** Largest page the server returns */
 const PAGE_SIZE = 200;
 
-/**
- * A failed request with its status, which the JSON helpers in `core/helpers/network` drop: a
- * `412` (someone else saved first) has to be told apart from other errors.
- */
+/** Keeps the status, which `core/helpers/network` drops, so a `412` can be told apart */
 export class AIStudioRequestError {
     status: number;
     body: unknown;

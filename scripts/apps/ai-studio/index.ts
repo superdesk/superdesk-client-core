@@ -2,14 +2,18 @@ import {reactToAngular1} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 import {EditorialActionsPage} from './components/EditorialActionsPage';
 
+const EDITORIAL_ACTIONS_PATH = '/ai-studio/editorial-actions';
+
 const styles = 'display: flex; height: 100%;';
 
 angular.module('superdesk.apps.ai-studio', [])
     .component('sdAiStudioEditorialActions', reactToAngular1(EditorialActionsPage, [], [], styles))
-    .config(['superdeskProvider', (superdeskProvider) => {
-        // Each AI Studio page gets its own path under /ai-studio, so adding pages keeps this URL
+    .config(['superdeskProvider', '$routeProvider', (superdeskProvider, $routeProvider) => {
+        // Each AI Studio page gets its own path under /ai-studio, which opens the first one
+        $routeProvider.when('/ai-studio', {redirectTo: EDITORIAL_ACTIONS_PATH});
+
         superdeskProvider
-            .activity('/ai-studio/editorial-actions', {
+            .activity(EDITORIAL_ACTIONS_PATH, {
                 label: gettext('AI Studio'),
                 template: require('./views/editorial-actions.html'),
                 category: superdeskProvider.MENU_MAIN,

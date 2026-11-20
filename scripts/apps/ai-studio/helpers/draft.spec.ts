@@ -1,8 +1,10 @@
+import type {IAIProvider} from 'apps/ai-providers/interfaces';
 import type {IAIAction, IAIActionTypeOption} from '../interfaces';
 import {
     actionToDraft,
     buildCreatePayload,
     buildPatch,
+    getDefaultProvider,
     getNewDraft,
     isNewDraftDirty,
     numberInputToValue,
@@ -135,6 +137,24 @@ describe('ai studio: action draft', () => {
         expect(isNewDraftDirty({...getNewDraft(), extra_instructions: ''})).toBe(false);
         expect(isNewDraftDirty({...getNewDraft(), name: 'x'})).toBe(true);
         expect(isNewDraftDirty({...getNewDraft(), input_fields: ['headline']})).toBe(true);
+    });
+
+    it('does not count the provider a new form opened with as a change', () => {
+        const initial = getNewDraft('provider-1');
+
+        expect(initial.provider).toBe('provider-1');
+        expect(isNewDraftDirty(initial, initial)).toBe(false);
+        expect(isNewDraftDirty({...initial, provider: 'provider-2'}, initial)).toBe(true);
+    });
+
+    it('picks a default provider only when exactly one is active', () => {
+        const provider = (_id: string, active: boolean) => ({_id, active} as IAIProvider);
+
+        expect(getDefaultProvider([])).toBeNull();
+        expect(getDefaultProvider([provider('a', true)])).toBe('a');
+        expect(getDefaultProvider([provider('a', true), provider('b', false)])).toBe('a');
+        expect(getDefaultProvider([provider('a', true), provider('b', true)])).toBeNull();
+        expect(getDefaultProvider([provider('a', false)])).toBeNull();
     });
 
     describe('validation', () => {

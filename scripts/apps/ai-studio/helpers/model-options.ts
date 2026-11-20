@@ -28,10 +28,7 @@ export function getProviderOptions(
     return options;
 }
 
-/**
- * The provider default always comes first, even with a shortlist, since the default model does not
- * have to be on it. The selected model is kept when the shortlist no longer holds it.
- */
+/** The provider default comes first, since it need not be on the shortlist; a dropped selection is kept */
 export function getModelOptions(provider: IAIProvider | null, selectedModel: string | null): Array<ISelectOption> {
     const defaultModel = provider?.default_model;
     const options: Array<ISelectOption> = [
@@ -54,11 +51,7 @@ export function getModelOptions(provider: IAIProvider | null, selectedModel: str
     return options;
 }
 
-/**
- * Why the action could not run with this provider and model, or `null` when it can. With no model
- * of its own an action runs on the provider's default, and an action with neither is left out of
- * what editors are offered.
- */
+/** Why the action can't run with this provider and model, or `null`. Editors are not offered it then */
 export function getModelWarning(provider: IAIProvider | null, selectedModel: string | null): string | null {
     if (provider == null || selectedModel != null || provider.default_model) {
         return null;

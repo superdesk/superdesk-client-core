@@ -2,11 +2,7 @@ import {gettext} from 'core/utils';
 import type {IContentProfile, IVocabulary} from 'superdesk-api';
 import type {ISelectOption} from '../interfaces';
 
-/**
- * A field is enabled in a profile when the profile's editor config has an entry for it that is not
- * switched off. Stored profiles drop disabled fields or mark them `enabled: false`, and leave
- * `enabled` out on enabled ones, so a missing flag counts as enabled.
- */
+/** Profiles drop disabled fields or mark them `enabled: false`, so a missing flag means enabled */
 export function isFieldEnabledInProfile(profile: IContentProfile, fieldId: string): boolean {
     const config = profile.editor?.[fieldId];
 
@@ -14,9 +10,8 @@ export function isFieldEnabledInProfile(profile: IContentProfile, fieldId: strin
 }
 
 /**
- * Profiles the action applies to: the selected ones, or every enabled profile when none is selected
- * (an action with no content profiles is offered for all of them). Selected IDs that no longer
- * match a profile are skipped; when none match, every enabled profile is used.
+ * The selected profiles, or every enabled one when none is selected or none of the selected ones
+ * exists any more.
  */
 export function getProfilesInScope(
     profiles: Array<IContentProfile>,
@@ -47,11 +42,7 @@ interface IFieldOptions {
     output: Array<ISelectOption>;
 }
 
-/**
- * Text fields an action can read from and write to. Input fields can be the union over the
- * profiles in scope, since a run reads whatever the item has, while the output field has to exist
- * in every one of them.
- */
+/** An input field may exist in any profile in scope, the output field must exist in all of them */
 export function getFieldOptions(params: IFieldOptionsParams): IFieldOptions {
     const {builtInTextFields, customFieldVocabularies, profiles, selectedProfileIds, getLabel} = params;
 
@@ -83,11 +74,7 @@ export function getFieldOptions(params: IFieldOptionsParams): IFieldOptions {
     };
 }
 
-/**
- * Appends the selected values that are missing from `options`, so a stored value that is no
- * longer offered (a field removed from a profile, a deleted vocabulary) stays visible and can be
- * removed, instead of the control showing something else or nothing.
- */
+/** Keeps selected values that are no longer offered visible, so they can be removed */
 export function withSelectedOptions(
     options: Array<ISelectOption>,
     selectedIds: Array<string>,

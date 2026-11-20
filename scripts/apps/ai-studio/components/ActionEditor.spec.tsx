@@ -1,5 +1,6 @@
 import React from 'react';
 import {mount, ReactWrapper} from 'enzyme';
+import {Label} from 'superdesk-ui-framework/react';
 import type {IContentProfile} from 'superdesk-api';
 import type {IAIProvider} from 'apps/ai-providers/interfaces';
 import type {IAIAction, IAIActionOptions, IAIActionType} from '../interfaces';
@@ -65,8 +66,10 @@ describe('ai studio: action editor', () => {
         expect(byTestId(render(summary, 'summary'), 'ai-action-suggestions-count').exists()).toBe(false);
     });
 
-    it('shows what editors can do with the answers as text, from the type', () => {
-        expect(byTestId(render(summary, 'summary'), 'ai-action-user-actions').text()).toContain('Apply, Copy');
+    it('shows what editors can do with the answers, from the type', () => {
+        const labels = byTestId(render(summary, 'summary'), 'ai-action-user-actions').find(Label);
+
+        expect(labels.map((label) => label.prop('text'))).toEqual(['Apply', 'Copy']);
     });
 
     it('enables Save only once something changed', () => {
@@ -77,6 +80,16 @@ describe('ai studio: action editor', () => {
         byTestId(wrapper, 'ai-action-name').simulate('change', {target: {value: 'Short abstracts'}});
 
         expect(byTestId(wrapper, 'ai-action-save').prop('disabled')).toBe(false);
+    });
+
+    it('offers Close while nothing changed and Cancel once something did', () => {
+        const wrapper = render(summary, 'summary');
+
+        expect(byTestId(wrapper, 'ai-action-cancel').text()).toBe('Close');
+
+        byTestId(wrapper, 'ai-action-name').simulate('change', {target: {value: 'Short abstracts'}});
+
+        expect(byTestId(wrapper, 'ai-action-cancel').text()).toBe('Cancel');
     });
 
     it('shows the provider, model and extra instructions on the AI Settings tab', () => {

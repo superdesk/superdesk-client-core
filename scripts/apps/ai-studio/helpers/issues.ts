@@ -27,10 +27,7 @@ export interface IMappedIssues {
     other: Array<string>;
 }
 
-/**
- * An issue is either a message or an object of messages keyed by error type (`{required: '...'}`),
- * and a list field can nest them one level deeper per entry.
- */
+/** A message, or messages keyed by error type (`{required: '...'}`), one level deeper for lists */
 function getMessages(issue: unknown): Array<string> {
     if (typeof issue === 'string') {
         return [issue];
@@ -44,9 +41,8 @@ function getMessages(issue: unknown): Array<string> {
 }
 
 /**
- * Maps the `_issues` of an error response onto the form fields. Parameter issues come nested under
- * `parameters` or, depending on server settings, as dotted keys (`parameters.suggestions_count`).
- * Anything the form has no control for is returned in `other` so it can be shown, not dropped.
+ * Parameter issues come nested under `parameters` or as dotted keys, depending on server settings.
+ * Issues for fields without a control go to `other`, so they are still shown.
  */
 export function mapIssues(issues: unknown): IMappedIssues {
     const result: IMappedIssues = {fields: {}, other: []};
