@@ -29,6 +29,7 @@
   "main": "scripts/index.js",
   "types": "scripts/core/superdesk-api.d.ts",
   "dependencies": {
+    "@hello-pangea/dnd": "^16.6.0",
     "@popperjs/core": "2.10.2",
     "@sourcefabric/common": "0.0.69",
     "@sourcefabric/date-fns-tz": "^1.2.1",

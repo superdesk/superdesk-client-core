@@ -3,7 +3,7 @@ import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 import {IExtensionActivationResult} from 'superdesk-api';
-import {extensions, appConfig} from 'appConfig';
+import {extensions, appConfig, authoringReactViewEnabled} from 'appConfig';
 import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 import ng from 'core/services/ng';
 import {confirmPublish} from 'apps/authoring/authoring/services/quick-publish-modal';
@@ -146,7 +146,16 @@ export function getMultiActions(
     }
 
     function addToPackage() {
-        $rootScope.$broadcast('package:addItems', {items: getSelectedItems(), group: 'main'});
+        if (authoringReactViewEnabled) {
+            dispatchInternalEvent('addItemsToPackageInAuthoringReact', {
+                packageId: ng.get('authoringWorkspace').getItem()._id,
+                groupId: 'main',
+                items: getSelectedItems(),
+            });
+        } else {
+            $rootScope.$broadcast('package:addItems', {items: getSelectedItems(), group: 'main'});
+        }
+
         unselectAll();
     }
 
