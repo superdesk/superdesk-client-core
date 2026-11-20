@@ -202,6 +202,13 @@ export class Monitoring {
         await dropdown.getByTestId('create-package').click();
     }
 
+    // The shortcut only acts while the route is under `workspace` or `search`.
+    async createArticleWithKeyboardShortcut(): Promise<void> {
+        await this.page.keyboard.press('Control+m');
+
+        await expect(this.page.getByTestId('authoring-topbar')).toBeVisible();
+    }
+
     async openMediaUploadView(): Promise<void> {
         await this.page.locator(s('content-create')).click();
         await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: 'Upload media'}).click();
