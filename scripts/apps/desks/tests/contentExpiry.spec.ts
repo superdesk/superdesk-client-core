@@ -1,10 +1,28 @@
+import {appConfig} from 'appConfig';
+import {isContentExpiryValid} from '../directives/ContentExpiry';
+
+const MAX_DAYS = 99999;
+const MAX_MINUTES = (MAX_DAYS + 1) * 24 * 60 - 1;
+
 describe('content expiry', () => {
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.spellcheck'));
 
+    let elem;
+    let originalMax;
+
+    beforeEach(() => {
+        originalMax = appConfig.max_content_expiry_minutes;
+        appConfig.max_content_expiry_minutes = MAX_MINUTES;
+    });
+
+    afterEach(() => {
+        appConfig.max_content_expiry_minutes = originalMax;
+    });
+
     function setupElement(context, contentExpiry) {
-        let scope, elem, iscope;
+        let scope, iscope;
 
         inject(($rootScope, $compile) => {
             scope = $rootScope.$new();
@@ -66,5 +84,43 @@ describe('content expiry', () => {
 
         expect(scope.contentExpiry.actualExpiry.text).toBe('OFF');
         expect(scope.contentExpiry.actualExpiry.expiry).toBe(null);
+    }));
+
+    it('rejects more than the maximum number of days', inject(($rootScope) => {
+        expect(isContentExpiryValid(null)).toBe(true);
+        expect(isContentExpiryValid(-1)).toBe(true);
+        expect(isContentExpiryValid(MAX_MINUTES)).toBe(true);
+        expect(isContentExpiryValid(MAX_MINUTES + 1)).toBe(false);
+        expect(isContentExpiryValid(NaN)).toBe(false);
+
+        const scope = setupElement('System', MAX_DAYS * 24 * 60);
+        const maxDaysError = () =>
+            elem[0].querySelector('[data-test-id="content-expiry--max-days-error"]') != null;
+
+        expect(maxDaysError()).toBe(false);
+
+        scope.contentExpiry.days = MAX_DAYS + 1;
+        $rootScope.$digest();
+        expect(maxDaysError()).toBe(true);
+    }));
+
+    it('does not show the default expiry while the input is invalid', inject(($rootScope) => {
+        const scope = setupElement('System', 0);
+
+        scope.contentExpiry.days = undefined;
+        $rootScope.$digest();
+        expect(scope.contentExpiry.actualExpiry).toBe(null);
+    }));
+
+    it('applies no limit when the server does not send one', inject(($rootScope) => {
+        appConfig.max_content_expiry_minutes = undefined;
+
+        expect(isContentExpiryValid(MAX_MINUTES + 1)).toBe(true);
+
+        const scope = setupElement('System', 0);
+
+        scope.contentExpiry.days = MAX_DAYS + 1;
+        $rootScope.$digest();
+        expect(elem[0].querySelector('[data-test-id="content-expiry--max-days-error"]')).toBe(null);
     }));
 });

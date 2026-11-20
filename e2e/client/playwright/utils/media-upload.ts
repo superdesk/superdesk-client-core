@@ -12,11 +12,12 @@ import {setEditor3FieldValue} from './editor3';
  * themselves is written once here and the specs stay a list of what each case adds.
  */
 
+/** A picture with embedded IPTC/XMP metadata for the staged-upload metadata test. */
+export const IMAGE_WITH_EMBEDDED_METADATA = mediaFixture('metadata.jpg', 'image/jpeg');
+
 /**
- * The upload sources without embedded metadata are used throughout: `metadata.jpg`
- * and `metadata.mov` carry IPTC/XMP that the screen maps onto headline and
- * description, which would both prefill the editor and hide the refusal of an empty
- * required field.
+ * The other upload sources have no embedded metadata, keeping tests for required
+ * fields and user-entered metadata independent of automatic metadata extraction.
  */
 export const AUDIO_FILE = testFile('audio.wav', 'audio/wav');
 export const VIDEO_FILE = mediaFixture('empty_metadata.mov', 'video/quicktime');
@@ -291,15 +292,11 @@ async function expectInGlobalSearch(page: Page, headline: string, count: number)
  * the screen, and the files turn up on the picked desk as the expected item types,
  * keep their metadata in authoring and are reachable from global search.
  *
- * With `withProgressCircles` the upload runs against held back archive responses so
- * the per-file progress circles can be counted as they appear; see
- * `MediaUpload.holdArchiveRequests` for why that is what makes them observable.
  */
 export async function expectUploadToTargetDesk(page: Page, options: {
     fileCount: number;
     itemTypes: Array<string>;
     metadata: {headline: string; description: string};
-    withProgressCircles?: boolean;
 }): Promise<void> {
     const upload = new MediaUpload(page);
 
@@ -312,57 +309,11 @@ export async function expectUploadToTargetDesk(page: Page, options: {
     await expect(upload.getItems().getByTestId('media-grid-item-headline'))
         .toHaveText(Array(options.fileCount).fill(options.metadata.headline));
 
-    if (options.withProgressCircles === true) {
-        await uploadWithProgressCircles(page, options.fileCount);
-    } else {
-        await upload.startUpload();
+    await upload.startUpload();
 
-        await expect(upload.getModal()).toBeHidden();
-    }
+    await expect(upload.getModal()).toBeHidden();
 
     await expectItemsOnTargetDesk(page, options.metadata.headline, options.itemTypes);
     await expectMetadataPreserved(page, options.metadata.headline, options.metadata, options.fileCount);
     await expectInGlobalSearch(page, options.metadata.headline, options.fileCount);
-}
-
-/**
- * Uploads the files already on the screen, releasing the held back archive requests
- * one by one so that the progress circle each file draws when its own upload is
- * answered can be counted as it appears.
- */
-async function uploadWithProgressCircles(page: Page, fileCount: number): Promise<void> {
-    const upload = new MediaUpload(page);
-    const releaseUploads = await upload.holdArchiveRequests('POST', fileCount);
-    const releaseMetadataUpdates = await upload.holdArchiveRequests('PATCH', fileCount);
-
-    /*
-     * `startUpload` returns on the click, and the screen then goes through
-     * validation and an async `api.archive.getUrl()` before the first file leaves
-     * the page. Waiting for that request is what makes the assertion below say
-     * something: an upload is under way and, because every response is held, not one
-     * item has left zero progress yet.
-     */
-    const firstUploadSent = page.waitForRequest(
-        (request) => request.method() === 'POST' && request.url().includes('/api/archive'),
-    );
-
-    await upload.startUpload();
-    await firstUploadSent;
-
-    await expect(upload.getProgressIndicators()).toHaveCount(0);
-
-    for (const index of Array(fileCount).keys()) {
-        releaseUploads[index]();
-
-        await expect(upload.getProgressIndicators()).toHaveCount(index + 1);
-    }
-
-    for (const release of releaseMetadataUpdates) {
-        release();
-    }
-
-    await expect(upload.getModal()).toBeHidden();
-
-    await upload.stopHoldingArchiveRequests('POST');
-    await upload.stopHoldingArchiveRequests('PATCH');
 }

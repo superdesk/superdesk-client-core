@@ -9,7 +9,8 @@
     get-icon-for-item-type="getIconForItemType"
     get-progress="getProgress"
     on-remove-item="onRemoveItem"
-    upload-in-progress="saving",
+    upload-in-progress="saving"
+    save-disabled="metadataPending || failed || removing"
     data-test-id="file-upload"
 >
     <sd-multi-edit-select-desk>
@@ -27,6 +28,31 @@
     </sd-multi-edit-select-desk>
 
     <sd-multi-edit-additional-content>
+        <div class="sd-grid-item" ng-repeat="item in pendingItems track by item.meta_id" data-test-id="pending-upload-item" style="z-index: 1;">
+            <div class="sd-grid-item__thumb">
+                <img ng-if="item.thumbnailUrl" ng-src="{{item.thumbnailUrl}}" alt="{{item.file.name}}">
+                <i ng-if="!item.thumbnailUrl" class="icon--2x" ng-class="'icon-' + (item.cssType === 'image' ? 'photo' : item.cssType)" aria-hidden="true"></i>
+                <button type="button" class="icn-btn sd-grid-item__remove"
+                    ng-click="onRemoveItem(item.meta)" ng-disabled="saving || item.removing"
+                    aria-label="{{'Remove item' | translate}}" data-test-id="remove-pending-upload">
+                    <i class="icon-close-small" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="sd-grid-item__content">
+                <p class="sd-grid-item__title">{{item.file.name}}</p>
+                <div role="status" aria-live="polite">
+                    <span ng-if="!item.staged" translate>Uploading... {{item.progress}}%</span>
+                    <span ng-if="item.staged && !item.processingError" translate>Reading metadata...</span>
+                    <span ng-if="item.processingError">{{item.processingError}}</span>
+                </div>
+                <progress ng-if="!item.staged" max="100" value="{{item.progress}}"
+                    aria-label="{{'Uploading' | translate}}"></progress>
+                <sd-spinner ng-if="item.staged && !item.processingError" data-size="'mini'"></sd-spinner>
+            </div>
+        </div>
+        <p ng-if="processing && !metadataPending && !saving" translate role="status">Preparing renditions. You can edit metadata while you wait.</p>
+        <p ng-if="saving && processing" translate role="status">Upload confirmed. Waiting for media processing to finish.</p>
+        <p ng-if="failed" translate role="alert">Media processing failed. Remove the affected file and try again.</p>
         <div class="drag-area"
             data-test-id="drag-area"
             ngf-drop="addFiles($files)"

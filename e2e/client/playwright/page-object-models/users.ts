@@ -22,12 +22,8 @@ export class Users {
     async openList(): Promise<void> {
         await this.page.goto('/#/users');
 
-        // UserListController.fetchUsers assigns the rows only once its query
-        // resolves and never clears them first, so the rows of the previous
-        // filter stay on screen while a new one loads: waiting on the rows alone
-        // would read the list the route opened on. Only the "All" filter leaves
-        // `is_active` out of its `where` clause, which is what tells its response
-        // apart from that initial fetch.
+        // The previous filter's rows stay on screen until a new query resolves, so wait for the
+        // "All" response itself: it is the only one without `is_active` in its `where` clause.
         const allUsersFetched = this.page.waitForResponse(
             (response) => response.url().includes('/api/users?')
                 && response.request().method() === 'GET'
@@ -39,8 +35,7 @@ export class Users {
         await this.page.getByTestId('user-filter').selectOption('All');
         await allUsersFetched;
 
-        // A negative assertion made against an empty table passes for the wrong
-        // reason, so hold every caller here until there is something to assert on.
+        // A negative assertion against an empty table passes for the wrong reason.
         await expect(this.page.getByTestId('users-list').getByTestId('users-list-item')).not.toHaveCount(0);
     }
 
@@ -54,6 +49,17 @@ export class Users {
         // page title only exists in the full profile view, so wait for that first.
         await expect(this.page.getByTestId('page-nav-title')).toContainText(displayName);
         await expect(this.detailsForm).toBeVisible();
+    }
+
+    async openProfileSection(sectionId: 'overview' | 'preferences' | 'privileges'): Promise<void> {
+        await this.page.getByTestId('page-sections').getByTestId('page-section')
+            .and(this.page.locator(`[data-test-value="${sectionId}"]`))
+            .click();
+    }
+
+    getPrivilegeRow(privilege: string): Locator {
+        return this.page.getByTestId('user-privileges-form').getByTestId('privilege-row')
+            .and(this.page.locator(`[data-test-value="${privilege}"]`));
     }
 
     /**

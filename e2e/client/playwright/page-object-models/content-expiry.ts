@@ -20,7 +20,7 @@ export class ContentExpiryField {
 
     // Only renders while this level has no expiry of its own, so it shows what the level inherits.
     get effective(): Locator {
-        return this.row.getByTestId('content-expiry--effective');
+        return this.row.getByTestId('content-expiry--default-label');
     }
 
     async set(expiry: IContentExpiry): Promise<void> {
