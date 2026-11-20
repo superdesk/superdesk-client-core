@@ -449,16 +449,6 @@ test.describe('content filters', () => {
         }
         await authoring.publish({subscribers: []});
 
-        // Unsaved body changes surface a "Save and send" confirm dialog;
-        // Authoring.publish only auto-handles it when subscribers are set.
-        {
-            const saveSend = page.getByRole('button', {name: 'Save and send', exact: true});
-
-            if (await saveSend.isVisible().catch(() => false)) {
-                await saveSend.click();
-            }
-        }
-
         await page.goto('/#/publish_queue');
         await expect(page.locator(s('publish-queue-item'))).toHaveCount(0);
 
@@ -495,16 +485,6 @@ test.describe('content filters', () => {
             await page.keyboard.type('Help needed item7 text');
         }
         await authoring.publish({subscribers: []});
-
-        // Unsaved body changes surface a "Save and send" confirm dialog;
-        // Authoring.publish only auto-handles it when subscribers are set.
-        {
-            const saveSend = page.getByRole('button', {name: 'Save and send', exact: true});
-
-            if (await saveSend.isVisible().catch(() => false)) {
-                await saveSend.click();
-            }
-        }
 
         await page.goto('/#/publish_queue');
         await expect(page.locator(s('publish-queue-item'))).toHaveCount(1);

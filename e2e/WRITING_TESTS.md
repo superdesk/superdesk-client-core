@@ -243,9 +243,9 @@ item, and no plain package; use the `media-items` snapshot for those.
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
 `editor3-tables`, `custom-blocks`, `availability-management`, `related-items`,
-`media-items`,
-`editor3-formats`, `authoring-extras`, `saved-search-private`, `publishing`,
-`required-headline`, `association-fields`, `editor3-comments`.
+`media-items`, `editor3-formats`, `editor3-suggestions`, `authoring-extras`,
+`saved-search-private`, `publishing`, `required-headline`,
+`association-fields`, `editor3-comments`, `desk-routing`.
 
 ### Publishing config in the `main` snapshot
 
@@ -321,6 +321,39 @@ are a different component again, found with `getByRole('button', {name})`.
 The Angular authoring view keys custom fields by display name, so the field is
 `s('authoring', 'authoring-field=Sample rich text')`, not by its vocabulary id.
 
+### The `editor3-suggestions` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'editor3-suggestions'})` gives you the same
+toolbar as `editor3-formats` with `suggestions` added, on `body_html` and on the
+custom text field alike. It is the only snapshot that offers the option at all:
+`main` and `editor3-formats` enable it on no field, so suggestions mode is
+unreachable under either.
+
+The toggle is a `StyleButton` like bold or italic, so it is found the same way, by
+`data-test-value="suggestions"`, and it carries `Editor3-activeButton` while
+suggestions mode is on.
+
+It also carries "story with suggestions" on the Sports desk, an article whose body
+reads `alphabravocharliedeltaechofoxtrot`: six words run together with no separators
+between them, with `bravo` and `foxtrot` as insertion suggestions and `delta` as a
+deletion suggestion, all made by `admin` and all unresolved. Assert on the individual
+words, not on a spaced sentence. Reach for it whenever a case starts from an article
+that already has suggestions rather than from making them. A suggestion is draft.js
+editor state under `fields_meta`, not markup, so it is recorded like any other field
+the browser writes; there is nothing special about putting one in a snapshot.
+
+Three things about suggestions themselves are worth knowing before writing a spec:
+
+- An insertion suggestion that directly touches a deletion suggestion is reported as
+  a single "Replace X with Y" suggestion, and accepting or rejecting it resolves both
+  halves at once. Leave plain text between them if you want two.
+- The detail popup renders only while the caret sits inside a suggestion, and it is
+  re-rendered only when the caret *moves* (`HighlightsPopup.shouldComponentUpdate`).
+  A click that lands where the caret already sits, which is where accepting or
+  rejecting one leaves it, shows nothing, so park the caret on plain text first.
+- The same re-render tears the popup down again, so a popup that was found open can
+  be gone by the time the next assertion runs. Retry the opening clicks and the
+  assertions on the popup as one `toPass` unit, not the clicks alone.
 ### The `association-fields` snapshot
 
 `restoreDatabaseSnapshot({snapshotName: 'association-fields'})` gives you `main`
@@ -425,6 +458,12 @@ snapshot when a spec needs publishing to be blocked by a missing field on the
 standard Sports items: publishing with an empty headline fails with
 "HEADLINE empty values not allowed". Saving is unaffected; required fields only
 gate publishing.
+
+### The `desk-routing` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'desk-routing'})` gives you `main` with the Desk Routing macro (`desk_routing`) set as the `incoming_macro` of every stage of Sports, Education and Finance. In `main` no stage has a macro, so closing a desk onto another changes nothing but the desk itself. Reach for this snapshot when a spec asserts what routing does to content: an item that lands on a stage of a closed desk (sent there, or fetched from ingest) gets a `marked_desks` entry for the last open desk at the end of the `closed_destination` chain, and reopening the desk removes those marks again.
+
+The macro is `access_type: "backend"`, so a plain `/api/macros` does not list it, but the Stages step of the desk settings asks for backend macros too and offers it there as "Desk Routing". Setting it that way on six stages would be a loop of UI actions, which "State reset" rules out, so the snapshot carries it. It does nothing while the stage's desk is open. `outgoing_macro` is left unset on purpose: on an item leaving a closed desk it would add a mark of its own, and a spec could no longer tell which stage produced the mark it asserts on.
 
 ### The `saved-search-private` snapshot
 
