@@ -5,23 +5,32 @@ import {getStorageState} from './utils/storage-state';
 
 /**
  * QA case "Translations" (1344444573), test case "Translate item" (5707530482).
- * Not covered: steps 1-2 (Edition package, Creation/Circulation desks) are Superdesk Fidelity config the e2e
- * instance lacks, so translation starts from the Sports desk. The copy goes to the current desk's working stage
- * (`translate` in scripts/api/article.ts), never the original's stage. The language is asserted in the
- * translations widget because the default list config renders no language field.
+ * The Edition package and Creation/Circulation desk steps need Fidelity config the e2e instance lacks, so
+ * translation starts from Sports. The copy lands on the current desk's working stage (`translate` in
+ * scripts/api/article.ts), which here is also the original's.
  */
 
 const ARTICLE = 'test sports story';
 const TARGET_LANGUAGE = {label: 'Deutsch', code: 'de'};
 
 test.use({
-    storageState: getStorageState({}, {authoringReact: true}),
+    storageState: getStorageState(
+        {
+            // the default list config renders no language code on items
+            list: {
+                priority: ['priority', 'urgency'],
+                firstLine: ['slugline', 'headline', 'versioncreated'],
+                secondLine: ['state', 'language', 'desk'],
+            },
+        },
+        {authoringReact: true},
+    ),
 });
 
 test.describe('translate article', () => {
     test('translates an article into another language from the monitoring actions menu', {
         annotation: [
-            {type: 'confluence', description: '1344444573 partial'}, // Translations / Translate item
+            {type: 'confluence', description: '1344444573 complete'}, // Translations / Translate item
         ],
     }, async ({page}) => {
         const monitoring = new Monitoring(page);
@@ -37,7 +46,12 @@ test.describe('translate article', () => {
             .getByTestId('article-item')
             .and(page.locator(`[data-test-value="${ARTICLE}"]`));
 
+        const copyInLanguage = (code: string) => copiesInWorkingStage.filter({
+            has: page.getByTestId('item-language').and(page.locator(`[data-test-value="${code}"]`)),
+        });
+
         await expect(copiesInWorkingStage).toHaveCount(1);
+        await expect(copyInLanguage('en')).toHaveCount(1);
 
         const [response] = await Promise.all([
             page.waitForResponse(
@@ -52,6 +66,16 @@ test.describe('translate article', () => {
         await expect(page.getByTestId('authoring-header-translated-from'))
             .toHaveAttribute('data-test-value', 'en');
 
+        const metadataTab = page.getByTestId('widget-icon').and(page.locator('[data-test-value="metadata"]'));
+        const widgetPanel = page.getByTestId('authoring-widget-panel');
+
+        await metadataTab.click();
+        await expect(widgetPanel.getByLabel('Language')).toHaveValue(TARGET_LANGUAGE.code);
+
+        // the open widget covers the header, and the tab toggles it shut
+        await metadataTab.click();
+        await expect(widgetPanel).toBeHidden();
+
         await page.getByTestId('authoring-header-translations-count').click();
 
         const chain = page.getByTestId('translations-widget').getByTestId('translation-item');
@@ -64,5 +88,7 @@ test.describe('translate article', () => {
         await monitoring.selectDeskOrWorkspace('Sports');
 
         await expect(copiesInWorkingStage).toHaveCount(2);
+        await expect(copyInLanguage('en')).toHaveCount(1);
+        await expect(copyInLanguage(TARGET_LANGUAGE.code)).toHaveCount(1);
     });
 });
