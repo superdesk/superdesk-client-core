@@ -12,16 +12,11 @@ export class UserRolesSettings {
         await expect(this.page.getByTestId('add-role')).toBeVisible();
     }
 
-    /**
-     * Drops all client-side state and re-queries the API. page.goto() cannot do
-     * this: the settings route is a hash, so navigating to the URL the page is
-     * already on is a same-document no-op and the tab stays where it was.
-     */
+    // page.goto() to the same hash route is a same-document no-op, so a real reload is needed.
     async reload(): Promise<void> {
         await this.page.reload();
 
-        // Booting the whole application takes noticeably longer than a route
-        // change, so this one assertion gets a longer budget.
+        // A full app boot is slower than a route change.
         await expect(this.page.getByTestId('add-role')).toBeVisible({timeout: 60000});
     }
 
