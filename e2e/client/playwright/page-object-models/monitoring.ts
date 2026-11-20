@@ -238,6 +238,14 @@ export class Monitoring {
         }
     }
 
+    async openMoreTemplates(): Promise<Locator> {
+        const dropdown = await this.openContentCreateDropdown();
+
+        await dropdown.getByRole('button', {name: 'More templates...'}).click();
+
+        return dropdown;
+    }
+
     async createArticleFromDefaultTemplate(): Promise<void> {
         const dropdown = await this.openContentCreateDropdown();
 
