@@ -61,4 +61,9 @@ export class IngestSettings {
         expect(response.status()).toBeLessThan(300);
         await expect(this.modal).toBeHidden();
     }
+
+    async cancel(): Promise<void> {
+        await this.modal.getByRole('button', {name: 'Cancel', exact: true}).click();
+        await expect(this.modal).toBeHidden();
+    }
 }

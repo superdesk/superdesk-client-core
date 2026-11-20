@@ -7,14 +7,10 @@ import {DeskSettings} from './page-object-models/settings/desks';
 import {IngestSettings} from './page-object-models/settings/ingest';
 
 /**
- * Content expiry at desk, stage and ingest level, and the expiry the backend stamps on items (read from the
- * preview Metadata tab).
+ * Content expiry at desk, stage and ingest level, and the expiry the backend stamps on items (preview Metadata tab).
  *
- * Not covered: item removal at expiry (backend job SDESK-5932, would need wall-clock waiting) and the 7-day
- * published-item rule (the e2e backend reports `publish_content_expiry_minutes` as 0).
- * Departures from the cases: Sports is configured instead of creating a desk (desks.spec.ts covers that); desk and
- * stage config is varied instead of workflow states; the ingest source is a File feed, as a live feed needs a
- * reachable service to save.
+ * Not covered: item removal at expiry (backend job SDESK-5932, needs wall-clock waiting) and the 7-day rule for
+ * published items (the e2e backend sets `publish_content_expiry_minutes` to 0).
  */
 
 const MINUTE = 60 * 1000;
@@ -30,8 +26,7 @@ const INGEST_EXPIRY: IContentExpiry = {days: 0, hours: 5, minutes: 30};
 const INGEST_PROVIDER = 'Antara news provider';
 const INGESTED_ITEM = 'Indonesia opens pasteurized milk facility to back free meals program';
 
-// Both timestamps come from the same document, so the test host's clock does not matter. The gap is the
-// configured expiry plus the time the test spent in authoring, hence the slack in expectExpiryOffset.
+// Both timestamps come from the same document, so host clock skew does not matter.
 async function getExpiryOffsetMinutes(preview: Locator): Promise<number> {
     const created = preview.getByTestId('metadata-created').locator('time');
     const expiry = preview.getByTestId('metadata-expiry').locator('time');
@@ -50,6 +45,7 @@ async function getExpiryOffsetMinutes(preview: Locator): Promise<number> {
 async function expectExpiryOffset(preview: Locator, expectedMinutes: number): Promise<void> {
     const offset = await getExpiryOffsetMinutes(preview);
 
+    // The slack covers the time between creating the item and the save or move that stamped the expiry.
     expect(offset).toBeGreaterThanOrEqual(expectedMinutes);
     expect(offset).toBeLessThan(expectedMinutes + 5);
 }
@@ -75,6 +71,14 @@ async function createArticle(page: Page, slugline: string): Promise<void> {
 
     await page.getByTestId('authoring-topbar').getByTestId('close').click();
     await expect(page.getByTestId('authoring-topbar')).toBeHidden();
+}
+
+async function getExpiry(preview: Locator): Promise<string | null> {
+    const expiry = preview.getByTestId('metadata-expiry').locator('time');
+
+    await expect(expiry).toHaveAttribute('datetime', /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/);
+
+    return expiry.getAttribute('datetime');
 }
 
 async function openMetadataPreview(page: Page, articleLabel: string): Promise<Locator> {
@@ -254,10 +258,7 @@ test.describe('content expiry', () => {
 
         await page.goto('/#/workspace/ingest');
 
-        const expiryBefore = await (await openMetadataPreview(page, INGESTED_ITEM))
-            .getByTestId('metadata-expiry').locator('time').getAttribute('datetime');
-
-        expect(expiryBefore).not.toBeNull();
+        const expiryBefore = await getExpiry(await openMetadataPreview(page, INGESTED_ITEM));
 
         const ingest = new IngestSettings(page);
 
@@ -270,13 +271,11 @@ test.describe('content expiry', () => {
 
         await ingest.openEdit(INGEST_PROVIDER);
         await ingest.contentExpiry.expectValue(INGEST_EXPIRY);
-        await ingest.modal.getByRole('button', {name: 'Cancel'}).click();
-        await expect(ingest.modal).toBeHidden();
+        await ingest.cancel();
 
         await page.goto('/#/workspace/ingest');
 
-        const expiryAfter = await (await openMetadataPreview(page, INGESTED_ITEM))
-            .getByTestId('metadata-expiry').locator('time').getAttribute('datetime');
+        const expiryAfter = await getExpiry(await openMetadataPreview(page, INGESTED_ITEM));
 
         expect(expiryAfter).toBe(expiryBefore);
     });
