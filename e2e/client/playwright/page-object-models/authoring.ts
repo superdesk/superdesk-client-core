@@ -132,7 +132,7 @@ export class Authoring {
         return panel;
     }
 
-    // Resolves once `POST /api/macros` settles. Status unchecked: macros that report errors answer with one.
+    // Resolves once `POST /api/macros` settles. Status is left unchecked: failing macros answer with an error status.
     async runMacro(macroLabel: string): Promise<Response> {
         const {page} = this;
         const macro = page.getByTestId('authoring-widget-panel')
@@ -141,7 +141,7 @@ export class Authoring {
 
         const [response] = await Promise.all([
             page.waitForResponse((res) =>
-                res.url().includes('/macros') && res.request().method() === 'POST'),
+                res.url().includes('/api/macros') && res.request().method() === 'POST'),
             macro.click(),
         ]);
 

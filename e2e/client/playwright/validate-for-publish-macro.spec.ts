@@ -3,8 +3,7 @@ import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot} from './utils';
 
-// Covers the "Validate for Publish" macro. The in-flight state (macro list behind `sd-loading`)
-// is not asserted: it is part of "waits for server response", not an outcome.
+// Covers the "Validate for Publish" macro. The in-flight loading state is not asserted.
 
 const ARTICLE = 'test sports story';
 const MACRO = 'Validate for Publish';
@@ -45,6 +44,7 @@ test.describe('validate for publish macro', {
 
         // the macro validates the stored item, not the editor contents
         await authoring.save();
+        await expect(page.getByTestId('notification--error')).toHaveCount(0);
 
         await authoring.openWidget('Macros');
         await authoring.runMacro(MACRO);
@@ -57,7 +57,10 @@ test.describe('validate for publish macro', {
         await error.click();
         await expect(error).toBeHidden();
 
-        await authoring.publish({subscribers: []});
+        // `authoring.publish` waits for the panel to close, which a rejected publish never does
+        const publishPanel = await authoring.openSendPublishPane();
+
+        await publishPanel.getByTestId('publish').click();
 
         await expect(error).toBeVisible();
 
