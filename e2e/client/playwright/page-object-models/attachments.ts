@@ -184,6 +184,18 @@ export class AttachmentsPane {
     }
 
     /**
+     * Hovers a row and asserts that one of its action buttons is fully shown.
+     * `toBeVisible` cannot tell: the closed menu clips its buttons without shrinking
+     * them, so they count as visible even when no row is hovered. Only an intersection
+     * check does, and it has to ask for the whole button because the menu centres its
+     * buttons, so a half-open menu still shows part of the middle one.
+     */
+    async hoverAndExpectAction(attachmentTitle: string, button: Locator): Promise<void> {
+        await this.hoverItem(attachmentTitle);
+        await expect(button).toBeInViewport({ratio: 1});
+    }
+
+    /**
      * Downloads an attachment and returns the tab it opened. `attachmentsApi.download`
      * calls `window.open(url, '_blank')`, which surfaces as a popup.
      */
