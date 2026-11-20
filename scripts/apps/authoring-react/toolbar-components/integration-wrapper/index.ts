@@ -11,3 +11,4 @@ export {CreatedModifiedInfoWidget} from './created-modified-info-widget';
 export {ItemStateWidget} from './item-state-widget';
 export {ContentProfileDropdownWidget} from './content-profile-dropdown-widget';
 export {HeaderGeneralInfoWidget} from './header-general-info-widget';
+export {SpellcheckerToggleButton} from './spellchecker-toggle-button';

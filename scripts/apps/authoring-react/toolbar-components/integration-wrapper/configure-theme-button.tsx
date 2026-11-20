@@ -1,16 +1,17 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import {IconButton} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 import {useToolbarContext} from './toolbar-context';
+import {ToolbarIconButton} from './toolbar-icon-button';
 
 export const ConfigureThemeButton: React.ComponentType<{entity: IArticle}> = () => {
     const {exposed} = useToolbarContext<IArticle>();
 
     return (
-        <IconButton
+        <ToolbarIconButton
             icon="switches"
-            ariaValue={gettext('Configure themes')}
+            label={gettext('Configure themes')}
+            testId="authoring-configure-themes"
             onClick={() => exposed?.configureTheme()}
         />
     );
