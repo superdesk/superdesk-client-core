@@ -127,7 +127,7 @@ test.describe('package (authoring-react)', () => {
         );
         await expect(authoring.item('test sports story')).toBeVisible();
 
-        const contextMenu = await monitoring.openContextMenu(item);
+        const contextMenu = await monitoring.openArticleActionsMenu(item);
 
         // the menu renders its actions together, so a visible Edit means the list is complete
         await expect(contextMenu.getByRole('button', {name: 'Edit', exact: true})).toBeVisible();
