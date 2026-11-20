@@ -1,36 +1,6 @@
 import {test, expect, Page} from '@playwright/test';
 import {restoreDatabaseSnapshot} from './utils';
-
-/**
- * The `main` snapshot has no `ai_providers` and the resource has no fixture, so tests create one
- * through the form. Resolves with the server-assigned `_id`, which the URL assertions need.
- */
-async function createProvider(
-    page: Page,
-    provider: {name: string; baseUrl: string; apiKey: string; defaultModel?: string},
-): Promise<string> {
-    await page.getByTestId('list-page--add-item').click();
-
-    const form = page.getByTestId('list-page--new-item');
-
-    await form.getByTestId('gform-input--name').fill(provider.name);
-    await form.getByTestId('gform-input--provider_type').selectOption('openai_compatible');
-    await form.getByTestId('gform-input--base_url').fill(provider.baseUrl);
-    await form.getByTestId('gform-input--api_key').fill(provider.apiKey);
-
-    if (provider.defaultModel != null) {
-        // the create form has a plain text input here: listing the models needs the stored key
-        await form.getByTestId('gform-input--default_model').fill(provider.defaultModel);
-    }
-
-    const [createResponse] = await Promise.all([
-        page.waitForResponse((response) => response.request().method() === 'POST'
-            && new URL(response.url()).pathname.endsWith('/ai_providers')),
-        form.getByTestId('item-view-edit--save').click(),
-    ]);
-
-    return (await createResponse.json())._id;
-}
+import {AIProviders} from './page-object-models/ai-providers';
 
 function waitForProviderPatch(page: Page, providerId: string) {
     return page.waitForRequest((request) => request.method() === 'PATCH'
@@ -41,7 +11,7 @@ test.describe('AI providers settings', () => {
     test.beforeEach(async ({page}) => {
         await restoreDatabaseSnapshot();
 
-        await page.goto('/#/settings/ai-providers');
+        await new AIProviders(page).open();
     });
 
     test('creates a provider', async ({page}) => {
@@ -49,7 +19,7 @@ test.describe('AI providers settings', () => {
 
         await expect(items).toHaveCount(0);
 
-        await createProvider(page, {
+        await new AIProviders(page).createProvider({
             name: 'Local OpenAI',
             baseUrl: 'https://example.test/v1',
             apiKey: 'secret-key',
@@ -65,7 +35,7 @@ test.describe('AI providers settings', () => {
     test('edits a provider and replaces its stored api key', async ({page}) => {
         const items = page.getByTestId('list-page--items').getByTestId('ai-providers-item');
 
-        const providerId = await createProvider(page, {
+        const providerId = await new AIProviders(page).createProvider({
             name: 'Local OpenAI',
             baseUrl: 'https://example.test/v1',
             apiKey: 'secret-key',
@@ -116,7 +86,7 @@ test.describe('AI providers settings', () => {
 
         const items = page.getByTestId('list-page--items').getByTestId('ai-providers-item');
 
-        const providerId = await createProvider(page, {
+        const providerId = await new AIProviders(page).createProvider({
             name: 'Local OpenAI',
             baseUrl: 'https://example.test/v1',
             apiKey: 'secret-key',
@@ -147,7 +117,7 @@ test.describe('AI providers settings', () => {
 
         const items = page.getByTestId('list-page--items').getByTestId('ai-providers-item');
 
-        await createProvider(page, {
+        await new AIProviders(page).createProvider({
             name: 'Local OpenAI',
             baseUrl: 'https://example.test/v1',
             apiKey: 'secret-key',
@@ -180,7 +150,7 @@ test.describe('AI providers settings', () => {
 
         const items = page.getByTestId('list-page--items').getByTestId('ai-providers-item');
 
-        const providerId = await createProvider(page, {
+        const providerId = await new AIProviders(page).createProvider({
             name: 'Local OpenAI',
             baseUrl: 'https://example.test/v1',
             apiKey: 'secret-key',
@@ -225,7 +195,7 @@ test.describe('AI providers settings', () => {
 
         const items = page.getByTestId('list-page--items').getByTestId('ai-providers-item');
 
-        const providerId = await createProvider(page, {
+        const providerId = await new AIProviders(page).createProvider({
             name: 'Local OpenAI',
             baseUrl: 'https://example.test/v1',
             apiKey: 'secret-key',
@@ -283,7 +253,7 @@ test.describe('AI providers settings', () => {
 
         const items = page.getByTestId('list-page--items').getByTestId('ai-providers-item');
 
-        const providerId = await createProvider(page, {
+        const providerId = await new AIProviders(page).createProvider({
             name: 'Local OpenAI',
             baseUrl: 'https://example.test/v1',
             apiKey: 'secret-key',
@@ -332,7 +302,7 @@ test.describe('AI providers settings', () => {
 
         const items = page.getByTestId('list-page--items').getByTestId('ai-providers-item');
 
-        const providerId = await createProvider(page, {
+        const providerId = await new AIProviders(page).createProvider({
             name: 'Local OpenAI',
             baseUrl: 'https://example.test/v1',
             apiKey: 'secret-key',
@@ -365,7 +335,7 @@ test.describe('AI providers settings', () => {
     test('deletes a provider', async ({page}) => {
         const items = page.getByTestId('list-page--items').getByTestId('ai-providers-item');
 
-        await createProvider(page, {
+        await new AIProviders(page).createProvider({
             name: 'Local OpenAI',
             baseUrl: 'https://example.test/v1',
             apiKey: 'secret-key',
