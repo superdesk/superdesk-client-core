@@ -4,26 +4,19 @@ import {TemplateSettings} from './page-object-models/template-settings';
 import {loginAs, restoreDatabaseSnapshot} from './utils';
 
 /**
- * Case 1344443537 "Templates privilege" is a requirements page, split over the two
- * `partial` tests. Not covered:
- * - Hiding the "desk template" tick box when saving an article as a template: no `main`
- *   snapshot user can open an editor without also holding `content_templates`
- *   (`frodobaggins` has no privileges, so `POST /api/archive` is 403). Needs a user
- *   with `archive` and without `content_templates`.
- * - "Manage other users private templates": states no actor or expected result.
+ * Case 1344443537 "Templates privilege" is split over the two `partial` tests.
+ * Not covered: save as template from editing for a user without `content_templates`.
+ * No `main` snapshot user holds `archive` without it, so no such user can open an editor.
  *
- * The case calls the toggle a "Make public checkbox"; the product renders an `sd-switch`.
+ * The case says checkbox; the product renders an `sd-switch`.
  */
-
-// Database restore plus login-form logins do not fit the 30s default.
-test.setTimeout(90000);
 
 const PUBLIC_TEMPLATE = 'story 2';
 
 /** Public, assigned to Sports, so it stays visible to every Sports member. */
 const ANCHOR_TEMPLATE = 'story';
 
-const SECOND_ACTOR = {username: 'samgamgee', password: 'samgamgee'};
+const OWNER = {username: 'samgamgee', password: 'samgamgee'};
 // No privileges, so it lands on the app shell instead of the dashboard.
 const NO_PRIVILEGE_ACTOR = {username: 'frodobaggins', password: 'frodobaggins', landsOn: 'top-menu'};
 
@@ -32,64 +25,73 @@ test('turning a public template personal keeps it listed, marks it grey and hide
         {type: 'confluence', description: '1311834132 complete'}, // Change public template to personal template
     ],
 }, async ({page, browser}) => {
-    const templates = new TemplateSettings(page);
-    const monitoring = new Monitoring(page);
+    // Admin is the other user on purpose: it holds `personal_template`, so the server returns
+    // other users' personal templates to it and only the client keeps them out of More templates.
+    const adminMonitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
-    await page.goto('/#/settings/templates');
-
-    const header = templates.getCardHeader(PUBLIC_TEMPLATE);
-
-    await expect(header).toBeVisible();
-    await expect(header).not.toHaveClass(/card-box__header--dark/);
-
-    // Cancel must discard the toggle: the template stays public.
-    await templates.openEditor(PUBLIC_TEMPLATE);
-    await templates.expectMakePublic(true);
-    await templates.toggleMakePublic();
-    await templates.expectMakePublic(false);
-    await templates.cancel();
-
-    await expect(header).toBeVisible();
-    await expect(header).not.toHaveClass(/card-box__header--dark/);
-
-    await templates.makePersonal(PUBLIC_TEMPLATE);
-
-    await expect(header).toBeVisible();
-    await expect(header).toHaveClass(/card-box__header--dark/);
 
     await page.goto('/#/workspace/monitoring');
-    await monitoring.selectDeskOrWorkspace('Sports');
+    await adminMonitoring.selectDeskOrWorkspace('Sports');
 
-    const ownerDropdown = await monitoring.openMoreTemplates();
+    const adminListBefore = await adminMonitoring.openMoreTemplates();
 
-    await expect(ownerDropdown.getByRole('button', {name: PUBLIC_TEMPLATE, exact: true})).toBeVisible();
+    await expect(adminListBefore.getByRole('button', {name: PUBLIC_TEMPLATE, exact: true})).toBeVisible();
 
-    // Naming `storageState` (even as undefined) keeps this context out of the committed
-    // admin session; Playwright only inherits project options for keys not mentioned.
-    const secondContext = await browser.newContext({storageState: undefined});
+    // Naming `storageState` stops this context inheriting the admin session.
+    const ownerContext = await browser.newContext({storageState: undefined});
 
     try {
-        const secondPage = await secondContext.newPage();
-        const secondMonitoring = new Monitoring(secondPage);
+        const ownerPage = await ownerContext.newPage();
+        const templates = new TemplateSettings(ownerPage);
+        const ownerMonitoring = new Monitoring(ownerPage);
 
-        await loginAs(secondPage, SECOND_ACTOR.username, SECOND_ACTOR.password);
+        await loginAs(ownerPage, OWNER.username, OWNER.password);
+        await ownerPage.goto('/#/settings/templates');
 
-        await secondPage.goto('/#/workspace/monitoring');
-        await secondMonitoring.selectDeskOrWorkspace('Sports');
+        const header = templates.getCardHeader(PUBLIC_TEMPLATE);
 
-        const otherDropdown = await secondMonitoring.openMoreTemplates();
+        await expect(header).toBeVisible();
+        await expect(header).not.toHaveClass(/card-box__header--dark/);
 
-        // Anchor: proves the list loaded before asserting the absence.
-        await expect(otherDropdown.getByRole('button', {name: ANCHOR_TEMPLATE, exact: true})).toBeVisible();
-        await expect(otherDropdown.getByRole('button', {name: PUBLIC_TEMPLATE, exact: true})).toHaveCount(0);
+        // Cancel must discard the toggle: the template stays public.
+        await templates.openEditor(PUBLIC_TEMPLATE);
+        await templates.expectMakePublic(true);
+        await templates.toggleMakePublic();
+        await templates.expectMakePublic(false);
+        await templates.cancel();
+
+        await expect(header).toBeVisible();
+        await expect(header).not.toHaveClass(/card-box__header--dark/);
+
+        await templates.makePersonal(PUBLIC_TEMPLATE);
+
+        await expect(header).toBeVisible();
+        await expect(header).toHaveClass(/card-box__header--dark/);
+
+        await ownerPage.goto('/#/workspace/monitoring');
+        await ownerMonitoring.selectDeskOrWorkspace('Sports');
+
+        const ownerList = await ownerMonitoring.openMoreTemplates();
+
+        await expect(ownerList.getByRole('button', {name: PUBLIC_TEMPLATE, exact: true})).toBeVisible();
     } finally {
-        await secondContext.close();
+        await ownerContext.close();
     }
+
+    // More templates fetches its list when it mounts, so reload for a fresh one.
+    await page.reload();
+    await adminMonitoring.selectDeskOrWorkspace('Sports');
+
+    const adminListAfter = await adminMonitoring.openMoreTemplates();
+
+    // Anchor: proves the list loaded before asserting the absence.
+    await expect(adminListAfter.getByRole('button', {name: ANCHOR_TEMPLATE, exact: true})).toBeVisible();
+    await expect(adminListAfter.getByRole('button', {name: PUBLIC_TEMPLATE, exact: true})).toHaveCount(0);
 });
 
 test.describe('without the content_templates privilege', () => {
-    // Empty state, not `undefined`: `undefined` inherits the committed admin session.
+    // Empty state, not `undefined`: in `test.use`, `undefined` inherits the committed admin session.
     test.use({storageState: {cookies: [], origins: []}});
 
     test('settings lists and edits only the user\'s own personal templates', {
@@ -152,6 +154,7 @@ test('the content_templates privilege still allows both desk and personal templa
 
     await expect(templates.getCardHeader('admin desk template')).toBeVisible();
     await expect(templates.getCardHeader('admin desk template')).not.toHaveClass(/card-box__header--dark/);
+    await expect(templates.getCardDesks('admin desk template')).toHaveText('Sports');
 
     await templates.startNewTemplate();
     await templates.toggleMakePublic();

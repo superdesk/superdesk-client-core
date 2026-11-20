@@ -182,10 +182,8 @@ export class Monitoring {
     }
 
     async openMoreTemplates(): Promise<Locator> {
-        const dropdown = this.page.getByTestId('content-create-dropdown');
+        const dropdown = await this.openContentCreateDropdown();
 
-        await this.page.getByTestId('content-create').click();
-        await expect(dropdown).toBeVisible();
         await dropdown.getByRole('button', {name: 'More templates...'}).click();
 
         return dropdown;

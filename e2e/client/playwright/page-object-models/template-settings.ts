@@ -20,13 +20,17 @@ export class TemplateSettings {
         return this.getCard(templateName).getByTestId('template-card-header');
     }
 
+    getCardDesks(templateName: string): Locator {
+        return this.getCard(templateName).locator('li', {has: this.page.getByRole('heading', {name: 'Desk(s)'})})
+            .locator('span');
+    }
+
     getEditor(): Locator {
         return this.page.getByTestId('template-edit-view');
     }
 
-    // Only rendered with the `content_templates` privilege, so zero matches is the assertion
-    // for a user without it. State is read from the `checked` class: the `checked` attribute
-    // is removed rather than set to "false", so it cannot tell the two states apart.
+    // Rendered only with `content_templates`. State is the `checked` class; the attribute is
+    // removed, not set to false.
     getMakePublicSwitch(): Locator {
         return this.getEditor().getByTestId('make-public');
     }
@@ -43,16 +47,14 @@ export class TemplateSettings {
         }
     }
 
-    // `fetchTemplates()` re-renders the card list on every cancel and `template:update`
-    // websocket event, which can replace the card between opening its menu and clicking
-    // Edit. The new card has the menu closed, so the whole sequence is retried.
+    // The card list re-renders on `template:update`, which can replace the card after its
+    // menu opens, so retry the whole open-menu-then-Edit sequence.
     async openEditor(templateName: string): Promise<void> {
         const card = this.getCard(templateName);
         const menu = card.getByTestId('template-actions--options');
 
         await expect(card).toBeVisible();
 
-        // Two attempts, within Playwright's 30s default test timeout.
         await expect(async () => {
             await card.getByTestId('template-actions').click({timeout: 4000});
             await menu.getByRole('button', {name: 'Edit'}).click({timeout: 4000});

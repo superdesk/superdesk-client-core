@@ -160,9 +160,8 @@ account is limited to routes with no privilege gate, `/workspace/personal` and
 `frodobaggins` also cannot create or edit any article: the archive resource
 declares `privileges = {"POST": "archive", "PATCH": "archive", ...}`
 (`apps/archive/archive.py` in superdesk-core), so every write answers 403 and no
-authoring view ever opens for it. Any scenario that needs an article in the
-editor under a user lacking some other privilege needs a new snapshot user that
-holds `archive` and not that privilege.
+authoring view ever opens for it. No snapshot user holds `archive` without
+`content_templates`.
 
 `frodobaggins` has `user_type: "user"`, a `role` of `null`, and no `privileges`
 field, so it holds **no** privileges at all. Keep it that way: do not assign a
