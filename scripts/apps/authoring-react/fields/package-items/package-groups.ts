@@ -25,8 +25,12 @@ export function getPackageItemRef(item: IArticle): IPackageItem {
     } as IPackageItem;
 }
 
+export function getResidRef(item: IArticle): string {
+    return getResidRefAndLocation(item).residRef;
+}
+
 export function isInPackage(groups: IPackageItemsValueOperational, item: IArticle): boolean {
-    const {residRef} = getResidRefAndLocation(item);
+    const residRef = getResidRef(item);
 
     return groups.some(
         (group) => group.refs.some((ref) => ref.residRef === residRef || ref.residRef === item._id),

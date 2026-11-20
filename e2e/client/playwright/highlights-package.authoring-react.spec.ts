@@ -48,8 +48,15 @@ function createArticleMarkedForHighlight(slugline: string, bodyHtml: string, hig
     });
 }
 
-async function createHighlightsPackage(page: Page): Promise<PackageAuthoring> {
-    await createArticleMarkedForHighlight('article 1', '<p>body html article</p>', 'Highlight 1');
+async function createHighlightsPackage(
+    page: Page,
+    articles: Array<{slugline: string; bodyHtml: string}> = [
+        {slugline: 'article 1', bodyHtml: '<p>body html article</p>'},
+    ],
+): Promise<PackageAuthoring> {
+    for (const {slugline, bodyHtml} of articles) {
+        await createArticleMarkedForHighlight(slugline, bodyHtml, 'Highlight 1');
+    }
 
     const monitoring = new Monitoring(page);
 
@@ -60,7 +67,7 @@ async function createHighlightsPackage(page: Page): Promise<PackageAuthoring> {
 
     const packageAuthoring = new PackageAuthoring(page);
 
-    await expect(packageAuthoring.item('article 1')).toBeVisible();
+    await expect(packageAuthoring.item(articles[0].slugline)).toBeVisible();
 
     return packageAuthoring;
 }
@@ -85,6 +92,38 @@ test.describe('highlights package (authoring-react)', () => {
         await expect(
             new Monitoring(page).getGroupedArticleLocator('Sports / Working Stage', 'Package Highlight 2'),
         ).toBeVisible();
+    });
+
+    test('shows the export again after a save', async ({page}) => {
+        await restoreDatabaseSnapshot();
+
+        const authoring = await createHighlightsPackage(page, [
+            {slugline: 'article 1', bodyHtml: '<p>body html article</p>'},
+            {slugline: 'article 2', bodyHtml: '<p>second article</p>'},
+        ]);
+        const preview = authoring.fieldContainer('groups').getByTestId('package-highlight-preview-content');
+
+        await expect(preview).toContainText('body html article');
+
+        await authoring.waitForAuthoringReactToInitialize();
+        await authoring.item('article 1').getByTestId('package-item-remove').getByRole('button').click();
+        await authoring.saveAndGetRequest();
+
+        await expect(preview).not.toContainText('body html article');
+        await expect(preview).toContainText('second article');
+    });
+
+    test('removes scripts from the export it shows', async ({page}) => {
+        await restoreDatabaseSnapshot();
+
+        const authoring = await createHighlightsPackage(page, [
+            {slugline: 'article 1', bodyHtml: '<p>unsafe article<img src="x" onerror="console.log(1)"></p>'},
+        ]);
+        const preview = authoring.fieldContainer('groups').getByTestId('package-highlight-preview-content');
+
+        await expect(preview).toContainText('unsafe article');
+        await expect(preview.locator('img')).toHaveCount(1);
+        await expect(preview.locator('[onerror]')).toHaveCount(0);
     });
 
     test('exports a highlights package that has not been saved yet', async ({page}) => {

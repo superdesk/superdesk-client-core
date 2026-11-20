@@ -4,7 +4,7 @@ import {gettext} from 'core/utils';
 import {authoringReactViewEnabled} from 'appConfig';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {getOpenPackageGroups} from 'apps/authoring-react/fields/package-items/open-packages';
-import {isInPackage} from 'apps/authoring-react/fields/package-items/package-groups';
+import {getResidRef, isInPackage} from 'apps/authoring-react/fields/package-items/package-groups';
 
 PackagesService.$inject = ['api', '$q', 'archiveService', 'lock', 'autosave', 'authoring',
     'authoringWorkspace', 'desks', '$rootScope'];
@@ -160,7 +160,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         if (authoringReactViewEnabled) {
             dispatchInternalEvent('setPackageItemLabelInAuthoringReact', {
                 packageId: pkg._id,
-                itemId: item._id,
+                itemId: getResidRef(item),
                 label: label ? label.qcode : null,
             });
         } else if (pkg._autosaved) {
@@ -179,8 +179,10 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         const groupsInAuthoringReact = authoringReactViewEnabled ? getOpenPackageGroups(pkg._id) : null;
 
         if (groupsInAuthoringReact != null) {
+            const residRef = getResidRef(item);
+
             return groupsInAuthoringReact.some(
-                (group) => group.refs.some((ref) => ref.residRef === item._id && (ref.label ?? null) === qcode),
+                (group) => group.refs.some((ref) => ref.residRef === residRef && (ref.label ?? null) === qcode),
             );
         }
 

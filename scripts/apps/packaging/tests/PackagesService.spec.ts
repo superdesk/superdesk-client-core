@@ -82,5 +82,24 @@ describe('packages service', () => {
             expect(packages.isSetItemLabel({_id: 'item'}, {qcode: 'breaking'})).toBe(true);
             expect(packages.isSetItemLabel({_id: 'item'}, null)).toBe(false);
         }));
+
+        it('labels a published search result by the archive item it was added as', inject((packages) => {
+            const published = {_id: 'published-record', _type: 'published', item_id: 'item'};
+            const received = [];
+            const removeListener = addInternalEventListener(
+                'setPackageItemLabelInAuthoringReact',
+                (event) => received.push(event.detail),
+            );
+
+            packages.setItemLabel(published, {qcode: 'breaking', name: 'Breaking'});
+            removeListener();
+
+            const ref = {residRef: 'item', label: 'breaking'} as IPackageItem;
+
+            setOpenPackageGroups(openPackage._id, [{id: 'main', refs: [ref]}]);
+
+            expect(received).toEqual([{packageId: 'open-package', itemId: 'item', label: 'breaking'}]);
+            expect(packages.isSetItemLabel(published, {qcode: 'breaking'})).toBe(true);
+        }));
     });
 });

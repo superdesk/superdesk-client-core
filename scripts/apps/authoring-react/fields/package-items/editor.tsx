@@ -132,7 +132,7 @@ export class Editor extends React.PureComponent<IProps> {
 
                 {
                     item.highlight != null && (
-                        <HighlightPreview packageId={item._id} />
+                        <HighlightPreview packageId={item._id} savedVersion={item._current_version} />
                     )
                 }
             </Container>
