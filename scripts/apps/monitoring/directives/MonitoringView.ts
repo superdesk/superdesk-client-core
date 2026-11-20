@@ -34,7 +34,7 @@ interface IScope extends ng.IScope {
     spikedItemsQuery: ISuperdeskQuery;
     highlightedItemsQuery: ISuperdeskQuery;
     selectedHighlightId: string;
-    getExtraButtonsForHighlightsView(): Array<{label: string; onClick: () => void}>;
+    getExtraButtonsForHighlightsView(): Array<{label: string; onClick: () => void; testId?: string}>;
     afterWorkspaceRename: () => void;
     initWorkspaceRename: (workspace) => void;
     workspaceToRename: any;
@@ -199,6 +199,7 @@ export function MonitoringView(
                                 return [
                                     {
                                         label: gettext('Create'),
+                                        testId: 'create-highlights-package',
                                         onClick: () => {
                                             highlightsService.find(scope.selectedHighlightId)
                                                 .then(highlightsService.createEmptyHighlight)

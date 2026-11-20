@@ -48,20 +48,60 @@ export class Monitoring {
         }
     }
 
+    async openArticleActionsMenu(item: Locator): Promise<Locator> {
+        const contextMenu = this.page.getByTestId('context-menu');
+
+        // The button renders only while its row is hovered, and a row that re-renders forgets the hover.
+        // Only a click that never happened is retried, so an open menu is never clicked shut.
+        await expect(async () => {
+            await item.hover();
+            await item.getByTestId('context-menu-button').click({timeout: 2000});
+        }).toPass();
+        await expect(contextMenu).toBeVisible();
+
+        return contextMenu;
+    }
+
+    // MenuItems handles Escape on the menu element (focused on mount), not on the page.
+    async closeActionsMenu(): Promise<void> {
+        const menu = this.page.getByTestId('context-menu');
+
+        await menu.press('Escape');
+        await expect(menu).toBeHidden();
+    }
+
+    // AggregateCtrl.getDefaultGroups can run before the current desk resolves, which leaves
+    // the view with no groups and no query; only a reload recovers. Keep the toPass budget well
+    // under the test timeout, since toPass cannot interrupt a running attempt.
+    async openMonitoringForDesk(deskName: string): Promise<void> {
+        let loaded = false;
+
+        await expect(async () => {
+            if (loaded) {
+                await this.page.reload();
+            } else {
+                await this.page.goto('/#/workspace/monitoring');
+                loaded = true;
+            }
+
+            await this.selectDeskOrWorkspace(deskName);
+            await expect(this.page.getByTestId('monitoring-group').first()).toBeVisible({timeout: 10000});
+        }).toPass({timeout: 45000});
+    }
+
     /**
      * opens 3-dot menu for an article and clicks on an action(supports nested actions)
      */
     async executeActionOnMonitoringItem(item: Locator, ...actionPath: Array<string>): Promise<void> {
-        await item.hover();
-        await item.locator(s('context-menu-button')).click();
+        const contextMenu = await this.openArticleActionsMenu(item);
 
         const actionsWithoutLast = actionPath.slice(0, actionPath.length - 1);
 
         for (const action of actionsWithoutLast) {
-            await this.page.locator(s('context-menu')).getByRole('button', {name: action, exact: true}).hover();
+            await contextMenu.getByRole('button', {name: action, exact: true}).hover();
         }
 
-        await this.page.locator(s('context-menu'))
+        await contextMenu
             .getByRole('button', {name: actionPath[actionPath.length - 1], exact: true})
             .click();
     }
@@ -81,10 +121,7 @@ export class Monitoring {
         innerLabel: string,
         opts?: {innerByTestId?: string},
     ): Promise<void> {
-        await item.hover();
-        await item.locator(s('context-menu-button')).click();
-
-        const contextMenu = this.page.locator(s('context-menu'));
+        const contextMenu = await this.openArticleActionsMenu(item);
         const parent = contextMenu.getByRole('button', {name: parentLabel, exact: true});
 
         await parent.hover();
@@ -103,6 +140,64 @@ export class Monitoring {
         } else {
             await contextMenu.getByText(innerLabel, {exact: true}).click();
         }
+    }
+
+    /**
+     * Ticks the multi-select checkbox of an item, which only shows while its type icon is hovered.
+     */
+    async multiSelect(item: Locator): Promise<void> {
+        await item.getByTestId('item-type-and-multi-select').hover();
+
+        const checkbox = item.getByTestId('multi-select-checkbox');
+
+        await checkbox.click();
+        await expect(checkbox).toHaveAttribute('aria-checked', 'true');
+    }
+
+    /**
+     * Runs an action of the multi-action bar, which lists actions inline when there is room for
+     * them and in a dropdown otherwise.
+     *
+     * Monitoring re-measures the bar 300ms after the editor opens or closes and marks nothing when
+     * done, so the form is read until two readings half a second apart agree.
+     */
+    async executeMultiAction(action: string): Promise<void> {
+        const bar = this.page.getByTestId('multi-action-bar');
+        const inline = bar.getByTestId('multi-actions-inline');
+        const dropdown = bar.getByTestId('multi-actions-dropdown');
+
+        await expect(inline.or(dropdown)).toBeVisible();
+
+        let previousForm: 'inline' | 'dropdown' | null = null;
+
+        await expect.poll(async () => {
+            const form = await inline.isVisible() ? 'inline' : 'dropdown';
+            const settled = form === previousForm;
+
+            previousForm = form;
+
+            return settled;
+        }, {intervals: [500]}).toBe(true);
+
+        if (previousForm === 'inline') {
+            await inline.getByTestId(action).click();
+        } else {
+            await dropdown.getByTestId('dropdown-toggle').click();
+            await dropdown.getByTestId(action).click();
+        }
+    }
+
+    // the side menu's Highlights entry lists the highlights on hover
+    async openHighlight(highlightName: string): Promise<void> {
+        await this.page.getByTestId('highlights-menu').hover();
+        await this.page.getByTestId('highlights-menu-item')
+            .and(this.page.locator(`[data-test-value="${highlightName}"]`))
+            .click();
+        await expect(this.page.getByTestId('articles-list--heading')).toHaveText(highlightName);
+    }
+
+    async createHighlightsPackage(): Promise<void> {
+        await this.page.getByTestId('articles-list--toolbar').getByTestId('create-highlights-package').click();
     }
 
     async executeBulkAction(action: string, articleNames: Array<string>): Promise<void> {
@@ -144,8 +239,31 @@ export class Monitoring {
     }
 
     async createArticleFromDefaultTemplate(): Promise<void> {
+        const dropdown = await this.openContentCreateDropdown();
+
+        await dropdown.getByTestId('default-desk-template').click();
+    }
+
+    async openContentCreateDropdown(): Promise<Locator> {
+        const dropdown = this.page.getByTestId('content-create-dropdown');
+
         await this.page.getByTestId('content-create').click();
-        await this.page.getByTestId('content-create-dropdown').getByTestId('default-desk-template').click();
+        await expect(dropdown).toBeVisible();
+
+        return dropdown;
+    }
+
+    async createEmptyPackage(): Promise<void> {
+        const dropdown = await this.openContentCreateDropdown();
+
+        await dropdown.getByTestId('create-package').click();
+    }
+
+    // The shortcut only acts while the route is under `workspace` or `search`.
+    async createArticleWithKeyboardShortcut(): Promise<void> {
+        await this.page.keyboard.press('Control+m');
+
+        await expect(this.page.getByTestId('authoring-topbar')).toBeVisible();
     }
 
     async openMediaUploadView(): Promise<void> {
@@ -157,16 +275,53 @@ export class Monitoring {
         return this.page.locator(s('article-item=' + headline));
     }
 
+    /** Every article of a monitoring group, in the order the group lists them. */
+    getGroupedArticlesLocator(groupName: string): Locator {
+        return this.page.getByTestId('monitoring-group')
+            .and(this.page.locator(`[data-test-value="${groupName}"]`))
+            .getByTestId('article-item');
+    }
+
+    getListedArticles(): Locator {
+        return this.page.getByTestId('monitoring-view').getByTestId('article-item');
+    }
+
+    getListedArticle(label: string): Locator {
+        return this.getListedArticles().and(this.page.locator(`[data-test-value="${label}"]`));
+    }
+
+    getFileTypeFilterButtons(): Locator {
+        return this.page.getByTestId('monitoring-filter-buttons').getByTestId(/^file-type-filter--/);
+    }
+
+    getFileTypeFilterButton(fileType: string): Locator {
+        return this.page.getByTestId('monitoring-filter-buttons').getByTestId(`file-type-filter--${fileType}`);
+    }
+
     /**
      * Locates an article in a specific monitoring group by its exact label.
      * Attribute matching is used instead of `filter({hasText})` because labels
      * of distinct items may share a prefix (e.g. "Story 5" and "Story 5.1").
      */
     getGroupedArticleLocator(groupName: string, articleLabel: string): Locator {
-        return this.page.getByTestId('monitoring-group')
-            .and(this.page.locator(`[data-test-value="${groupName}"]`))
-            .getByTestId('article-item')
+        return this.getGroupedArticlesLocator(groupName)
             .and(this.page.locator(`[data-test-value="${articleLabel}"]`));
+    }
+
+    getGroupLocator(groupName: string): Locator {
+        return this.getGroupLocators().and(this.page.locator(`[data-test-value="${groupName}"]`));
+    }
+
+    getGroupLocators(): Locator {
+        return this.page.getByTestId('monitoring-view').getByTestId('monitoring-group');
+    }
+
+    /** The groups of the open view, in order, by their `data-test-value`. */
+    async expectGroups(groupNames: Array<string>): Promise<void> {
+        await expect
+            .poll(() => this.getGroupLocators()
+                .evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-test-value'))))
+            .toEqual(groupNames);
     }
 
     getPreviewPane(): Locator {
@@ -175,5 +330,42 @@ export class Monitoring {
 
     async openPreviewTab(name: string): Promise<void> {
         await this.getPreviewPane().getByRole('tab', {name, exact: true}).click();
+    }
+
+    /**
+     * The right-aligned button stack of the monitoring toolbar (refresh, monitoring
+     * settings, monitoring filter buttons, create new item). The file type filters are
+     * not in here, they live in the second subnav row.
+     */
+    getToolbarActions(): Locator {
+        return this.page.getByTestId('monitoring-toolbar-actions');
+    }
+
+    /**
+     * Only rendered while a custom workspace is the active selection; on a desk the
+     * monitoring settings are reached from the desks settings page instead
+     * (see `monitoring-view.html`, `aggregate.settings.type === 'workspace'`).
+     */
+    getMonitoringSettingsButton(): Locator {
+        return this.getToolbarActions().getByTestId('monitoring-settings-button');
+    }
+
+    getCreateItemButton(): Locator {
+        return this.getToolbarActions().getByTestId('content-create');
+    }
+
+    getMarkedDesksIndicator(item: Locator): Locator {
+        return item.getByTestId('mark-for-desk--bell');
+    }
+
+    /** The list is rendered outside the item. */
+    async openMarkedDesks(item: Locator): Promise<Locator> {
+        await this.getMarkedDesksIndicator(item).click();
+
+        const list = this.page.getByTestId('marked-desk-list');
+
+        await expect(list).toBeVisible();
+
+        return list;
     }
 }

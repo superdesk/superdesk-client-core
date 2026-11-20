@@ -1,5 +1,5 @@
 <div id="highlightPackage">
-    <button class="dropdown__toggle sd-sidebar-menu__btn" ng-click="hideMonitoring(currentRoute.href === '/workspace/highlights', $event)" dropdown__toggle aria-label="{{ 'Highlights' | translate }}">
+    <button class="dropdown__toggle sd-sidebar-menu__btn" ng-click="hideMonitoring(currentRoute.href === '/workspace/highlights', $event)" dropdown__toggle aria-label="{{ 'Highlights' | translate }}" data-test-id="highlights-menu">
         <span class="sd-sidebar-menu__main-icon element-with-badge">
             <i class="big-icon--marked-star"></i>
     
@@ -19,7 +19,7 @@
     <ul class="dropdown__menu pull-left">
         <li><div class="dropdown__menu-label" translate>Choose highlight list</div></li>
         <li ng-if="hasHighlights" ng-repeat="h in highlights track by h._id">
-            <button option="{{ :: h.name }}" ng-click="listHighlight(h);" title="{{ :: h.name }}">
+            <button option="{{ :: h.name }}" ng-click="listHighlight(h);" title="{{ :: h.name }}" data-test-id="highlights-menu-item" data-test-value="{{ :: h.name }}">
                 {{ :: h.label | translate }}</button>
         </li>
         <li ng-if="!hasHighlights">

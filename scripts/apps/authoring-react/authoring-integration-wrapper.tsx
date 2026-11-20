@@ -65,7 +65,9 @@ import {
     ItemStateWidget,
     ContentProfileDropdownWidget,
     HeaderGeneralInfoWidget,
+    SpellcheckerToggleButton,
 } from './toolbar-components/integration-wrapper';
+import {canPrintPreview} from 'apps/search/helpers';
 
 const headerToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
     {
@@ -96,9 +98,9 @@ interface IProps {
  * Captures the `exposed` parameter to avoid using module-level mutable state,
  * which prevents bugs when multiple authoring instances are rendered simultaneously.
  */
-function getAuthoringCosmeticActions(exposed: IExposedFromAuthoring<IArticle>): Array<ITopBarWidget<IArticle>> {
-    return [
-        {
+export function getAuthoringCosmeticActions(exposed: IExposedFromAuthoring<IArticle>): Array<ITopBarWidget<IArticle>> {
+    const printPreview: Array<ITopBarWidget<IArticle>> = canPrintPreview(exposed.item)
+        ? [{
             availableOffline: true,
             component: PrintPreviewButton,
             group: 'end',
@@ -106,7 +108,11 @@ function getAuthoringCosmeticActions(exposed: IExposedFromAuthoring<IArticle>): 
             keyBindings: {'ctrl+shift+i': () => {
                 exposed.printPreview();
             }},
-        },
+        }]
+        : [];
+
+    return [
+        ...printPreview,
         {
             availableOffline: true,
             component: ToggleThemeButton,
@@ -115,6 +121,12 @@ function getAuthoringCosmeticActions(exposed: IExposedFromAuthoring<IArticle>): 
             keyBindings: {'ctrl+shift+t': () => {
                 exposed.toggleTheme();
             }},
+        },
+        {
+            availableOffline: true,
+            component: SpellcheckerToggleButton,
+            group: 'end',
+            priority: 2.5,
         },
         {
             availableOffline: true,
@@ -587,9 +599,6 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     label: gettext('Check spelling'),
                                     group: {id: 'spellchecker', label: gettext('Spell Checker'), priority: 40},
                                     onTrigger: runCheck,
-                                    keyBindings: {
-                                        'ctrl+shift+y': runCheck,
-                                    },
                                 } satisfies IAuthoringAction;
                             };
 

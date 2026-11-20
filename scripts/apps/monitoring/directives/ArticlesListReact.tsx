@@ -10,7 +10,7 @@ interface IProps {
     heading: string;
     query: ISuperdeskQuery;
     monitoringController: any;
-    getExtraButtons?(): Array<{label: string; onClick: () => void}>;
+    getExtraButtons?(): Array<{label: string; onClick: () => void; testId?: string}>;
 }
 
 interface IState {

@@ -238,14 +238,16 @@ set, this is not exhaustive):
 
 Every article in `main` is text, apart from "Package Highlight 1", which is a
 package attached to a highlight. There is no picture, graphic, video or audio
-item, and no plain package; use the `media-items` snapshot for those.
+item, and no plain package; use the `media-items` snapshot for those, or the
+`packages` snapshot for a package with more than one group.
 
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
 `editor3-tables`, `custom-blocks`, `availability-management`, `related-items`,
-`media-items`,
-`editor3-formats`, `authoring-extras`, `saved-search-private`, `publishing`,
-`required-headline`, `association-fields`, `editor3-comments`.
+`media-items`, `editor3-formats`, `editor3-suggestions`, `authoring-extras`,
+`saved-search-private`, `publishing`, `required-headline`,
+`association-fields`, `editor3-comments`, `desk-routing`,
+`packages`.
 
 ### Publishing config in the `main` snapshot
 
@@ -282,6 +284,12 @@ Reach for it when a spec asserts something about a non-text item: the monitoring
 type filter buttons, media metadata, the crop/rotate editor, the media carousel.
 Do not reach for it otherwise, because it also shifts every item count in the
 Sports groups relative to `main`.
+
+### The `packages` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'packages'})` gives you `main` plus "Fellowship package", a plain package on the `composite` profile with two groups: `main` holds "Hobbiton notice" and "Buckland notice", `story` holds "Bywater notice". All four items are in Sports / Working Stage, so the Sports item counts differ from `main`.
+
+Reach for it for anything that edits a package's items: a change to one group can only be told apart from a rewrite of all of them on a package that has more than one. In authoring-react the groups render under the `groups` field as `package-group` (group id in `data-test-value`) and each item as `package-items` (slugline in `data-test-value`); `PackageAuthoring` in `page-object-models/authoring.ts` wraps them, including dragging an item.
 
 ### The `editor3-formats` snapshot
 
@@ -321,6 +329,39 @@ are a different component again, found with `getByRole('button', {name})`.
 The Angular authoring view keys custom fields by display name, so the field is
 `s('authoring', 'authoring-field=Sample rich text')`, not by its vocabulary id.
 
+### The `editor3-suggestions` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'editor3-suggestions'})` gives you the same
+toolbar as `editor3-formats` with `suggestions` added, on `body_html` and on the
+custom text field alike. It is the only snapshot that offers the option at all:
+`main` and `editor3-formats` enable it on no field, so suggestions mode is
+unreachable under either.
+
+The toggle is a `StyleButton` like bold or italic, so it is found the same way, by
+`data-test-value="suggestions"`, and it carries `Editor3-activeButton` while
+suggestions mode is on.
+
+It also carries "story with suggestions" on the Sports desk, an article whose body
+reads `alphabravocharliedeltaechofoxtrot`: six words run together with no separators
+between them, with `bravo` and `foxtrot` as insertion suggestions and `delta` as a
+deletion suggestion, all made by `admin` and all unresolved. Assert on the individual
+words, not on a spaced sentence. Reach for it whenever a case starts from an article
+that already has suggestions rather than from making them. A suggestion is draft.js
+editor state under `fields_meta`, not markup, so it is recorded like any other field
+the browser writes; there is nothing special about putting one in a snapshot.
+
+Three things about suggestions themselves are worth knowing before writing a spec:
+
+- An insertion suggestion that directly touches a deletion suggestion is reported as
+  a single "Replace X with Y" suggestion, and accepting or rejecting it resolves both
+  halves at once. Leave plain text between them if you want two.
+- The detail popup renders only while the caret sits inside a suggestion, and it is
+  re-rendered only when the caret *moves* (`HighlightsPopup.shouldComponentUpdate`).
+  A click that lands where the caret already sits, which is where accepting or
+  rejecting one leaves it, shows nothing, so park the caret on plain text first.
+- The same re-render tears the popup down again, so a popup that was found open can
+  be gone by the time the next assertion runs. Retry the opening clicks and the
+  assertions on the popup as one `toPass` unit, not the clicks alone.
 ### The `association-fields` snapshot
 
 `restoreDatabaseSnapshot({snapshotName: 'association-fields'})` gives you `main`
@@ -426,6 +467,12 @@ standard Sports items: publishing with an empty headline fails with
 "HEADLINE empty values not allowed". Saving is unaffected; required fields only
 gate publishing.
 
+### The `desk-routing` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'desk-routing'})` gives you `main` with the Desk Routing macro (`desk_routing`) set as the `incoming_macro` of every stage of Sports, Education and Finance. In `main` no stage has a macro, so closing a desk onto another changes nothing but the desk itself. Reach for this snapshot when a spec asserts what routing does to content: an item that lands on a stage of a closed desk (sent there, or fetched from ingest) gets a `marked_desks` entry for the last open desk at the end of the `closed_destination` chain, and reopening the desk removes those marks again.
+
+The macro is `access_type: "backend"`, so a plain `/api/macros` does not list it, but the Stages step of the desk settings asks for backend macros too and offers it there as "Desk Routing". Setting it that way on six stages would be a loop of UI actions, which "State reset" rules out, so the snapshot carries it. It does nothing while the stage's desk is open. `outgoing_macro` is left unset on purpose: on an item leaving a closed desk it would add a mark of its own, and a spec could no longer tell which stage produced the mark it asserts on.
+
 ### The `saved-search-private` snapshot
 
 `restoreDatabaseSnapshot({snapshotName: 'saved-search-private'})` gives you
@@ -527,6 +574,10 @@ snapshots"); both run from `e2e/server` in a Python venv:
 
 This alters shared fixtures, so treat it like a product-source change: call it
 out in your hand-off for review.
+
+### Seeding through the API
+
+When the state a test needs varies from test to test (a user preference, a content list), and a snapshot per combination would be worse, a test may set it through the REST API after `restoreDatabaseSnapshot()` and before navigating. Use `withApiContext` and `assertOk` from `playwright/utils/api.ts`, which call the API as the `storageState` user, and keep each resource's calls in its own `utils/<resource>-api.ts` (see `preferences-api.ts`, `content-lists-api.ts`). This is for setting up preconditions only, never for driving the behaviour under test.
 
 ## Page Objects
 
