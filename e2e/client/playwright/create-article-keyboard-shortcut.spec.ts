@@ -41,6 +41,9 @@ const ANCHOR_ARTICLE = 'test sports story';
 
 const SEARCH_TERM = 'story';
 
+// Ingested item listed by an unfiltered search and not matched by SEARCH_TERM.
+const NOT_MATCHING_SEARCH = 'Indonesia opens pasteurized milk facility to back free meals program';
+
 // The label is exposed as `data-test-value` only, so `filter({hasText})` cannot match it.
 function withLabel(items: Locator, label: string): Locator {
     return items.and(items.page().locator(`[data-test-value="${label}"]`));
@@ -194,14 +197,24 @@ test.describe('creating a new article with the Ctrl+M shortcut', {
         // Wait out the debounced autosave: a late one would write a new autosave record
         // after the prompt's Save cleared the old one, and the reopened article would be dirty.
         await abstractAutosaved;
+        await expect.poll(() => recordStatus(page, 'archive_autosave', articleId)).toBe(200);
+
+        // The server also applies a pending autosave on unlock, so only the request
+        // itself shows that the prompt's Save saved.
+        const savedFromPrompt = page.waitForRequest(
+            (request) => request.method() === 'PATCH' && request.url().endsWith(`/archive/${articleId}`),
+        );
 
         await authoring.closeAndSave();
+        await savedFromPrompt;
 
         await expect(page.getByTestId('authoring')).toBeHidden();
         await expect(withLabel(monitoringItems(page), SAVED.headline)).toBeVisible();
         await expect.poll(() => recordStatus(page, 'archive_autosave', articleId)).toBe(404);
 
         const results = await openGlobalSearch(page);
+
+        await expect(withLabel(results, NOT_MATCHING_SEARCH)).toBeVisible();
 
         await page.locator('#search-input').fill(SEARCH_TERM);
         await page.locator('#search-button').click();
@@ -212,6 +225,8 @@ test.describe('creating a new article with the Ctrl+M shortcut', {
             await page.reload();
             await expect(withLabel(results, SAVED.headline)).toBeVisible({timeout: 5000});
         }).toPass({timeout: 30000});
+
+        await expect(withLabel(results, NOT_MATCHING_SEARCH)).toHaveCount(0);
 
         await openSportsMonitoring(page, monitoring);
         await withLabel(monitoringItems(page), SAVED.headline).dblclick();
