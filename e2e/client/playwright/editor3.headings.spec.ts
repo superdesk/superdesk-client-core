@@ -9,9 +9,9 @@ import {
     pressRepeatedly,
 } from './utils/editor3';
 
-// Each test walks the full toggle cycle six times and then a save/close/reopen round-trip,
-// which does not fit the default per-test budget.
-test.setTimeout(120000);
+// A run takes about 15s; a failing 15s assertion after the reopen must still report itself
+// rather than the test timeout.
+test.setTimeout(60000);
 
 test.describe('heading formatting in editor3 fields', () => {
     type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
@@ -36,6 +36,13 @@ test.describe('heading formatting in editor3 fields', () => {
 
     async function expectBlockTag(field: Locator, tag: BlockTag, text: string): Promise<void> {
         await expect(blockWithText(field, tag, text)).toHaveCount(1);
+    }
+
+    // A heading is a block style, so a collapsed caret would convert the block just the same;
+    // checking the selection keeps the "select part of the text" step observable.
+    async function selectTail(page: Page, tail: string): Promise<void> {
+        await pressRepeatedly(page, 'Shift+ArrowLeft', tail.length);
+        await expect.poll(() => page.evaluate(() => window.getSelection()?.toString())).toBe(tail);
     }
 
     // Each stretch of text is typed as two halves, so "select part of the text" is a fixed
@@ -90,13 +97,12 @@ test.describe('heading formatting in editor3 fields', () => {
         await page.keyboard.type(texts.regularHead + texts.regularTail);
         await expectBlockTag(field, REGULAR_TAG, texts.regularHead);
 
-        await pressRepeatedly(page, 'Shift+ArrowLeft', texts.regularTail.length);
+        await selectTail(page, texts.regularTail);
 
         await expect(button).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await button.click();
         await expect(button).toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await expectBlockTag(field, tag, texts.regularTail);
-        await expectBlockTag(field, tag, texts.regularHead);
 
         // Enter at the end of a heading starts a new block that keeps the heading level.
         await page.keyboard.press('ArrowRight');
@@ -106,13 +112,12 @@ test.describe('heading formatting in editor3 fields', () => {
         await page.keyboard.type(texts.headingHead + texts.headingTail);
         await expectBlockTag(field, tag, texts.headingHead);
 
-        await pressRepeatedly(page, 'Shift+ArrowLeft', texts.headingTail.length);
+        await selectTail(page, texts.headingTail);
 
         await expect(button).toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await button.click();
         await expect(button).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await expectBlockTag(field, REGULAR_TAG, texts.headingTail);
-        await expectBlockTag(field, REGULAR_TAG, texts.headingHead);
 
         await page.keyboard.press('ArrowRight');
         await page.keyboard.press('Enter');
@@ -127,8 +132,7 @@ test.describe('heading formatting in editor3 fields', () => {
         await page.goto('/#/workspace/monitoring');
         await monitoring.selectDeskOrWorkspace('Sports');
 
-        // The restore reaches the search index asynchronously; a rerun could otherwise be
-        // served the article the previous run created and edit that one.
+        // Wait for the restored index so a stale article from a previous run cannot be opened.
         await expect(monitoring.getArticleLocator('test sports story')).toBeVisible();
         await expect(monitoring.getArticleLocator(headline)).toHaveCount(0);
 

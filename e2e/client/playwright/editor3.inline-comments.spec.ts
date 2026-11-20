@@ -28,10 +28,10 @@ import {getEditor3Field, getEditor3TextRun} from './utils/editor3';
  */
 
 /**
- * Every case builds its own article, comments on it, and most of them save and reopen it,
- * which does not fit the 30s default.
+ * The slowest case takes about 13s; a failing 30s `toPass` on top of that must still report
+ * its own assertion rather than the test timeout.
  */
-test.describe.configure({timeout: 120000});
+test.describe.configure({timeout: 60000});
 
 const SNAPSHOT = 'editor3-comments';
 
@@ -51,6 +51,12 @@ const EDITED_REPLY_TEXT = 'still agreed on bravo';
 
 /** What `getComputedStyle` reports for an element with no background of its own. */
 const NO_BACKGROUND = 'rgba(0, 0, 0, 0)';
+
+/** `Comment.tsx` formats the date as `MMMM Do YYYY, h:mm:ss a`. */
+const POPUP_DATE = /^[A-Z][a-z]+ \d{1,2}(st|nd|rd|th) \d{4}, \d{1,2}:\d{2}:\d{2} [ap]m$/;
+
+/** `sd-absdate` for a date in the current day: `[Today], D. MMMM HH:mm`. */
+const WIDGET_DATE_TODAY = /^Today, \d{1,2}\. [A-Z][a-z]+ \d{2}:\d{2}$/;
 
 /**
  * The toolbar Comment button, narrowed to the inner `span`. `SelectionButton` carries
@@ -76,8 +82,8 @@ function getCommentPopup(page: Page): Locator {
  * `background-color: var(--sd-editor-colour__comment-bg)` (highlightsConfig.ts); the
  * token lives on the authoring `.theme-container`, not `:root`, and holds an `hsl()`
  * value the browser reports back as `rgb()`, so it's read through a probe mounted
- * inside the field instead of being hardcoded. An unresolved token reads as
- * NO_BACKGROUND, so that is rejected.
+ * inside the field instead of being hardcoded. Fails when the token does not resolve: it
+ * would read as NO_BACKGROUND and make every highlight assertion vacuous.
  */
 async function getCommentHighlightColor(body: Locator): Promise<string> {
     const color = await body.evaluate((element) => {
@@ -134,7 +140,7 @@ function getCommentDialog(page: Page): Locator {
  * Adds a comment on the trailing word of the field through the toolbar Comment flow.
  * Fill, check and Submit retry as one unit: the entry popup can re-render after it
  * opens and drop the typed text even after the check saw it, leaving Submit disabled
- * (same as `addEditor3Embed` documents for `EmbedInput`).
+ * (see `addEditor3Embed`).
  */
 async function addComment(page: Page, body: Locator, message: string): Promise<void> {
     const dialog = getCommentDialog(page);
@@ -149,7 +155,7 @@ async function addComment(page: Page, body: Locator, message: string): Promise<v
         await input.fill(message);
         await expect(input).toHaveValue(message, {timeout: 1000});
         await dialog.getByTestId('submit').click({timeout: 2000});
-    }).toPass();
+    }).toPass({timeout: 15000});
 
     await expect(dialog).toHaveCount(0);
 }
@@ -228,11 +234,19 @@ async function executeCommentAction(comment: Locator, action: string): Promise<v
     await clickInPopup(getCommentAction(menu, action));
 }
 
-/** Rewrites the message of a comment or reply that is already open for editing. */
+/**
+ * Rewrites the message of a comment or reply that is already open for editing. The fill
+ * is checked and retried: react-mentions can read it as an insertion and keep the old
+ * message after the new one.
+ */
 async function submitEditedMessage(target: Locator, message: string): Promise<void> {
     const body = target.getByTestId('comment-text');
+    const input = body.getByTestId('comment-textarea').getByRole('textbox');
 
-    await body.getByTestId('comment-textarea').getByRole('textbox').fill(message);
+    await expect(async () => {
+        await input.fill(message);
+        await expect(input).toHaveValue(message, {timeout: 1000});
+    }).toPass({timeout: 15000});
     await clickInPopup(body.getByTestId('submit'));
 }
 
@@ -250,6 +264,24 @@ async function focusReplyField(popup: Locator): Promise<void> {
     await addReply.getByTestId('comment-textarea').getByRole('textbox').focus();
 
     await expect(addReply.getByTestId('submit')).toBeVisible();
+}
+
+/**
+ * Mentions Sam Gamgee at the start of an empty comment or reply field. The mention has to be
+ * typed: react-mentions only queries its data source from keystrokes, and only picking a
+ * suggestion writes the `@[name](user:id)` markup the backend scans for. Its suggestion list
+ * is third-party markup with no test id. Retried as one unit because the entry popup can
+ * re-render and drop the typed `@Sam`.
+ */
+async function mentionSamGamgee(page: Page, input: Locator): Promise<void> {
+    const suggestions = page.locator('.mentions-input__suggestions');
+
+    await expect(async () => {
+        await input.fill('');
+        await input.pressSequentially('@Sam');
+        await suggestions.getByText('Sam Gamgee', {exact: true}).click({timeout: 2000});
+        await expect(input).toHaveValue('Sam Gamgee ', {timeout: 1000});
+    }).toPass({timeout: 15000});
 }
 
 async function addReply(popup: Locator, message: string): Promise<void> {
@@ -382,7 +414,7 @@ test('editing an inline comment from its detail popup, and the edit surviving a 
 
     await expect(popup.getByTestId('user-avatar')).toBeVisible();
     await expect(popup.getByTestId('comment-author')).toHaveText('John Doe');
-    await expect(popup.getByTestId('comment-date')).not.toBeEmpty();
+    await expect(popup.getByTestId('comment-date')).toHaveText(POPUP_DATE);
     await expect(popup.getByTestId('comment-label')).toHaveText('Comment');
     await expect(commentBody).toHaveText(COMMENT_TEXT);
 
@@ -521,12 +553,7 @@ test('replying to an inline comment with and without a mention, and only the aut
     await expect(popup.getByTestId('comment-text')).toHaveText(COMMENT_TEXT);
 
     await focusReplyField(popup);
-    await replyInput.pressSequentially('@Sam');
-
-    const suggestions = page.locator('.mentions-input__suggestions');
-
-    await expect(suggestions).toBeVisible();
-    await suggestions.getByText('Sam Gamgee', {exact: true}).click();
+    await mentionSamGamgee(page, replyInput);
     await replyInput.pressSequentially('see this');
     await clickInPopup(addReplyBox.getByTestId('submit'));
 
@@ -541,7 +568,6 @@ test('replying to an inline comment with and without a mention, and only the aut
     const otherPage = await otherContext.newPage();
 
     try {
-        // fixture users with a known password use the username as one
         await loginAs(otherPage, 'samgamgee', 'samgamgee');
 
         const otherMonitoring = new Monitoring(otherPage);
@@ -551,13 +577,26 @@ test('replying to an inline comment with and without a mention, and only the aut
         await otherMonitoring.getArticleLocator(headline).dblclick();
 
         const otherBody = getEditor3Field(otherPage, 'body_html');
-        const otherPopup = await openCommentPopup(otherPage, otherBody);
+        const otherPopup = getCommentPopup(otherPage);
         const otherReplies = otherPopup.getByTestId('comment-reply');
 
-        await expect(otherReplies).toHaveCount(1);
-        await expect(otherReplies.getByTestId('comment-text')).toHaveText('Sam Gamgee see this');
+        // Read in one go from a popup that is open: on a just-opened article it closes on its
+        // own, and a `toHaveCount(0)` on the 3-dots toggle would pass once it has.
+        await expect(async () => {
+            await clickCommentedText(otherBody);
 
-        await expect(otherPopup.getByTestId('highlight-actions-toggle')).toHaveCount(0);
+            const seen = await otherPopup.evaluate((popup) => {
+                const replyTexts = '[data-test-id="comment-reply"] [data-test-id="comment-text"]';
+
+                return {
+                    replies: Array.from(popup.querySelectorAll(replyTexts), (el) => el.textContent),
+                    links: Array.from(popup.querySelectorAll(`${replyTexts} a[href]`), (el) => el.textContent),
+                    menus: popup.querySelectorAll('[data-test-id="highlight-actions-toggle"]').length,
+                };
+            }, undefined, {timeout: 2000});
+
+            expect(seen).toEqual({replies: ['Sam Gamgee see this'], links: ['Sam Gamgee'], menus: 0});
+        }).toPass({timeout: 30000});
 
         await addReply(otherPopup, 'reply by Sam');
 
@@ -586,7 +625,7 @@ test('listing inline comments in the widget grouped by field, and resolving one 
     const abstractCommentText = 'first thoughts on the abstract';
 
     // `editor3-comments` enables comments on the body only, and the widget groups by field.
-    // The list replaces the abstract's options, so it repeats the ones the Story profile has.
+    // The options list replaces the abstract's existing ones, so the Story profile's own are repeated.
     await page.goto('/#/settings/content-profiles');
     await new ContentProfileSettings(page).addFormattingOptionToContentProfile({
         profileName: 'Story',
@@ -596,6 +635,7 @@ test('listing inline comments in the widget grouped by field, and resolving one 
     });
 
     const body = await createArticleWithComment(page, headline);
+    const highlightColor = await getCommentHighlightColor(body);
     const popup = await openCommentPopup(page, body);
 
     await addReply(popup, REPLY_TEXT);
@@ -630,7 +670,7 @@ test('listing inline comments in the widget grouped by field, and resolving one 
 
     await expect(bodyComment.locator('sd-user-avatar').first()).toHaveText('JD');
     await expect(bodyComment.getByTestId('author').first()).toHaveText('John Doe:');
-    await expect(bodyComment.getByTestId('date').first()).not.toBeEmpty();
+    await expect(bodyComment.getByTestId('date').first()).toHaveText(WIDGET_DATE_TODAY);
     await expect(bodyComment).toContainText(COMMENT_TEXT);
     await expect(bodyComment.getByTestId('inline-comment-reply')).toHaveCount(1);
     await expect(bodyComment.getByTestId('inline-comment-reply')).toContainText(REPLY_TEXT);
@@ -640,6 +680,8 @@ test('listing inline comments in the widget grouped by field, and resolving one 
     // the controller reads the item once per activation, so the widget has to be closed
     // before the comment is resolved and reopened afterwards to show the new state
     await authoring.closeWidget('Inline comments');
+
+    await expect(getEditor3TextRun(body, COMMENTED_TEXT)).toHaveCSS('background-color', highlightColor);
 
     const reopenedPopup = await openCommentPopup(page, body);
 
@@ -713,16 +755,7 @@ test('notifying a user mentioned in an inline comment, who opens the article and
     await getCommentButton(body).click();
     await expect(dialogInput).toBeVisible();
 
-    // the mention has to be typed: react-mentions only queries its data source from
-    // keystrokes, and only picking a suggestion writes the `@[name](user:id)` markup the
-    // backend scans for. Its suggestion list is third-party markup with no test id.
-    await dialogInput.pressSequentially('@Sam');
-
-    const suggestions = page.locator('.mentions-input__suggestions');
-
-    await expect(suggestions).toBeVisible();
-    await suggestions.getByText('Sam Gamgee', {exact: true}).click();
-
+    await mentionSamGamgee(page, dialogInput);
     await dialogInput.pressSequentially('take a look');
     await dialog.getByTestId('submit').click();
     await expect(dialog).toHaveCount(0);
@@ -738,7 +771,6 @@ test('notifying a user mentioned in an inline comment, who opens the article and
     const mentionedPage = await mentionedContext.newPage();
 
     try {
-        // fixture users with a known password use the username as one
         await loginAs(mentionedPage, 'samgamgee', 'samgamgee');
 
         // the badge has no test id, and the authoring sidebar reuses the same element id

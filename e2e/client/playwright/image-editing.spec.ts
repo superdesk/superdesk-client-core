@@ -3,6 +3,7 @@ import {Monitoring} from './page-object-models/monitoring';
 import {MediaEditor} from './page-object-models/media-editor';
 import {PictureAuthoring} from './page-object-models/authoring';
 import {restoreDatabaseSnapshot} from './utils';
+import {addVocabularyItem} from './utils/vocabularies-api';
 
 /**
  * QA cases for the media editor of a picture item: opening it, cropping the
@@ -11,7 +12,8 @@ import {restoreDatabaseSnapshot} from './utils';
  * Every test works on "Rivendell picture" from the `media-items` snapshot, the
  * only fixture picture with a full set of renditions. Its original is
  * 2100 x 1050 and the `crop_sizes` vocabulary defines a single crop size,
- * "4-3" (800 x 600), so the Edit crops tab lists exactly Original and 4-3.
+ * "4-3" (800 x 600), so the Edit crops tab lists exactly Original and 4-3 unless
+ * a test adds one.
  *
  * The live preview is checked through the CSS transform on the preview canvas.
  * A change that reached the server is checked through the stored original size,
@@ -23,24 +25,14 @@ import {restoreDatabaseSnapshot} from './utils';
  * - "Open image in Edit image mode" (1315931606) also expects the dialog to be
  *   reachable from a picture embedded in an editor3 body; no snapshot carries
  *   one and building it needs the upload flow.
- * - "Crop image" (1315931417) expects the Width and Height fields to default to
- *   the original size and to hold while the crop moves, and the ratio buttons
- *   and typed Width / Height values to activate Confirm crop. None of these
- *   holds: the fields are bound to `CropRight` / `CropBottom`, start empty, and
- *   only a jCrop drag sets `isAoIDirty` (`setRatio()` refreshes jCrop with its
- *   events disabled), so every confirmed cycle here starts with a drag.
- * - "Edit crops" (1311834326) expects a red message in place of a rendition the
- *   original is too small to produce; no fixture picture is smaller than the
- *   only configured crop. Its Cancel after a point-of-interest change hides the
- *   toolbar but leaves the point where it was moved (`cancelCrops()` restores
- *   the crop data only), so only the rendition-crop Cancel is checked to revert.
  */
 // Every Apply and every confirmed crop is a round trip through the server-side
-// image processing, and several tests do more than one.
-test.setTimeout(180000);
+// image processing; the slowest test takes about 12s locally.
+test.setTimeout(60000);
 
 test.describe('image editing', () => {
     const ORIGINAL_SIZE = 'Original (2100 x 1050 px)';
+    const CROPPED_SIZE = 'Original (1400 x 788 px)';
 
     const THUMB_WIDTH = 16;
     const THUMB_HEIGHT = 8;
@@ -162,14 +154,55 @@ test.describe('image editing', () => {
         return total / (pixels.length / 4);
     }
 
-    function meanLightness(pixels: Array<number>): number {
-        let total = 0;
+    function lightness(pixels: Array<number>): Array<number> {
+        const values: Array<number> = [];
 
         for (let i = 0; i < pixels.length; i += 4) {
-            total += (pixels[i] + pixels[i + 1] + pixels[i + 2]) / 3;
+            values.push((pixels[i] + pixels[i + 1] + pixels[i + 2]) / 3);
         }
 
-        return total / (pixels.length / 4);
+        return values;
+    }
+
+    function meanLightness(pixels: Array<number>): number {
+        const values = lightness(pixels);
+
+        return values.reduce((total, value) => total + value, 0) / values.length;
+    }
+
+    // The standard deviation of the lightness, which contrast scales around the mean.
+    function lightnessSpread(pixels: Array<number>): number {
+        const values = lightness(pixels);
+        const mean = meanLightness(pixels);
+
+        return Math.sqrt(values.reduce((total, value) => total + (value - mean) ** 2, 0) / values.length);
+    }
+
+    function expectNear(actual: number | undefined, expected: number, tolerance: number): void {
+        expect(actual).toBeGreaterThanOrEqual(expected - tolerance);
+        expect(actual).toBeLessThanOrEqual(expected + tolerance);
+    }
+
+    async function boxOf(locator: Locator): Promise<{x: number; y: number; width: number; height: number}> {
+        const box = await locator.boundingBox();
+
+        if (box == null) {
+            throw new Error('the element is not rendered');
+        }
+
+        return box;
+    }
+
+    // MediaEditor only drags the jCrop handles; grabbing the selection itself moves it.
+    async function dragBy(page: Page, target: Locator, dx: number, dy: number): Promise<void> {
+        const box = await boxOf(target);
+        const x = box.x + box.width / 2;
+        const y = box.y + box.height / 2;
+
+        await page.mouse.move(x, y);
+        await page.mouse.down();
+        await page.mouse.move(x + dx, y + dy, {steps: 10});
+        await page.mouse.up();
     }
 
     async function pointOfInterest(mediaEditor: MediaEditor): Promise<{x: number; y: number}> {
@@ -185,6 +218,14 @@ test.describe('image editing', () => {
             x: Math.round((cursor.x + cursor.width / 2 - image.x) / image.width * 100) / 100,
             y: Math.round((cursor.y + cursor.height / 2 - image.y) / image.height * 100) / 100,
         };
+    }
+
+    // A rendition thumbnail's jCrop selection, as fractions of the image width.
+    async function cropFraction(rendition: Locator): Promise<{left: number; width: number}> {
+        const holder = await boxOf(rendition.locator('.jcrop-holder'));
+        const selection = await boxOf(rendition.locator('.jcrop-holder > div').first());
+
+        return {left: (selection.x - holder.x) / holder.width, width: selection.width / holder.width};
     }
 
     async function reopenPicture(page: Page): Promise<void> {
@@ -369,6 +410,7 @@ test.describe('image editing', () => {
         async function expectStoredFlippedVertically(): Promise<void> {
             await expect(picture.originalSizeLabel).toHaveText(ORIGINAL_SIZE);
             await expect(picture.previewImage).toBeVisible();
+            // Waits for the new rendition; the pixel fetch below reads the src only once.
             await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
 
             const pixelsAfter = await thumbnailPixels(page, await sourceOf(picture.previewImage));
@@ -415,11 +457,13 @@ test.describe('image editing', () => {
         await expect(mediaEditor.slider('brightness')).toHaveValue('1');
         await expect(mediaEditor.controlsToolbar).toBeHidden();
 
-        await mediaEditor.slider('brightness').fill('1.5');
-        await mediaEditor.slider('contrast').fill('1.25');
+        // Darkening rather than brightening: the picture is mostly light, and brightening
+        // clips it so much that the contrast change no longer shows in the stored pixels.
+        await mediaEditor.slider('brightness').fill('0.6');
+        await mediaEditor.slider('contrast').fill('1.5');
         await mediaEditor.slider('saturation').fill('0');
-        await expect(mediaEditor.sliderValue('brightness')).toHaveText('50%');
-        await expect(mediaEditor.sliderValue('contrast')).toHaveText('25%');
+        await expect(mediaEditor.sliderValue('brightness')).toHaveText('-40%');
+        await expect(mediaEditor.sliderValue('contrast')).toHaveText('50%');
         await expect(mediaEditor.sliderValue('saturation')).toHaveText('-100%');
 
         await mediaEditor.controlsToolbar.getByTestId('apply').click();
@@ -433,32 +477,38 @@ test.describe('image editing', () => {
 
         await applyMediaEdits(page, mediaEditor);
 
-        async function expectStoredGreyAndBrighter(): Promise<void> {
+        async function expectStoredAdjustment(): Promise<void> {
             await expect(picture.previewImage).toBeVisible();
+            // Waits for the new rendition; the pixel fetch below reads the src only once.
             await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
 
             const pixelsAfter = await thumbnailPixels(page, await sourceOf(picture.previewImage));
 
             expect(meanChroma(pixelsAfter)).toBeLessThan(2);
-            expect(meanLightness(pixelsAfter)).toBeGreaterThan(meanLightness(pixelsBefore));
+            expect(meanLightness(pixelsAfter)).toBeLessThan(meanLightness(pixelsBefore) * 0.75);
+            // Brightness 0.6 alone would shrink the spread to 0.6 of the original.
+            expect(lightnessSpread(pixelsAfter)).toBeGreaterThan(lightnessSpread(pixelsBefore) * 0.7);
         }
 
-        await expectStoredGreyAndBrighter();
+        await expectStoredAdjustment();
 
         await reopenPicture(page);
-        await expectStoredGreyAndBrighter();
+        await expectStoredAdjustment();
     });
 
-    test('cropping the original twice with the crop tool and the ratio buttons', {
+    test('cropping the original twice with the crop tool, the size fields and the ratio buttons', {
         annotation: [
-            {type: 'confluence', description: '1315931417 partial'}, // Crop image
+            {type: 'confluence', description: '1315931417 complete'}, // Crop image
         ],
     }, async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'media-items'});
 
-        const CROPPED_SIZE = 'Original (1400 x 788 px)';
         const picture = new PictureAuthoring(page);
         const mediaEditor = new MediaEditor(page);
+        const confirmCrop = mediaEditor.confirmCropToolbar.getByTestId('confirm-crop');
+        const selection = mediaEditor.areaOfInterestSelection;
+        const cropWidth = mediaEditor.cropWidth;
+        const cropHeight = mediaEditor.cropHeight;
 
         await openPicture(page);
         await picture.openImageEditor();
@@ -468,7 +518,7 @@ test.describe('image editing', () => {
         await expect(mediaEditor.confirmCropToolbar.getByTestId('cancel')).toBeVisible();
         // The toolbar buttons are anchors carrying ng-disabled, so the disabled
         // state is an attribute rather than the form-control state toBeDisabled reads.
-        await expect(mediaEditor.confirmCropToolbar.getByTestId('confirm-crop')).toHaveAttribute('disabled');
+        await expect(confirmCrop).toHaveAttribute('disabled');
         await expect(mediaEditor.areaOfInterestPreview).toBeVisible();
 
         // Crop mode owns the whole image, so the other transforms and the colour
@@ -488,33 +538,48 @@ test.describe('image editing', () => {
         await mediaEditor.control('crop').click();
         await expect(mediaEditor.confirmCropToolbar).toBeVisible();
 
-        const fullSelection = await mediaEditor.areaOfInterestSelection.boundingBox();
-        const cropWidth = mediaEditor.cropWidth;
-        const cropHeight = mediaEditor.cropHeight;
+        const fullSelection = await boxOf(selection);
+        // Preview pixels to original pixels.
+        const scale = 2100 / (await boxOf(mediaEditor.areaOfInterestPreview.locator('.jcrop-holder'))).width;
 
+        // The fields are bound to the crop's right and bottom edges (`CropRight` /
+        // `CropBottom`) rather than to a size, and stay empty until jCrop reports one.
         await expect(cropWidth).toHaveValue('');
         await expect(cropHeight).toHaveValue('');
 
         await mediaEditor.resizeAreaOfInterest(-160, -80);
 
-        // Dragging the crop is the only interaction that marks it changed.
-        await expect(mediaEditor.confirmCropToolbar.getByTestId('confirm-crop')).not.toHaveAttribute('disabled');
-        expect((await mediaEditor.areaOfInterestSelection.boundingBox())?.width)
-            .toBeLessThan(fullSelection?.width ?? 0);
+        await expect(confirmCrop).not.toHaveAttribute('disabled');
 
-        // The two fields follow the mouse: jCrop reports the dragged corner through
-        // `onSelect`, which writes it into `CropRight` / `CropBottom`. Dragging the
-        // bottom-right handle inwards therefore leaves both inside the original.
+        const resized = await boxOf(selection);
+
+        expect(resized.width).toBeLessThan(fullSelection.width);
+
+        // The selection starts at the top-left corner, so the edges equal its size.
         await expect(async () => {
-            expect(Number(await cropWidth.inputValue())).toBeGreaterThan(0);
-            expect(Number(await cropWidth.inputValue())).toBeLessThan(2100);
-            expect(Number(await cropHeight.inputValue())).toBeGreaterThan(0);
-            expect(Number(await cropHeight.inputValue())).toBeLessThan(1050);
+            expectNear(Number(await cropWidth.inputValue()), resized.width * scale, 3);
+            expectNear(Number(await cropHeight.inputValue()), resized.height * scale, 3);
+        }).toPass();
+
+        const right = Number(await cropWidth.inputValue());
+        const bottom = Number(await cropHeight.inputValue());
+
+        await dragBy(page, selection, 60, 30);
+
+        // Moving keeps the crop's size, but the fields follow its edges and shift with it.
+        await expect(async () => {
+            const moved = await boxOf(selection);
+
+            expectNear(moved.width, resized.width, 1);
+            expectNear(moved.height, resized.height, 1);
+            expectNear(moved.x, resized.x + 60, 2);
+            expectNear(moved.y, resized.y + 30, 2);
+            expectNear(Number(await cropWidth.inputValue()), right + 60 * scale, 2 * scale);
+            expectNear(Number(await cropHeight.inputValue()), bottom + 30 * scale, 2 * scale);
         }).toPass();
 
         // The ratio buttons letterbox the 2100 x 1050 original: 16:9, 4:3 and 3:2 are
-        // all taller than it is, so each keeps the full height and is centred. The Width
-        // field is bound to the crop's right edge, so it shows (2100 + width) / 2.
+        // all taller than it is, so each keeps the full height and is centred.
         await mediaEditor.ratioButton('Original').click();
         await expect(cropWidth).toHaveValue('2100');
         await expect(cropHeight).toHaveValue('1050');
@@ -531,30 +596,54 @@ test.describe('image editing', () => {
         await expect(cropWidth).toHaveValue('1750');
         await expect(cropHeight).toHaveValue('1050');
 
-        const ratioSelection = await mediaEditor.areaOfInterestSelection.boundingBox();
-
+        // 4:3 spans 350..1750 x 0..1050, so typed edges set the size from those origins.
         await cropWidth.fill('1200');
+        await cropHeight.fill('900');
         await expect(async () => {
-            expect((await mediaEditor.areaOfInterestSelection.boundingBox())?.width)
-                .toBeLessThan(ratioSelection?.width ?? 0);
+            const typed = await boxOf(selection);
+
+            expectNear(typed.width * scale, 1200 - 350, 2 * scale);
+            expectNear(typed.height * scale, 900, 2 * scale);
         }).toPass();
 
         await mediaEditor.ratioButton('4:3').click();
         await expect(cropWidth).toHaveValue('1750');
+        await expect(cropHeight).toHaveValue('1050');
 
-        await mediaEditor.confirmCropToolbar.getByTestId('confirm-crop').click();
+        await confirmCrop.click();
         await expect(mediaEditor.confirmCropToolbar).toBeHidden();
         await expect(mediaEditor.adjustColours).toBeVisible();
 
-        // A second crop of the first one's result: crop mode starts clean again.
+        // A second crop, of the first one's 1400 x 1050 result, starts clean again.
         await mediaEditor.control('crop').click();
-        await expect(mediaEditor.confirmCropToolbar.getByTestId('confirm-crop')).toHaveAttribute('disabled');
+        await expect(confirmCrop).toHaveAttribute('disabled');
+        await expect(cropWidth).toHaveValue('');
+        await expect(selection).toBeVisible();
 
-        await mediaEditor.resizeAreaOfInterest(-80, -40);
-        await expect(mediaEditor.confirmCropToolbar.getByTestId('confirm-crop')).not.toHaveAttribute('disabled');
+        const cleanSelection = await boxOf(selection);
+
+        // With the other edges still unset a typed edge has nothing to size against:
+        // the selection stays put.
+        await cropWidth.fill('1000');
+        await expect(selection).toBeVisible();
+        expect(await boxOf(selection)).toEqual(cleanSelection);
+        await expect(confirmCrop).toHaveAttribute('disabled');
 
         await mediaEditor.ratioButton('16:9').click();
-        await mediaEditor.confirmCropToolbar.getByTestId('confirm-crop').click();
+        await expect(cropWidth).toHaveValue('1400');
+        await expect(cropHeight).toHaveValue('919');
+        await expect.poll(async () => (await boxOf(selection)).height).toBeLessThan(cleanSelection.height);
+
+        // Only a jCrop drag marks the crop changed: the ratio buttons and the fields
+        // redraw the selection with jCrop's events off, so Confirm crop stays disabled.
+        await expect(confirmCrop).toHaveAttribute('disabled');
+
+        await mediaEditor.resizeAreaOfInterest(-80, -40);
+        await expect(confirmCrop).not.toHaveAttribute('disabled');
+
+        await mediaEditor.ratioButton('16:9').click();
+        await expect(cropHeight).toHaveValue('919');
+        await confirmCrop.click();
         await expect(mediaEditor.confirmCropToolbar).toBeHidden();
 
         await applyMediaEdits(page, mediaEditor);
@@ -567,10 +656,12 @@ test.describe('image editing', () => {
 
     test('editing a rendition crop and the point of interest', {
         annotation: [
-            {type: 'confluence', description: '1311834326 partial'}, // Edit crops
+            {type: 'confluence', description: '1311834326 complete'}, // Edit crops
         ],
     }, async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'media-items'});
+        // Larger than the 2100 x 1050 original, so it cannot be produced.
+        await addVocabularyItem('crop_sizes', {name: 'Billboard', width: 3000, height: 1500});
 
         const picture = new PictureAuthoring(page);
         const mediaEditor = new MediaEditor(page);
@@ -584,23 +675,33 @@ test.describe('image editing', () => {
         await picture.openCropsEditor();
 
         await expect(mediaEditor.header.getByRole('heading')).toHaveText('Edit Crops');
-        await expect(mediaEditor.renditions).toHaveCount(2);
+        await expect(mediaEditor.renditions).toHaveCount(3);
         await expect(mediaEditor.rendition('Original')).toBeVisible();
         await expect(mediaEditor.rendition('4-3')).toBeVisible();
+        await expect(mediaEditor.rendition('Billboard').locator('.error')).toHaveText(
+            'Sorry, but image must be at least 3000x1500. Currently the image size is 2100x1050).',
+        );
+        await expect(mediaEditor.rendition('Billboard').locator('.error')).toHaveCSS('color', 'rgb(228, 27, 33)');
 
         // The original is previewed until a rendition is picked.
         await expect(mediaEditor.cropPreviewLabel).toHaveText(/Original\s+2100 x 1050/);
+        await expect(async () => {
+            const crop = await cropFraction(mediaEditor.rendition('4-3'));
+
+            expectNear(crop.left, 350 / 2100, 0.01);
+            expectNear(crop.width, 1400 / 2100, 0.01);
+        }).toPass();
 
         await mediaEditor.rendition('4-3').click();
         await expect(mediaEditor.cropPreviewLabel).toHaveText('4-3');
 
         const renditionSelection = mediaEditor.renditionCropPreview.locator('.jcrop-holder > div').first();
-        const storedSelection = await renditionSelection.boundingBox();
+        const storedSelection = await boxOf(renditionSelection);
 
         await mediaEditor.resizeRenditionCrop(-60, -45);
         await expect(mediaEditor.saveCropsToolbar.getByTestId('cancel')).toBeVisible();
         await expect(mediaEditor.saveCropsToolbar.getByTestId('save')).toBeVisible();
-        expect((await renditionSelection.boundingBox())?.width).toBeLessThan(storedSelection?.width ?? 0);
+        await expect.poll(async () => (await boxOf(renditionSelection)).width).toBeLessThan(storedSelection.width);
 
         await mediaEditor.saveCropsToolbar.getByTestId('cancel').click();
         await expect(mediaEditor.saveCropsToolbar).toBeHidden();
@@ -619,8 +720,10 @@ test.describe('image editing', () => {
         await expect(mediaEditor.saveCropsToolbar.getByTestId('cancel')).toBeVisible();
         await expect(mediaEditor.saveCropsToolbar.getByTestId('save')).toBeVisible();
 
+        // Cancel restores the crops only (`cancelCrops()`), so the point stays where it was moved.
         await mediaEditor.saveCropsToolbar.getByTestId('cancel').click();
         await expect(mediaEditor.saveCropsToolbar).toBeHidden();
+        await expect.poll(() => pointOfInterest(mediaEditor)).toEqual({x: 0.3, y: 0.3});
 
         await mediaEditor.setPointOfInterest(0.7, 0.4);
         await expect(mediaEditor.saveCropsToolbar.getByTestId('save')).toBeVisible();
@@ -629,17 +732,27 @@ test.describe('image editing', () => {
 
         await applyMediaEdits(page, mediaEditor);
 
-        await expect(picture.crop('4-3')).toBeVisible();
         await expect(picture.crop('4-3').locator('img')).toBeVisible();
         await expect(picture.crop('4-3').locator('img')).not.toHaveAttribute('src', cropSourceBefore);
 
         await reopenPicture(page);
         await expect(picture.crop('4-3').locator('img')).toBeVisible();
-        await expect(picture.crop('4-3').locator('img')).not.toHaveAttribute('src', cropSourceBefore);
 
         await picture.openCropsEditor();
         await expect(mediaEditor.cropPreviewLabel).toHaveText(/Original\s+2100 x 1050/);
         await expect.poll(() => pointOfInterest(mediaEditor)).toEqual({x: 0.7, y: 0.4});
+
+        // Cancel restores the crops as they were when the editor opened, so it also
+        // discarded the resized 4-3 crop saved before it: the stored full-height 1400 x 1050
+        // crop is kept, and the point at x 0.7 pushes it from left edge 350 to the right edge.
+        // The large preview opens on the default crop rather than the stored one, so the
+        // stored crop is read from the strip thumbnail.
+        await expect(async () => {
+            const crop = await cropFraction(mediaEditor.rendition('4-3'));
+
+            expectNear(crop.left, 700 / 2100, 0.01);
+            expectNear(crop.width, 1400 / 2100, 0.01);
+        }).toPass();
 
         await mediaEditor.doneButton.click();
         await expect(mediaEditor.header).toBeHidden();
