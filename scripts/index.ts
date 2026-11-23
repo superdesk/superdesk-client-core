@@ -24,6 +24,7 @@ import {keyBy, merge} from 'lodash';
 import {registerAuthoringReactWidgets} from 'apps/authoring-react/manage-widget-registration';
 import {registerAuthoringReactFields} from 'apps/authoring-react/fields/register-fields';
 import ng from 'core/services/ng';
+import {SESSION_EVENTS} from 'core/auth/auth';
 import {sdApi} from 'api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {store} from 'core/data';
@@ -182,7 +183,15 @@ export function startApp(
     body.attr('data-theme', 'dark-ui');
 
     ng.waitForServicesToBeAvailable().then(() => {
-        if (sdApi.user.isLoggedIn()) {
+        let initializedForSession = false;
+
+        const initializeForSession = () => {
+            if (initializedForSession) {
+                return;
+            }
+
+            initializedForSession = true;
+
             if (appConfig.features.useTansaProofing) {
                 setupTansa();
             }
@@ -196,6 +205,13 @@ export function startApp(
                 });
 
             registerGlobalKeybindings();
+        };
+
+        if (sdApi.user.isLoggedIn()) {
+            initializeForSession();
+        } else {
+            // logging in through the login page does not reload the app
+            ng.get('$rootScope').$on(SESSION_EVENTS.LOGIN, initializeForSession);
         }
     });
 }

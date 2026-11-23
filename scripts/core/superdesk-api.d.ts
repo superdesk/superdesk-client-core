@@ -160,6 +160,7 @@ declare module 'superdesk-api' {
          */
         getLatestItem(options?: {preferIncomplete?: IStoreValueIncomplete}): T;
         toggleTheme: () => void;
+        proofreadingEnabled: boolean;
         printPreview: () => void;
         configureTheme: () => void;
         toggleSideWidget(id: string | null): void;
@@ -591,7 +592,7 @@ declare module 'superdesk-api' {
 
     // AUTHORING-REACT FIELD TYPES - packages
 
-    interface IPackageItem {
+    export interface IPackageItem {
         type: IArticle['type'];
         headline: string;
         residRef: string;
@@ -599,10 +600,25 @@ declare module 'superdesk-api' {
         slugline: string;
         renditions: {};
         itemClass: string;
-        guid: string;
+
+        // set by the server
+        guid?: string;
+
+        // qcode from the `package-story-labels` vocabulary
+        label?: string | null;
+
+        // set when the package is published, pins the version of the referenced item
+        _current_version?: number;
     }
 
-    export type IPackageItemsValueOperational = Array<IPackageItem>;
+    export interface IPackageGroup {
+        id: string; // `idRef` in the root group
+        label?: string | null; // label of the root group's ref
+        refs: Array<IPackageItem>;
+    }
+
+    // Groups referenced from the root group, in root order. The root group itself is not included.
+    export type IPackageItemsValueOperational = Array<IPackageGroup>;
     export type IPackageItemsValueStorage = IPackageItemsValueOperational;
     export type IPackageItemsUserPreferences = never;
     export type IPackageItemsConfig = ICommonFieldConfig;

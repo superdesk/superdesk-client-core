@@ -1,4 +1,4 @@
-import {Locator, Page, expect} from '@playwright/test';
+import {Locator, Page, Response, expect} from '@playwright/test';
 import {s} from '../utils';
 import {TreeSelectDriver} from '../utils/tree-select-driver';
 
@@ -8,11 +8,31 @@ import {TreeSelectDriver} from '../utils/tree-select-driver';
  */
 export const ACTIVE_FORMATTING_BUTTON = /Editor3-activeButton/;
 
+export interface IEditorThemeKeys {
+    theme: string;
+    font: string;
+    headline: string;
+    abstract: string;
+    body: string;
+}
+
 export class Authoring {
     protected page: Page;
 
     constructor(page: Page) {
         this.page = page;
+    }
+
+    /** The angular editor's topbar or authoring-react's toolbars, which carry the same `save` and `close` ids. */
+    protected get topbar(): Locator {
+        return this.page.getByTestId('authoring-topbar')
+            .or(this.page.getByTestId('authoring').getByTestId('authoring-toolbar-1'));
+    }
+
+    // the open item's send / publish panel: angular renders it inside the editor, authoring-react outside
+    get interactiveActionsPanel(): Locator {
+        return this.page.getByTestId('authoring').getByTestId('interactive-actions-panel')
+            .or(this.page.getByTestId('authoring-actions-panel-overlay').getByTestId('interactive-actions-panel'));
     }
 
     async executeActionInEditor(...actionPath: Array<string>): Promise<void> {
@@ -33,9 +53,12 @@ export class Authoring {
 
     async publish(options: {subscribers: Array<string>}): Promise<void> {
         const {page} = this;
-        const panel = page.getByTestId('authoring').getByTestId('interactive-actions-panel');
+        const panel = this.interactiveActionsPanel;
 
         await page.getByTestId('authoring').getByTestId('open-send-publish-pane').click();
+
+        // the panel renders its buttons only once it has loaded the subscribers
+        await expect(panel.getByTestId('publish')).toBeEnabled();
 
         if (options.subscribers.length > 0) {
             await new TreeSelectDriver(
@@ -132,6 +155,42 @@ export class Authoring {
         return panel;
     }
 
+    // Resolves once `POST /api/macros` settles. Status is left unchecked: failing macros answer with an error status.
+    async runMacro(macroLabel: string): Promise<Response> {
+        const {page} = this;
+        const macro = page.getByTestId('authoring-widget-panel')
+            .getByTestId('macro-item')
+            .filter({hasText: macroLabel});
+
+        const [response] = await Promise.all([
+            page.waitForResponse((res) =>
+                res.url().includes('/api/macros') && res.request().method() === 'POST'),
+            macro.click(),
+        ]);
+
+        return response;
+    }
+
+    async openSendPublishPane(): Promise<Locator> {
+        const {page} = this;
+
+        await page.getByTestId('authoring-topbar').getByTestId('open-send-publish-pane').click();
+
+        const panel = page.getByTestId('interactive-actions-panel');
+
+        await expect(panel).toBeVisible();
+
+        return panel;
+    }
+
+    async closeSendPublishPane(): Promise<void> {
+        const panel = this.page.getByTestId('interactive-actions-panel');
+
+        await panel.getByTestId('close').click();
+
+        await expect(panel).toBeHidden();
+    }
+
     /**
      * Closes an open side widget. The panel is an overlay above the article body, so
      * anything that has to reach a body field needs it closed first.
@@ -183,7 +242,7 @@ export class Authoring {
         const {page} = this;
         const unsavedChanges = page.getByTestId('unsaved-changes-dialog');
 
-        await page.getByTestId('authoring-topbar').getByTestId('close').click();
+        await this.topbar.getByTestId('close').click();
 
         await expect(async () => {
             if (await unsavedChanges.isVisible()) {
@@ -214,6 +273,24 @@ export class Authoring {
         await expect(saving).toBeVisible();
         await expect(saving).toBeHidden();
         await expect(save).toBeDisabled();
+    }
+
+    // saves in either editor and returns the PATCH request and response
+    async saveAndGetRequest(): Promise<{request: any; response: any}> {
+        const save = this.topbar.getByTestId('save');
+        const saved = this.page.waitForResponse(
+            (r: Response) => r.request().method() === 'PATCH' && r.url().includes('/api/archive/'),
+        );
+
+        await expect(save).toBeEnabled();
+        await save.click();
+
+        const response = await saved;
+
+        expect(response.ok()).toBe(true);
+        await expect(save).toBeDisabled();
+
+        return {request: response.request().postDataJSON(), response: await response.json()};
     }
 
     field(field: string): Locator {
@@ -321,6 +398,61 @@ export class Authoring {
             .and(this.page.locator(`[data-test-value="${option}"]`));
     }
 
+    secondaryToolbar(): Locator {
+        return this.page.getByTestId('authoring-secondary-toolbar');
+    }
+
+    /**
+     * The content area the editor theme applies to. authoring-react exposes the active theme's keys
+     * on it as `data-editor-*` attributes; angular exposes them as `sd-editor--*` classes.
+     */
+    themeContainer(): Locator {
+        return this.page.getByTestId('authoring-theme-container');
+    }
+
+    async expectEditorTheme(theme: Partial<IEditorThemeKeys>): Promise<void> {
+        for (const [key, value] of Object.entries(theme)) {
+            await expect(this.themeContainer()).toHaveAttribute(`data-editor-${key}`, value);
+        }
+    }
+
+    /**
+     * What the theme paints, read once: poll it after anything that changes the theme. Colours come
+     * back as sRGB `r,g,b,a` so they compare whatever colour space the CSS declares them in.
+     */
+    readThemeAppearance(): Promise<{background: string; text: string; bodyFontSize: number}> {
+        return this.fieldContainer('body_html').getByRole('textbox').evaluate((textbox) => {
+            const container = textbox.closest('[data-test-id="authoring-theme-container"]');
+            const context = document.createElement('canvas').getContext('2d');
+
+            if (container == null || context == null) {
+                throw new Error('the body field is not inside a themed container');
+            }
+
+            const toRgba = (color: string): string => {
+                context.clearRect(0, 0, 1, 1);
+                context.fillStyle = color;
+                context.fillRect(0, 0, 1, 1);
+
+                return context.getImageData(0, 0, 1, 1).data.join(',');
+            };
+
+            const style = window.getComputedStyle(textbox);
+
+            return {
+                background: toRgba(window.getComputedStyle(container).backgroundColor),
+                text: toRgba(style.color),
+                bodyFontSize: parseFloat(style.fontSize),
+            };
+        });
+    }
+
+    editorThemesPanel(slot: 'default' | 'proofreading'): Locator {
+        return this.page.getByTestId('editor-themes-modal')
+            .getByTestId('proofreading-panel')
+            .and(this.page.locator(`[data-test-value="${slot}"]`));
+    }
+
     /**
      * Closes an edited article through the "Save changes?" prompt that closing raises, which both
      * persists the changes and closes the article. The prompt's Save is scoped to the dialog so it
@@ -393,4 +525,79 @@ export class PictureAuthoring extends Authoring {
         await this.hoverMedia();
         await this.mediaField.getByTestId('crop').click();
     }
+}
+
+export class PackageAuthoring extends Authoring {
+    group(groupId: string): Locator {
+        return this.fieldContainer('groups')
+            .getByTestId('package-group')
+            .and(this.page.locator(`[data-test-value="${groupId}"]`));
+    }
+
+    groupItems(groupId: string): Locator {
+        return this.group(groupId).getByTestId('package-items');
+    }
+
+    item(slugline: string): Locator {
+        return this.fieldContainer('groups')
+            .getByTestId('package-items')
+            .and(this.page.locator(`[data-test-value="${slugline}"]`));
+    }
+
+    private row(slugline: string): Locator {
+        return this.fieldContainer('groups')
+            .getByTestId('package-item-row')
+            .filter({
+                has: this.page.getByTestId('package-items').and(this.page.locator(`[data-test-value="${slugline}"]`)),
+            });
+    }
+
+    /**
+     * Drops an item in front of another one, in any group. The list library lifts the item and
+     * makes room for it a frame late, so each step waits, or the drop lands where it started.
+     */
+    async dragItemBefore(slugline: string, targetSlugline: string): Promise<void> {
+        const {page} = this;
+        const dragged = this.row(slugline);
+        const target = this.row(targetSlugline);
+        const handle = dragged.getByTestId('package-item-drag-handle');
+
+        // the cards grow once the items they show have loaded, so their positions settle only then
+        await expect(dragged.getByTestId('package-item-state')).toBeVisible();
+        await expect(target.getByTestId('package-item-state')).toBeVisible();
+
+        // opening the editor puts the focus in its first field, which scrolls the editor back to the top
+        await expect(page.getByTestId('authoring').locator(':focus')).toHaveCount(1);
+
+        // the package header can push the items below the fold, and both ends of the drag have to be on screen
+        await target.scrollIntoViewIfNeeded();
+        await handle.scrollIntoViewIfNeeded();
+        await expect(target).toBeInViewport();
+
+        // waits for the handle to stop moving, the editor slides in when it opens
+        await handle.hover();
+
+        const from = await getBox(handle, `drag handle of "${slugline}"`);
+
+        await page.mouse.down();
+        await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2 - 10, {steps: 5});
+        await expect(dragged).toHaveCSS('position', 'fixed');
+
+        const to = await getBox(target, `"${targetSlugline}"`);
+
+        await page.mouse.move(to.x + to.width / 2, to.y + to.height / 4, {steps: 20});
+        await expect(target).not.toHaveCSS('transform', 'none');
+
+        await page.mouse.up();
+    }
+}
+
+async function getBox(locator: Locator, name: string): Promise<{x: number; y: number; width: number; height: number}> {
+    const box = await locator.boundingBox();
+
+    if (box == null) {
+        throw new Error(`${name} is not visible`);
+    }
+
+    return box;
 }

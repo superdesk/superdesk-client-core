@@ -33,7 +33,7 @@ interface IProps {
     query: ISuperdeskQuery;
     onItemClick(item: IArticle): void;
     onItemDoubleClick(item: IArticle): void;
-    getExtraButtons?(): Array<{label: string; onClick: () => void}>;
+    getExtraButtons?(): Array<{label: string; onClick: () => void; testId?: string}>;
 }
 
 interface IState {
@@ -370,12 +370,13 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                                         extraButtons == null ? null : (
                                             <ButtonGroup padded={true} align="end">
                                                 {
-                                                    extraButtons.map(({label, onClick}) => (
+                                                    extraButtons.map(({label, onClick, testId}) => (
                                                         <Button
                                                             key={label}
                                                             text={label}
                                                             type="primary"
                                                             onClick={onClick}
+                                                            data-test-id={testId}
                                                         />
                                                     ))
                                                 }

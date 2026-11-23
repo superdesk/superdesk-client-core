@@ -11,7 +11,12 @@ class LanguageComponent extends React.Component<IPropsItemListInfo> {
         }
 
         return (
-            <span key="language" className="language-label">
+            <span
+                key="language"
+                className="language-label"
+                data-test-id="item-language"
+                data-test-value={item.language}
+            >
                 {get(item, 'language')}
             </span>
         );

@@ -147,11 +147,21 @@ Exceptions that do need an explicit login:
 
 Use `frodobaggins` or `samgamgee` for anything that needs a second actor: a
 two-user lock or mark-for-user flow, or a permission check. Both have a known
-password (the password is the username) and both are members of the Sports desk,
-so both can reach the Sports monitoring view. What separates them is privileges:
-`frodobaggins` holds none at all, which is what makes it the negative half of a
-privilege test, while `samgamgee` carries the `Sub Editor` role and so holds
-*some*, but not `send_to_personal` or `unlock`.
+password (the password is the username) and both are members of the Sports desk.
+What separates them is privileges: `frodobaggins` holds none at all, which is
+what makes it the negative half of a privilege test, while `samgamgee` carries
+the `Sub Editor` role and so holds *some*, but not `send_to_personal` or
+`unlock`. Only `samgamgee` can open the Sports monitoring view:
+`/workspace/monitoring` is declared with `privileges: {monitoring_view: 1}`
+(`scripts/apps/monitoring/config.ts`), which `frodobaggins` lacks, so that
+account is limited to routes with no privilege gate, `/workspace/personal` and
+`/settings/templates` among them.
+
+`frodobaggins` also cannot create or edit any article: the archive resource
+declares `privileges = {"POST": "archive", "PATCH": "archive", ...}`
+(`apps/archive/archive.py` in superdesk-core), so every write answers 403 and no
+authoring view ever opens for it. No snapshot user holds `archive` without
+`content_templates`.
 
 `frodobaggins` has `user_type: "user"`, a `role` of `null`, and no `privileges`
 field, so it holds **no** privileges at all. Keep it that way: do not assign a
@@ -230,6 +240,9 @@ set, this is not exhaustive):
 - **Users:** `admin`, `frodobaggins`, `samgamgee`, `janedoe` (see "Users in the
   `main` snapshot" under Authentication).
 - **Roles:** `Administrator` and `Sub Editor`, neither of them the default role.
+- **Content templates:** `story`, `story 2` and `story 3`, all public and all
+  owned by `admin`, plus the `kill` and `takedown` kill templates. There is no
+  personal (`is_public: false`) template; a spec that needs one makes it in-test.
 - **Saved searches:** "Malaysia" and "Technology", both global, both owned by
   `admin`. There is no private one; use the `saved-search-private` snapshot.
 - **Story profile `body_html` toolbar:** `h2`, bold, italic, underline, quote,
@@ -238,14 +251,16 @@ set, this is not exhaustive):
 
 Every article in `main` is text, apart from "Package Highlight 1", which is a
 package attached to a highlight. There is no picture, graphic, video or audio
-item, and no plain package; use the `media-items` snapshot for those.
+item, and no plain package; use the `media-items` snapshot for those, or the
+`packages` snapshot for a package with more than one group.
 
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
 `editor3-tables`, `custom-blocks`, `availability-management`, `related-items`,
 `media-items`, `editor3-formats`, `editor3-suggestions`, `authoring-extras`,
 `saved-search-private`, `publishing`, `required-headline`,
-`association-fields`, `editor3-comments`, `desk-routing`.
+`association-fields`, `editor3-comments`, `desk-routing`,
+`packages`.
 
 ### Publishing config in the `main` snapshot
 
@@ -282,6 +297,12 @@ Reach for it when a spec asserts something about a non-text item: the monitoring
 type filter buttons, media metadata, the crop/rotate editor, the media carousel.
 Do not reach for it otherwise, because it also shifts every item count in the
 Sports groups relative to `main`.
+
+### The `packages` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'packages'})` gives you `main` plus "Fellowship package", a plain package on the `composite` profile with two groups: `main` holds "Hobbiton notice" and "Buckland notice", `story` holds "Bywater notice". All four items are in Sports / Working Stage, so the Sports item counts differ from `main`.
+
+Reach for it for anything that edits a package's items: a change to one group can only be told apart from a rewrite of all of them on a package that has more than one. In authoring-react the groups render under the `groups` field as `package-group` (group id in `data-test-value`) and each item as `package-items` (slugline in `data-test-value`); `PackageAuthoring` in `page-object-models/authoring.ts` wraps them, including dragging an item.
 
 ### The `editor3-formats` snapshot
 
@@ -566,6 +587,10 @@ snapshots"); both run from `e2e/server` in a Python venv:
 
 This alters shared fixtures, so treat it like a product-source change: call it
 out in your hand-off for review.
+
+### Seeding through the API
+
+When the state a test needs varies from test to test (a user preference, a content list), and a snapshot per combination would be worse, a test may set it through the REST API after `restoreDatabaseSnapshot()` and before navigating. Use `withApiContext` and `assertOk` from `playwright/utils/api.ts`, which call the API as the `storageState` user, and keep each resource's calls in its own `utils/<resource>-api.ts` (see `preferences-api.ts`, `content-lists-api.ts`). This is for setting up preconditions only, never for driving the behaviour under test.
 
 ## Page Objects
 

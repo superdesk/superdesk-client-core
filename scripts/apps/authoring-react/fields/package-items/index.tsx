@@ -39,7 +39,7 @@ export function getArticlesInPackageField(): IPackageItemsField {
         previewComponent: Preview,
         differenceComponent: Difference,
 
-        hasValue: (valueOperational) => valueOperational != null && valueOperational.length > 0,
+        hasValue: (valueOperational) => (valueOperational ?? []).some((group) => group.refs.length > 0),
         getEmptyValue: () => [],
 
         configComponent: () => null,
