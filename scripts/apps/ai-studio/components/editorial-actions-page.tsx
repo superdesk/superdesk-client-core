@@ -331,6 +331,23 @@ export function EditorialActionsPage() {
 
     const {editing, options, providers} = state;
 
+    const setEditorTab = (tab: IActionEditorTab) => {
+        editorTab.current = tab;
+    };
+
+    const setDirty = (dirty: boolean) => updateState({dirty});
+
+    const closeEditor = () => updateState({editing: null, dirty: false});
+
+    const handleSaved = (saved: IAIAction) => {
+        replaceAction(saved);
+
+        // The user may have discarded this form and opened another while it saved
+        if (stateRef.current.editing === editing) {
+            updateState({editing: {action: saved, actionType: saved.action_type}, dirty: false});
+        }
+    };
+
     return (
         <div
             data-test-id="ai-studio-editorial-actions"
@@ -354,19 +371,10 @@ export function EditorialActionsPage() {
                         profiles={sdApi.contentProfiles.getAll()}
                         customFieldVocabularies={sdApi.vocabularies.getCustomFieldVocabularies()}
                         initialTab={editorTab.current}
-                        onTabChange={(tab) => {
-                            editorTab.current = tab;
-                        }}
-                        onDirtyChange={(dirty) => updateState({dirty})}
-                        onCancel={() => updateState({editing: null, dirty: false})}
-                        onSaved={(saved) => {
-                            replaceAction(saved);
-
-                            // The user may have discarded this form and opened another while it saved
-                            if (stateRef.current.editing === editing) {
-                                updateState({editing: {action: saved, actionType: saved.action_type}, dirty: false});
-                            }
-                        }}
+                        onTabChange={setEditorTab}
+                        onDirtyChange={setDirty}
+                        onCancel={closeEditor}
+                        onSaved={handleSaved}
                         onConflict={reloadEditedAction}
                     />
                 )}
