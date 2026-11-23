@@ -89,28 +89,71 @@ interface IMailcrabMessage {
     to: Array<{email: string}>;
 }
 
+async function readMailcrab<T>(page: Page, path: string): Promise<T> {
+    const response = await page.request.get(`${MAILCRAB_URL}/api/${path}`);
+
+    if (!response.ok()) {
+        throw new Error(`MailCrab ${path} answered ${response.status()}: ${await response.text()}`);
+    }
+
+    return response.json();
+}
+
+// MailCrab is shared by every e2e slot, so an email only counts when it is addressed to `to`,
+// is not in `knownMessageIds`, and links to this run's client origin.
+async function waitForEmailedLink(
+    page: Page,
+    options: {
+        to: string;
+        knownMessageIds: Set<string>;
+        isWanted: (message: IMailcrabMessage) => boolean;
+        linkPattern: RegExp;
+        description: string;
+    },
+): Promise<string> {
+    const {to, knownMessageIds, isWanted, linkPattern, description} = options;
+    const clientOrigin = new URL(page.url()).origin;
+    let link = '';
+
+    await expect.poll(async () => {
+        const candidates = (await readMailcrab<Array<IMailcrabMessage>>(page, 'messages'))
+            .filter((message) => !knownMessageIds.has(message.id))
+            .filter(isWanted)
+            .filter((message) => message.to.some((recipient) => recipient.email === to))
+            .sort((a, b) => b.date.localeCompare(a.date));
+
+        for (const candidate of candidates) {
+            const body = await readMailcrab<{text: string}>(page, `message/${candidate.id}`);
+            const found = body.text.match(linkPattern)?.find((url) => url.startsWith(clientOrigin));
+
+            if (found != null) {
+                link = found;
+                break;
+            }
+        }
+
+        return link;
+    }, {timeout: 20000, message: `No ${description} email for ${to} arrived in MailCrab`}).not.toBe('');
+
+    return link;
+}
+
 /**
  * Sets a password for the account owning `email` through the "Forgot password?"
  * flow and MailCrab. Call while signed out. The `main` snapshot documents a
  * plaintext password for the admin only and no API sets one directly.
- *
- * MailCrab is shared by every e2e slot, so a message only counts when it is
- * addressed to `email`, is new since the request, and links to this run's client origin.
  */
 export async function setPasswordThroughResetEmail(
     page: Page,
     {email, password}: {email: string; password: string},
 ): Promise<void> {
-    const readInbox = () => page.request.get(`${MAILCRAB_URL}/api/messages`)
-        .then((response) => response.json() as Promise<Array<IMailcrabMessage>>);
-
     await page.goto('/#/reset-password/');
 
     const resetPage = page.getByTestId('reset-password-page');
 
     await resetPage.getByTestId('email').fill(email);
 
-    const knownMessageIds = new Set((await readInbox()).map((message) => message.id));
+    const knownMessageIds = await getMailcrabMessageIds(page);
 
     // A page.request call issued while this POST is in flight cancels it and no
     // email is sent, so polling must wait for the response.
@@ -122,29 +165,13 @@ export async function setPasswordThroughResetEmail(
     await resetPage.getByTestId('get-token').click();
     await tokenRequest;
 
-    const clientOrigin = new URL(page.url()).origin;
-    let resetLink = '';
-
-    await expect.poll(async () => {
-        const candidates = (await readInbox())
-            .filter((message) => !knownMessageIds.has(message.id))
-            .filter((message) => message.subject === 'Reset password')
-            .filter((message) => message.to.some((recipient) => recipient.email === email))
-            .sort((a, b) => b.date.localeCompare(a.date));
-
-        for (const candidate of candidates) {
-            const body = await page.request.get(`${MAILCRAB_URL}/api/message/${candidate.id}`)
-                .then((response) => response.json() as Promise<{text: string}>);
-            const link = body.text.match(/(https?:\/\/[^\s]+reset-password[^\s]+)/)?.[1];
-
-            if (link != null && link.startsWith(clientOrigin)) {
-                resetLink = link;
-                break;
-            }
-        }
-
-        return resetLink;
-    }, {timeout: 20000, message: `No reset-password email for ${email} arrived in MailCrab`}).not.toBe('');
+    const resetLink = await waitForEmailedLink(page, {
+        to: email,
+        knownMessageIds,
+        isWanted: (message) => message.subject === 'Reset password',
+        linkPattern: /https?:\/\/[^\s]+reset-password[^\s]+/g,
+        description: 'reset-password',
+    });
 
     await page.goto(resetLink);
 
@@ -157,6 +184,23 @@ export async function setPasswordThroughResetEmail(
     await resetPage.getByTestId('submit').click();
 
     await expect(page.getByTestId('login-page')).toBeVisible();
+}
+
+export async function getMailcrabMessageIds(page: Page): Promise<Set<string>> {
+    return new Set((await readMailcrab<Array<IMailcrabMessage>>(page, 'messages')).map((message) => message.id));
+}
+
+export function getEmailedLink(
+    page: Page,
+    {to, subject, knownMessageIds}: {to: string; subject: string; knownMessageIds: Set<string>},
+): Promise<string> {
+    return waitForEmailedLink(page, {
+        to,
+        knownMessageIds,
+        isWanted: (message) => message.subject.includes(subject),
+        linkPattern: /https?:\/\/\S+/g,
+        description: `"${subject}"`,
+    });
 }
 
 /**
