@@ -1,4 +1,6 @@
 import {test, expect, type Page} from '@playwright/test';
+import fs from 'fs';
+import path from 'path';
 import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
 import {AttachmentsPane} from './page-object-models/attachments';
@@ -50,16 +52,15 @@ import {dismissSessionExpiry, getCellValueByColumTitle, login, restoreDatabaseSn
  *   says; the product's label is asserted.
  * - The internal marker's text is "internal", uppercased by the label style rather
  *   than written as "Internal"; the assertion is case-insensitive on the real text.
+ * - "Download attachment" (1327759365, 1326285061) is `partial`. Right-click "Save as"
+ *   and saving to disk are browser UI that Playwright cannot drive; the tab the
+ *   Download icon opens is asserted to serve the uploaded bytes instead.
  * - "Attachments in NINJS output" (1326285069) is asserted on the payload the
  *   subscriber is actually sent: `publishing`'s "Public API" subscriber's only
  *   destination ("NINJS Email") formats as `ninjs`. The payload is read back
  *   through the item history's transmission details, which render the queue
  *   entry's `formatted_item` verbatim.
  */
-
-// Every test builds its own attachments through the upload dialog and most of them
-// also save, close and reopen the article, which does not fit the 30s default.
-test.setTimeout(120000);
 
 const TEXT_FILE = 'not-a-media-file.txt';
 const TEXT_FILE_SIZE = '17';
@@ -232,9 +233,9 @@ test.describe('article attachments', () => {
 
     test('download attachments from the widget and from the content profile field', {
         annotation: [
-            {type: 'confluence', description: '1327759365 complete'}, // Download attachment using the right toolbar
+            {type: 'confluence', description: '1327759365 partial'}, // Download attachment using the right toolbar
             // Download attachment using the content profile field
-            {type: 'confluence', description: '1326285061 complete'},
+            {type: 'confluence', description: '1326285061 partial'},
         ],
     }, async ({page}) => {
         const opened = await openArticle(page);
@@ -248,13 +249,20 @@ test.describe('article attachments', () => {
 
         async function downloadEach(pane: AttachmentsPane): Promise<void> {
             for (const attachment of [PUBLIC_ATTACHMENT, INTERNAL_ATTACHMENT]) {
-                await pane.hoverItem(attachment.title);
+                await pane.hoverAndExpectAction(attachment.title, pane.downloadButton(attachment.title));
                 await expect(pane.downloadButton(attachment.title)).toHaveAttribute('title', 'Download');
 
                 const popup = await pane.download(attachment.title);
 
                 // the popup event can arrive before the tab committed its target url
                 await expect.poll(() => popup.url()).toMatch(downloadUrl);
+
+                const served = await page.request.get(popup.url());
+
+                expect(served.ok()).toBe(true);
+                expect(await served.body())
+                    .toEqual(fs.readFileSync(path.join('test-files', attachment.file)));
+
                 await popup.close();
             }
         }
@@ -288,6 +296,11 @@ test.describe('article attachments', () => {
 
         const editDialog = opened.widget.editDialog;
 
+        await opened.widget.hoverAndExpectAction(
+            PUBLIC_ATTACHMENT.title,
+            opened.widget.editButton(PUBLIC_ATTACHMENT.title),
+        );
+        await expect(opened.widget.editButton(PUBLIC_ATTACHMENT.title)).toHaveAttribute('title', 'Edit');
         await opened.widget.openEditDialog(PUBLIC_ATTACHMENT.title);
 
         await expect(editDialog.getByTestId('title')).toHaveValue(PUBLIC_ATTACHMENT.title);
@@ -317,6 +330,25 @@ test.describe('article attachments', () => {
         const editedInternal = {title: 'Internal pic edited', description: 'edited from the field'};
 
         await opened.useField();
+
+        await opened.field.hoverAndExpectAction(
+            INTERNAL_ATTACHMENT.title,
+            opened.field.editButton(INTERNAL_ATTACHMENT.title),
+        );
+        await expect(opened.field.editButton(INTERNAL_ATTACHMENT.title)).toHaveAttribute('title', 'Edit');
+        await opened.field.openEditDialog(INTERNAL_ATTACHMENT.title);
+
+        await expect(editDialog.getByTestId('title')).toHaveValue(INTERNAL_ATTACHMENT.title);
+        await expect(editDialog.getByTestId('description')).toHaveValue(INTERNAL_ATTACHMENT.description);
+
+        await editDialog.getByTestId('title').fill('discarded title');
+        await editDialog.getByTestId('description').fill('discarded description');
+        await opened.field.cancelEdit();
+
+        await expect(opened.field.title(INTERNAL_ATTACHMENT.title)).toBeVisible();
+        await expect(opened.field.description(INTERNAL_ATTACHMENT.title))
+            .toHaveText(INTERNAL_ATTACHMENT.description);
+
         await opened.field.openEditDialog(INTERNAL_ATTACHMENT.title);
         await editDialog.getByTestId('title').fill(editedInternal.title);
         await editDialog.getByTestId('description').fill(editedInternal.description);
@@ -363,6 +395,10 @@ test.describe('article attachments', () => {
         await opened.widget.attach([PUBLIC_ATTACHMENT, INTERNAL_ATTACHMENT, keptAttachment]);
 
         await expect(opened.widget.list.getByTestId('attachment-title')).toHaveCount(3);
+        await opened.widget.hoverAndExpectAction(
+            PUBLIC_ATTACHMENT.title,
+            opened.widget.removeButton(PUBLIC_ATTACHMENT.title),
+        );
         await expect(opened.widget.removeButton(PUBLIC_ATTACHMENT.title))
             .toHaveAttribute('title', 'Remove');
 
@@ -377,6 +413,11 @@ test.describe('article attachments', () => {
         await expect(opened.field.title(INTERNAL_ATTACHMENT.title)).toBeVisible();
         await expect(opened.field.title(PUBLIC_ATTACHMENT.title)).toHaveCount(0);
 
+        await opened.field.hoverAndExpectAction(
+            INTERNAL_ATTACHMENT.title,
+            opened.field.removeButton(INTERNAL_ATTACHMENT.title),
+        );
+        await expect(opened.field.removeButton(INTERNAL_ATTACHMENT.title)).toHaveAttribute('title', 'Remove');
         await opened.field.remove(INTERNAL_ATTACHMENT.title);
 
         await expect(opened.field.title(keptAttachment.title)).toBeVisible();
@@ -400,6 +441,9 @@ test.describe('attachments in the NINJS output', () => {
             {type: 'confluence', description: '1326285069 complete'}, // Attachments in NINJS output
         ],
     }, async ({page}) => {
+        // leaves room for the 60s wait on the publish queue below
+        test.setTimeout(90000);
+
         await restoreDatabaseSnapshot({snapshotName: 'publishing'});
 
         const monitoring = new Monitoring(page);
