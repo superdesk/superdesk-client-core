@@ -103,7 +103,7 @@ export function EditorialActionsPage() {
                 .catch((error) => notify.error(toErrorMessage(error)));
         };
 
-        // A provider added in another tab (the editor links there) shows up on return
+        // So a provider added in another tab shows up on return
         window.addEventListener('focus', reloadProviders);
 
         return () => {

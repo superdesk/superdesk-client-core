@@ -9,10 +9,7 @@ export function isFieldEnabledInProfile(profile: IContentProfile, fieldId: strin
     return config != null && config.enabled !== false;
 }
 
-/**
- * The selected profiles, or every enabled one when none is selected or none of the selected ones
- * exists any more.
- */
+/** The selected profiles, or every enabled one when none of the selected ones exists */
 export function getProfilesInScope(
     profiles: Array<IContentProfile>,
     selectedProfileIds: Array<string>,

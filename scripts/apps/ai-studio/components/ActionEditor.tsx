@@ -73,7 +73,7 @@ interface IProps {
     onCancel(): void;
     onSaved(action: IAIAction): void;
 
-    /** Someone else saved the action first; the page reloads it, which resets this form */
+    /** On a `412`; the page reloads the action, which resets this form */
     onConflict(): void;
 }
 
@@ -99,7 +99,7 @@ export function ActionEditor(props: IProps) {
     // Save errors arrive after the request, when the user may be on another tab
     const currentTab = React.useRef(tab);
 
-    // The tab list only reads the selected tab on mount, so a switch made for the user remounts it
+    // The tab list only reads the selected tab on mount, so a switch from code remounts it
     const [tabListKey, setTabListKey] = React.useState(0);
     const [saving, setSaving] = React.useState(false);
     const mounted = React.useRef(false);

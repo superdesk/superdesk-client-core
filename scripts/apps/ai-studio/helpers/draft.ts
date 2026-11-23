@@ -25,7 +25,7 @@ export function numberInputToValue(value: number | null | undefined): number | n
     return value == null || value === 0 || Number.isNaN(value) ? null : value;
 }
 
-/** The provider a new action starts with: the only active one, if there is exactly one */
+/** The only active provider, if there is exactly one */
 export function getDefaultProvider(providers: Array<IAIProvider>): string | null {
     const active = providers.filter(({active}) => active);
 
@@ -86,7 +86,6 @@ function changedFields(before: IAIActionDraft, after: IAIActionDraft): Array<IAI
     return (Object.keys(after) as Array<IAIActionDraftField>).filter((field) => !isEqual(before[field], after[field]));
 }
 
-/** The draft fields as a request body, with the parameters nested */
 function toPayload(draft: IAIActionDraft, fields: Array<IAIActionDraftField>): IAIActionPayload {
     const payload: Record<string, unknown> = {};
     const parameters: Record<string, unknown> = {};
@@ -102,10 +101,7 @@ function toPayload(draft: IAIActionDraft, fields: Array<IAIActionDraftField>): I
     return payload as IAIActionPayload;
 }
 
-/**
- * Only what changed; empty means no change. The server merges parameters, so a cleared one is
- * sent as `null`.
- */
+/** Only the changed fields. The server merges parameters, so a cleared one is sent as `null` */
 export function buildPatch(original: IAIAction, draft: IAIActionDraft): IAIActionPayload {
     const after = normaliseDraft(draft);
 
@@ -120,7 +116,6 @@ export function buildCreatePayload(actionType: IAIActionType, draft: IAIActionDr
     return {action_type: actionType, ...toPayload(values, fields)};
 }
 
-/** Whether the draft differs from what the form was opened with */
 export function isDraftDirty(draft: IAIActionDraft, baseline: IAIActionDraft): boolean {
     return changedFields(baseline, normaliseDraft(draft)).length > 0;
 }

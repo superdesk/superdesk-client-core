@@ -7,7 +7,6 @@ test.describe('AI Studio editorial actions', () => {
     test.beforeEach(async ({page}) => {
         await restoreDatabaseSnapshot();
 
-        // An action needs a provider, and the `main` snapshot has none
         const providers = new AIProviders(page);
 
         await providers.open();

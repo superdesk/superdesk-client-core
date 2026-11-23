@@ -105,7 +105,6 @@ export function createAction(payload: IAIActionPayload): Promise<IAIAction> {
     return request<IAIAction>({method: 'POST', path: '/ai_actions', payload});
 }
 
-/** `patch` holds only the changed values, see `buildPatch` */
 export function patchAction(action: IAIAction, patch: IAIActionPayload): Promise<IAIAction> {
     return request<IAIAction>({
         method: 'PATCH',
