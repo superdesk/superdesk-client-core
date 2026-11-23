@@ -29,7 +29,7 @@ function getMessages(issue: unknown): Array<string> {
     }
 
     if (issue != null && typeof issue === 'object') {
-        return Object.values(issue).flatMap((value) => getMessages(value));
+        return Object.values(issue).flatMap(getMessages);
     }
 
     return [];

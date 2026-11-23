@@ -1,4 +1,4 @@
-// ui-framework has no normal-case button and no segmented tabs, so both are restyled here
+// ui-framework has no normal-case button, so the panel buttons are restyled here
 
 .ai-studio-editor {
     .ai-studio-editor__title {
@@ -13,33 +13,6 @@
         text-transform: none;
         letter-spacing: normal;
         font-size: 1.4rem;
-    }
-}
-
-.ai-studio-segmented-tabs .sd-nav-tabs {
-    display: inline-flex;
-    height: auto;
-    padding: var(--space--0-5);
-    gap: var(--space--0-5);
-    box-shadow: none;
-    border-radius: var(--b-radius--small);
-    background-color: var(--sd-colour-panel-bg--200);
-
-    .sd-nav-tabs__tab {
-        height: 3.2rem;
-        padding-inline: var(--space--1-5);
-        border: 0;
-        border-radius: var(--b-radius--small);
-
-        span {
-            margin: 0;
-        }
-    }
-
-    .sd-nav-tabs__tab--active {
-        background-color: var(--sd-colour-panel-bg--000);
-        color: var(--sd-colour-interactive);
-        box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.16);
     }
 }
 

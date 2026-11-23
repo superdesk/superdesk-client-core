@@ -9,8 +9,11 @@ import {
     Label,
     Option,
     Select,
+    Spacer,
     SvgIconIllustration,
     Switch,
+    TabLabel,
+    Tabs,
     Text,
     TextArea,
     TreeSelect,
@@ -19,7 +22,6 @@ import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import type {IContentProfile, IVocabulary} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {notify} from 'core/notify/notify';
-import {TabList} from 'core/ui/components/tabs';
 import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 import type {IAIProvider} from 'apps/ai-providers/interfaces';
 import type {
@@ -52,6 +54,8 @@ import {PROVIDER_DEFAULT_MODEL, getModelOptions, getModelWarning, getProviderOpt
 import './style.scss';
 
 export type IActionEditorTab = 'configuration' | 'ai-settings';
+
+const TABS: Array<IActionEditorTab> = ['configuration', 'ai-settings'];
 
 const AI_PROVIDERS_URL = '#/settings/ai-providers';
 
@@ -99,8 +103,6 @@ export function ActionEditor(props: IProps) {
     // Save errors arrive after the request, when the user may be on another tab
     const currentTab = useRef(tab);
 
-    // The tab list only reads the selected tab on mount, so a switch from code remounts it
-    const [tabListKey, setTabListKey] = useState(0);
     const [saving, setSaving] = useState(false);
     const mounted = useRef(false);
 
@@ -159,7 +161,6 @@ export function ActionEditor(props: IProps) {
 
         if (tabsWithErrors.length > 0 && !tabsWithErrors.includes(currentTab.current)) {
             changeTab(tabsWithErrors[0]);
-            setTabListKey((key) => key + 1);
         }
 
         if (tabsWithErrors.length > 1) {
@@ -321,9 +322,10 @@ export function ActionEditor(props: IProps) {
                     ))}
                 </Select>
 
-                <div style={{display: 'flex', gap: 16, alignItems: 'flex-start'}}>
-                    <div style={{flex: 1}}>
+                <Spacer h gap="16" alignItems="start">
+                    {[
                         <Input
+                            key="max-characters"
                             type="number"
                             label={gettext('Max. characters')}
                             // eslint-disable-next-line max-len
@@ -332,12 +334,11 @@ export function ActionEditor(props: IProps) {
                             error={errors.max_characters}
                             onChange={(value) => update({max_characters: numberInputToValue(value)})}
                             data-test-id="ai-action-max-characters"
-                        />
-                    </div>
-
-                    {typeOption?.uses_suggestions_count === true && (
-                        <div style={{flex: 1}}>
+                        />,
+                        // Spacer gives every child a slot, so a hidden one is left out rather than `false`
+                        typeOption?.uses_suggestions_count === true && (
                             <Input
+                                key="suggestions-count"
                                 type="number"
                                 label={gettext('No. of suggestions')}
                                 info={gettext('From {{min}} to {{max}}.', {
@@ -350,9 +351,9 @@ export function ActionEditor(props: IProps) {
                                 onChange={(value) => update({suggestions_count: numberInputToValue(value)})}
                                 data-test-id="ai-action-suggestions-count"
                             />
-                        </div>
-                    )}
-                </div>
+                        ),
+                    ].filter(Boolean)}
+                </Spacer>
 
                 <div data-test-id="ai-action-user-actions">
                     <FormLabel text={gettext('User actions')} />
@@ -485,7 +486,7 @@ export function ActionEditor(props: IProps) {
                             text={dirty ? gettext('Cancel') : gettext('Close')}
                             type="default"
                             disabled={saving}
-                            onClick={() => props.onCancel()}
+                            onClick={props.onCancel}
                             data-test-id="ai-action-cancel"
                         />
                         <Button
@@ -503,17 +504,16 @@ export function ActionEditor(props: IProps) {
             <Layout.PanelContent>
                 <Layout.PanelContentBlock>
                     <div style={{display: 'flex', flexDirection: 'column', gap: 24}}>
-                        <div className="ai-studio-segmented-tabs">
-                            <TabList
-                                key={tabListKey}
-                                tabs={[
-                                    {id: 'configuration', label: gettext('Configuration')},
-                                    {id: 'ai-settings', label: gettext('AI Settings')},
-                                ]}
-                                selectedTabId={tab}
-                                onChange={(next: IActionEditorTab) => changeTab(next)}
+                        <div>
+                            <Tabs
+                                style="segmented"
+                                selectedIndex={TABS.indexOf(tab)}
+                                onClick={(index) => changeTab(TABS[index])}
                                 data-test-id="ai-action-tabs"
-                            />
+                            >
+                                <TabLabel label={gettext('Configuration')} indexValue={0} />
+                                <TabLabel label={gettext('AI Settings')} indexValue={1} />
+                            </Tabs>
                         </div>
 
                         {tab === 'configuration' ? renderConfiguration() : renderAiSettings()}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dropdown, IconButton, Label, SvgIconIllustration, Text} from 'superdesk-ui-framework/react';
+import {Dropdown, IconButton, Label, Spacer, SvgIconIllustration, Text} from 'superdesk-ui-framework/react';
 import {BoxedListItem} from 'superdesk-ui-framework/react/components/Lists';
 import type {IContentProfile} from 'superdesk-api';
 import {gettext} from 'core/utils';
@@ -64,20 +64,20 @@ export function ActionListItem({action, profiles, selected, onEdit, onDelete}: I
                     </span>
                 )}
             >
-                <div style={{display: 'flex', flexDirection: 'column', gap: 2}}>
-                    <div style={{display: 'flex', gap: 8, alignItems: 'center'}}>
+                <Spacer v gap="4">
+                    <Spacer h gap="8" justifyContent="start" noGrow>
                         <Text noMargin>{action.name}</Text>
                         {action.active === false && (
                             <Label text={gettext('Inactive')} style="translucent" type="default" />
                         )}
-                    </div>
+                    </Spacer>
                     <Text size="x-small" color="light" noMargin>
                         {gettext('Content profiles:')} <strong>{getProfileNames(action, profiles)}</strong>
                         &nbsp;&nbsp;&nbsp;
                         {gettext('Max. characters:')}{' '}
                         <strong>{maxCharacters ?? gettext('from content profile')}</strong>
                     </Text>
-                </div>
+                </Spacer>
             </BoxedListItem>
         </div>
     );
