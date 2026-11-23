@@ -1,5 +1,6 @@
 import {gettext} from 'core/utils';
 import type {IAIProvider} from 'apps/ai-providers/interfaces';
+import {toModelOptions} from 'apps/ai-providers/api';
 import type {ISelectOption} from '../interfaces';
 import {withSelectedOptions} from './field-options';
 
@@ -34,7 +35,7 @@ export function getModelOptions(provider: IAIProvider | null, selectedModel: str
                 ? gettext('Provider default ({{model}})', {model: defaultModel})
                 : gettext('Provider default (none set)'),
         },
-        ...(provider?.available_models ?? []).map((model) => ({id: model, label: model})),
+        ...toModelOptions(provider?.available_models),
     ];
 
     if (selectedModel != null && !options.some(({id}) => id === selectedModel)) {
