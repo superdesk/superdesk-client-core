@@ -212,8 +212,8 @@ async function expectCommentText(page: Page, body: Locator, message: string): Pr
  * race (unstable, then detached). Dispatching the event only waits for attachment,
  * and React 16 listens at the document, so its handler still gets the click.
  */
-function clickInPopup(target: Locator): Promise<void> {
-    return target.dispatchEvent('click');
+function clickInPopup(target: Locator, options?: {timeout?: number}): Promise<void> {
+    return target.dispatchEvent('click', undefined, options);
 }
 
 /**
@@ -256,14 +256,14 @@ async function submitEditedMessage(target: Locator, message: string): Promise<vo
  * clears the flag while the field keeps DOM focus, and focusing an already-focused
  * field raises no focus event, so the toolbar would stay away.
  */
-async function focusReplyField(popup: Locator): Promise<void> {
+async function focusReplyField(popup: Locator, options?: {timeout?: number}): Promise<void> {
     const addReply = popup.getByTestId('add-reply');
 
     await addReply.getByTestId('comment-textarea').getByRole('textbox')
-        .evaluate((element: HTMLElement) => element.blur());
-    await addReply.getByTestId('comment-textarea').getByRole('textbox').focus();
+        .evaluate((element: HTMLElement) => element.blur(), undefined, options);
+    await addReply.getByTestId('comment-textarea').getByRole('textbox').focus(options);
 
-    await expect(addReply.getByTestId('submit')).toBeVisible();
+    await expect(addReply.getByTestId('submit')).toBeVisible(options);
 }
 
 /**
@@ -284,12 +284,26 @@ async function mentionSamGamgee(page: Page, input: Locator): Promise<void> {
     }).toPass({timeout: 15000});
 }
 
-async function addReply(popup: Locator, message: string): Promise<void> {
-    const addReply = popup.getByTestId('add-reply');
+/**
+ * Replies to the comment on the trailing word. Opening the popup when it is closed, focusing
+ * and filling retry as one unit: the popup can close on its own, and its remount empties the
+ * reply field. Submit stays outside the retry, which would otherwise post the reply twice.
+ */
+async function addReply(body: Locator, message: string): Promise<void> {
+    const popup = getCommentPopup(body.page());
+    const addReplyBox = popup.getByTestId('add-reply');
+    const input = addReplyBox.getByTestId('comment-textarea').getByRole('textbox');
 
-    await focusReplyField(popup);
-    await addReply.getByTestId('comment-textarea').getByRole('textbox').fill(message);
-    await clickInPopup(addReply.getByTestId('submit'));
+    await expect(async () => {
+        if (!await popup.isVisible()) {
+            await clickCommentedText(body);
+        }
+
+        await focusReplyField(popup, {timeout: 2000});
+        await input.fill(message, {timeout: 2000});
+        await expect(input).toHaveValue(message, {timeout: 1000});
+    }).toPass({timeout: 15000});
+    await clickInPopup(addReplyBox.getByTestId('submit'), {timeout: 5000});
 }
 
 /**
@@ -374,11 +388,15 @@ test('adding an inline comment to the body, and the comment surviving a reopen',
     await expect(getEditor3TextRun(body, COMMENTED_TEXT)).toHaveCSS('background-color', highlightColor);
     await expect(getEditor3TextRun(body, PLAIN_TEXT)).toHaveCSS('background-color', NO_BACKGROUND);
 
-    const popup = await openCommentPopup(page, body);
+    const popup = getCommentPopup(page);
 
-    await expect(popup.getByTestId('comment-author')).toHaveText('John Doe');
-    await expect(popup.getByTestId('comment-label')).toHaveText('Comment');
-    await expect(popup.getByTestId('comment-text')).toHaveText(COMMENT_TEXT);
+    // opened and read as one unit: the popup can close on its own right after it opens
+    await expect(async () => {
+        await clickCommentedText(body);
+        await expect(popup.getByTestId('comment-author')).toHaveText('John Doe', {timeout: 2000});
+        await expect(popup.getByTestId('comment-label')).toHaveText('Comment', {timeout: 2000});
+        await expect(popup.getByTestId('comment-text')).toHaveText(COMMENT_TEXT, {timeout: 2000});
+    }).toPass({timeout: 30000});
 
     // clicking text that carries no comment collapses the caret outside the highlight,
     // which is what closes the popup
@@ -409,14 +427,18 @@ test('editing an inline comment from its detail popup, and the edit surviving a 
     const headline = 'Inline comment edited';
 
     const body = await createArticleWithComment(page, headline);
-    const popup = await openCommentPopup(page, body);
+    const popup = getCommentPopup(page);
     const commentBody = popup.getByTestId('comment-text');
 
-    await expect(popup.getByTestId('user-avatar')).toBeVisible();
-    await expect(popup.getByTestId('comment-author')).toHaveText('John Doe');
-    await expect(popup.getByTestId('comment-date')).toHaveText(POPUP_DATE);
-    await expect(popup.getByTestId('comment-label')).toHaveText('Comment');
-    await expect(commentBody).toHaveText(COMMENT_TEXT);
+    // opened and read as one unit: the popup can close on its own right after it opens
+    await expect(async () => {
+        await clickCommentedText(body);
+        await expect(popup.getByTestId('user-avatar')).toBeVisible({timeout: 2000});
+        await expect(popup.getByTestId('comment-author')).toHaveText('John Doe', {timeout: 2000});
+        await expect(popup.getByTestId('comment-date')).toHaveText(POPUP_DATE, {timeout: 2000});
+        await expect(popup.getByTestId('comment-label')).toHaveText('Comment', {timeout: 2000});
+        await expect(commentBody).toHaveText(COMMENT_TEXT, {timeout: 2000});
+    }).toPass({timeout: 30000});
 
     const menu = popup.getByTestId('highlight-actions-menu').first();
 
@@ -429,7 +451,12 @@ test('editing an inline comment from its detail popup, and the edit surviving a 
     await expect(popup.getByTestId('resolve')).toBeVisible();
     await expect(popup.getByTestId('add-reply').getByTestId('comment-textarea')).toBeVisible();
 
-    await commentBody.getByTestId('comment-textarea').getByRole('textbox').fill('discarded edit');
+    const editInput = commentBody.getByTestId('comment-textarea').getByRole('textbox');
+
+    await expect(async () => {
+        await editInput.fill('discarded edit');
+        await expect(editInput).toHaveValue('discarded edit', {timeout: 1000});
+    }).toPass({timeout: 15000});
     await clickInPopup(commentBody.getByTestId('cancel'));
 
     await expect(commentBody.getByTestId('comment-textarea')).toBeHidden();
@@ -505,6 +532,9 @@ test('replying to an inline comment with and without a mention, and only the aut
         {type: 'confluence', description: '1311834929 complete'}, // Reply to inline comment
     ],
 }, async ({page, browser}) => {
+    // a second user's login and two 30s `toPass` reads in their view do not fit the file's 60s
+    test.setTimeout(90000);
+
     await restoreDatabaseSnapshot({snapshotName: SNAPSHOT});
 
     const authoring = new Authoring(page);
@@ -522,14 +552,17 @@ test('replying to an inline comment with and without a mention, and only the aut
     await expect(addReplyBox.getByTestId('submit')).toHaveCount(0);
     await focusReplyField(popup);
 
-    await replyInput.fill('discarded reply');
+    await expect(async () => {
+        await replyInput.fill('discarded reply');
+        await expect(replyInput).toHaveValue('discarded reply', {timeout: 1000});
+    }).toPass({timeout: 15000});
     await clickInPopup(addReplyBox.getByTestId('cancel'));
 
     await expect(replyInput).toHaveValue('');
     await expect(addReplyBox.getByTestId('submit')).toHaveCount(0);
     await expect(reply).toHaveCount(0);
 
-    await addReply(popup, REPLY_TEXT);
+    await addReply(body, REPLY_TEXT);
 
     await expect(reply).toHaveCount(1);
     await expect(reply.getByTestId('comment-author')).toHaveText('John Doe');
@@ -578,7 +611,6 @@ test('replying to an inline comment with and without a mention, and only the aut
 
         const otherBody = getEditor3Field(otherPage, 'body_html');
         const otherPopup = getCommentPopup(otherPage);
-        const otherReplies = otherPopup.getByTestId('comment-reply');
 
         // Read in one go from a popup that is open: on a just-opened article it closes on its
         // own, and a `toHaveCount(0)` on the 3-dots toggle would pass once it has.
@@ -598,14 +630,30 @@ test('replying to an inline comment with and without a mention, and only the aut
             expect(seen).toEqual({replies: ['Sam Gamgee see this'], links: ['Sam Gamgee'], menus: 0});
         }).toPass({timeout: 30000});
 
-        await addReply(otherPopup, 'reply by Sam');
+        await addReply(otherBody, 'reply by Sam');
 
-        const ownReply = otherReplies.filter({hasText: 'reply by Sam'});
+        // Same one-go read: the popup can close again once the reply is posted. Only Sam's
+        // reply carries the 3-dots toggle, so the popup-wide count also covers the comment.
+        await expect(async () => {
+            await clickCommentedText(otherBody);
 
-        await expect(otherReplies).toHaveCount(2);
-        await expect(ownReply.getByTestId('comment-author')).toHaveText('Sam Gamgee');
-        await expect(ownReply.getByTestId('highlight-actions-toggle')).toHaveCount(1);
-        await expect(otherPopup.getByTestId('highlight-actions-toggle')).toHaveCount(1);
+            const seen = await otherPopup.evaluate((popup) => ({
+                replies: Array.from(popup.querySelectorAll('[data-test-id="comment-reply"]'), (reply) => ({
+                    text: reply.querySelector('[data-test-id="comment-text"]')?.textContent,
+                    author: reply.querySelector('[data-test-id="comment-author"]')?.textContent,
+                    menus: reply.querySelectorAll('[data-test-id="highlight-actions-toggle"]').length,
+                })),
+                menus: popup.querySelectorAll('[data-test-id="highlight-actions-toggle"]').length,
+            }), undefined, {timeout: 2000});
+
+            expect(seen).toEqual({
+                replies: [
+                    {text: 'Sam Gamgee see this', author: 'John Doe', menus: 0},
+                    {text: 'reply by Sam', author: 'Sam Gamgee', menus: 1},
+                ],
+                menus: 1,
+            });
+        }).toPass({timeout: 30000});
     } finally {
         await otherContext.close();
     }
@@ -638,7 +686,7 @@ test('listing inline comments in the widget grouped by field, and resolving one 
     const highlightColor = await getCommentHighlightColor(body);
     const popup = await openCommentPopup(page, body);
 
-    await addReply(popup, REPLY_TEXT);
+    await addReply(body, REPLY_TEXT);
     await expect(popup.getByTestId('comment-reply')).toHaveCount(1);
 
     const abstract = getEditor3Field(page, 'abstract');
