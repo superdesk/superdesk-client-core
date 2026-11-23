@@ -68,6 +68,19 @@ export class DeskSettings {
         await expect(this.stagesStep.getByTestId('new-stage')).toBeVisible();
     }
 
+    get peopleStep(): Locator {
+        return this.modal.locator('[sd-deskedit-people]');
+    }
+
+    async openPeopleStep(): Promise<void> {
+        await this.modal.locator('[sd-wizard] .nav-tabs').getByRole('button', {name: 'People', exact: true}).click();
+        await expect(this.peopleStep.getByTestId('desk-member')).not.toHaveCount(0);
+    }
+
+    member(displayName: string): Locator {
+        return this.peopleStep.getByTestId('desk-member').and(this.page.locator(`[data-test-value="${displayName}"]`));
+    }
+
     getStageRow(stageName: string): Locator {
         return this.stagesStep.getByTestId(`stage--${stageName}`);
     }

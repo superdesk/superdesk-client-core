@@ -148,6 +148,14 @@ export class MediaEditor {
         return this.controlsPanel.getByTestId('ratio').and(this.page.locator(`[data-test-value="${ratio}"]`));
     }
 
+    get clearSavedMetadataLink(): Locator {
+        return this.body.getByTestId('clear-saved-metadata');
+    }
+
+    get applyMetadataButton(): Locator {
+        return this.body.getByTestId('apply-metadata-button');
+    }
+
     rendition(name: string): Locator {
         return this.renditions.and(this.page.locator(`[data-test-value="${name}"]`));
     }
