@@ -21,8 +21,8 @@ import type {IAIAction, IAIActionOptions, IAIActionType} from '../interfaces';
 import {AIStudioRequestError, deleteAction, getAction, getActionOptions, getActions, getProviders} from '../api';
 import {getErrorMessage} from '../helpers/issues';
 import {getActionTypeFilterLabel, getActionTypeLabel} from '../helpers/labels';
-import {ActionEditor, IActionEditorTab} from './ActionEditor';
-import {ActionListItem} from './ActionListItem';
+import {ActionEditor, IActionEditorTab} from './action-editor';
+import {ActionListItem} from './action-list-item';
 
 const ALL_TYPES = 'all';
 

@@ -5,7 +5,7 @@ import type {IContentProfile} from 'superdesk-api';
 import type {IAIProvider} from 'apps/ai-providers/interfaces';
 import type {IAIAction, IAIActionOptions, IAIActionType} from '../interfaces';
 import ng from 'core/services/ng';
-import {ActionEditor, IActionEditorTab} from './ActionEditor';
+import {ActionEditor, IActionEditorTab} from './action-editor';
 
 const options: IAIActionOptions = {
     action_types: [

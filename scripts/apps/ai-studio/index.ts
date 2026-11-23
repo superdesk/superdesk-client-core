@@ -1,6 +1,6 @@
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
-import {EditorialActionsPage} from './components/EditorialActionsPage';
+import {EditorialActionsPage} from './components/editorial-actions-page';
 
 const EDITORIAL_ACTIONS_PATH = '/ai-studio/editorial-actions';
 
