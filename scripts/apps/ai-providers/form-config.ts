@@ -79,7 +79,7 @@ export function getAiProviderFormConfig(item?: Partial<IAIProvider>): IFormGroup
 
     const availableModelsParameters: ISelectAsyncParameters = {
         getOptions: getModelOptions,
-        info: gettext('Leave empty to allow AI actions every model the provider lists.'),
+        info: gettext('Models AI actions can choose from. Leave empty to have them use the default model.'),
     };
 
     // `available_models` restricts the actions, not this field, so the whole catalogue is on offer.
@@ -100,12 +100,14 @@ export function getAiProviderFormConfig(item?: Partial<IAIProvider>): IFormGroup
             label: gettext('Default model'),
             type: GenericFormFieldType.selectAsync,
             field: 'default_model',
+            required: true,
             component_parameters: defaultModelParameters,
         }
         : {
             label: gettext('Default model'),
             type: GenericFormFieldType.plainText,
             field: 'default_model',
+            required: true,
         };
 
     return {

@@ -1,7 +1,7 @@
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {coreMenuGroups} from 'core/activity/activity';
 import {gettext} from 'core/utils';
-import {AiProvidersPage} from './AiProvidersPage';
+import {AiProvidersPage} from './ai-providers-page';
 
 const styles = 'display: flex; height: calc(100% - 48px)';
 
