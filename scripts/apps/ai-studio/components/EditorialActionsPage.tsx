@@ -21,7 +21,7 @@ import type {IAIAction, IAIActionOptions, IAIActionType} from '../interfaces';
 import {AIStudioRequestError, deleteAction, getAction, getActionOptions, getActions, getProviders} from '../api';
 import {getErrorMessage} from '../helpers/issues';
 import {getActionTypeFilterLabel, getActionTypeLabel} from '../helpers/labels';
-import {ActionEditor} from './ActionEditor';
+import {ActionEditor, IActionEditorTab} from './ActionEditor';
 import {ActionListItem} from './ActionListItem';
 
 const ALL_TYPES = 'all';
@@ -70,6 +70,7 @@ const INITIAL_STATE: IState = {
 export function EditorialActionsPage() {
     const [state, setState] = React.useState<IState>(INITIAL_STATE);
     const lastNewFormId = React.useRef(0);
+    const editorTab = React.useRef<IActionEditorTab>('configuration');
 
     // For handlers that run after a prompt or a request, when the state may have changed
     const stateRef = React.useRef(state);
@@ -134,6 +135,7 @@ export function EditorialActionsPage() {
 
         proceed.then((confirmed) => {
             if (confirmed) {
+                editorTab.current = 'configuration';
                 updateState({editing, dirty: false});
             }
         });
@@ -342,11 +344,19 @@ export function EditorialActionsPage() {
                         providers={providers}
                         profiles={sdApi.contentProfiles.getAll()}
                         customFieldVocabularies={sdApi.vocabularies.getCustomFieldVocabularies()}
+                        initialTab={editorTab.current}
+                        onTabChange={(tab) => {
+                            editorTab.current = tab;
+                        }}
                         onDirtyChange={(dirty) => updateState({dirty})}
                         onCancel={() => updateState({editing: null, dirty: false})}
                         onSaved={(saved) => {
                             replaceAction(saved);
-                            updateState({editing: {action: saved, actionType: saved.action_type}, dirty: false});
+
+                            // The user may have discarded this form and opened another while it saved
+                            if (stateRef.current.editing === editing) {
+                                updateState({editing: {action: saved, actionType: saved.action_type}, dirty: false});
+                            }
                         }}
                         onConflict={reloadEditedAction}
                     />

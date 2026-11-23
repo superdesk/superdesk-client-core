@@ -4,7 +4,8 @@ import {Label} from 'superdesk-ui-framework/react';
 import type {IContentProfile} from 'superdesk-api';
 import type {IAIProvider} from 'apps/ai-providers/interfaces';
 import type {IAIAction, IAIActionOptions, IAIActionType} from '../interfaces';
-import {ActionEditor} from './ActionEditor';
+import ng from 'core/services/ng';
+import {ActionEditor, IActionEditorTab} from './ActionEditor';
 
 const options: IAIActionOptions = {
     action_types: [
@@ -37,7 +38,11 @@ const summary = {
     parameters: {suggestions_count: 1, max_characters: 300},
 } as IAIAction;
 
-function render(action: IAIAction | null, actionType: IAIActionType): ReactWrapper {
+function render(
+    action: IAIAction | null,
+    actionType: IAIActionType,
+    initialTab: IActionEditorTab = 'configuration',
+): ReactWrapper {
     return mount(
         <ActionEditor
             action={action}
@@ -46,6 +51,8 @@ function render(action: IAIAction | null, actionType: IAIActionType): ReactWrapp
             providers={providers}
             profiles={profiles}
             customFieldVocabularies={[]}
+            initialTab={initialTab}
+            onTabChange={() => undefined}
             onDirtyChange={() => undefined}
             onCancel={() => undefined}
             onSaved={() => undefined}
@@ -112,5 +119,42 @@ describe('ai studio: action editor', () => {
         expect(byTestId(wrapper, 'ai-action-model').prop('value')).toBe('');
         expect(byTestId(wrapper, 'ai-action-model').find('option').map((option) => option.text()))
             .toEqual(['Provider default (local-model)']);
+    });
+
+    it('opens on the tab it is given, so saving does not move the user to another tab', () => {
+        const wrapper = render(summary, 'summary', 'ai-settings');
+
+        expect(byTestId(wrapper, 'ai-action-provider').exists()).toBe(true);
+    });
+
+    it('moves to the tab with the errors when saving fails validation', () => {
+        const wrapper = render(null, 'suggestion');
+
+        openAiSettings(wrapper);
+        byTestId(wrapper, 'ai-action-provider').simulate('change', {target: {value: 'provider-1'}});
+        byTestId(wrapper, 'ai-action-save').simulate('click');
+
+        expect(byTestId(wrapper, 'ai-action-name').exists()).toBe(true);
+    });
+
+    it('moves to the tab with a server error that arrives after the user changed tab', async () => {
+        let respond: (response: Response) => void = () => undefined;
+
+        spyOn(ng, 'getService').and.returnValue(Promise.resolve({token: 'token'}));
+        spyOn(window, 'fetch').and.returnValue(new Promise<Response>((resolve) => {
+            respond = resolve;
+        }));
+
+        const wrapper = render(summary, 'summary');
+
+        byTestId(wrapper, 'ai-action-name').simulate('change', {target: {value: 'Short abstracts'}});
+        byTestId(wrapper, 'ai-action-save').simulate('click');
+        openAiSettings(wrapper);
+
+        respond(new Response(JSON.stringify({_issues: {name: 'Name is taken'}}), {status: 400}));
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        wrapper.update();
+
+        expect(byTestId(wrapper, 'ai-action-name').exists()).toBe(true);
     });
 });

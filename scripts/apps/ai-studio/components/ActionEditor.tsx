@@ -1,4 +1,5 @@
 import React from 'react';
+import {uniq} from 'lodash';
 import {
     Alert,
     Button,
@@ -30,7 +31,7 @@ import type {
     IAIActionType,
     ISelectOption,
 } from '../interfaces';
-import {AIStudioRequestError, createAction, getAction, patchAction} from '../api';
+import {AIStudioRequestError, createAction, patchAction} from '../api';
 import {
     EXTRA_INSTRUCTIONS_MAX_LENGTH,
     SUGGESTIONS_COUNT_MAX,
@@ -40,10 +41,9 @@ import {
     buildPatch,
     getDefaultProvider,
     getNewDraft,
-    isNewDraftDirty,
+    isDraftDirty,
     numberInputToValue,
     validateDraft,
-    withProvider,
 } from '../helpers/draft';
 import {getFieldOptions, getProfileOptions, withSelectedOptions} from '../helpers/field-options';
 import {getErrorMessage, mapIssues} from '../helpers/issues';
@@ -51,7 +51,7 @@ import {getActionTypeIllustration, getActionTypeLabel, getUserActionLabel} from 
 import {PROVIDER_DEFAULT_MODEL, getModelOptions, getModelWarning, getProviderOptions} from '../helpers/model-options';
 import './style.scss';
 
-type ITab = 'configuration' | 'ai-settings';
+export type IActionEditorTab = 'configuration' | 'ai-settings';
 
 const AI_PROVIDERS_URL = '#/settings/ai-providers';
 
@@ -65,6 +65,10 @@ interface IProps {
     providers: Array<IAIProvider>;
     profiles: Array<IContentProfile>;
     customFieldVocabularies: Array<IVocabulary>;
+
+    /** The form is remounted after every save, so the page keeps the tab the user was on */
+    initialTab: IActionEditorTab;
+    onTabChange(tab: IActionEditorTab): void;
     onDirtyChange(dirty: boolean): void;
     onCancel(): void;
     onSaved(action: IAIAction): void;
@@ -80,17 +84,25 @@ function toNumberInputValue(value: number | null): number {
 
 export function ActionEditor(props: IProps) {
     const {action, actionType, options, providers, profiles, customFieldVocabularies} = props;
+    const typeOption = options.action_types.find(({action_type}) => action_type === actionType);
 
     // So an automatically picked provider does not count as a change
-    const initialDraft = React.useRef(getNewDraft(getDefaultProvider(providers)));
+    const initialDraft = React.useRef(
+        getNewDraft(typeOption?.uses_suggestions_count === true, getDefaultProvider(providers)),
+    );
     const [draft, setDraft] = React.useState<IAIActionDraft>(
         () => action == null ? initialDraft.current : actionToDraft(action),
     );
     const [errors, setErrors] = React.useState<IAIActionDraftErrors>({});
-    const [tab, setTab] = React.useState<ITab>('configuration');
+    const [tab, setTab] = React.useState<IActionEditorTab>(props.initialTab);
+
+    // Save errors arrive after the request, when the user may be on another tab
+    const currentTab = React.useRef(tab);
+
+    // The tab list only reads the selected tab on mount, so a switch made for the user remounts it
+    const [tabListKey, setTabListKey] = React.useState(0);
     const [saving, setSaving] = React.useState(false);
     const mounted = React.useRef(false);
-    const notifiedDraft = React.useRef(draft);
 
     React.useEffect(() => {
         mounted.current = true;
@@ -100,11 +112,7 @@ export function ActionEditor(props: IProps) {
         };
     }, []);
 
-    const typeOption = options.action_types.find(({action_type}) => action_type === actionType);
-
-    const dirty = action == null
-        ? isNewDraftDirty(draft, initialDraft.current)
-        : Object.keys(buildPatch(action, draft, typeOption)).length > 0;
+    const dirty = isDraftDirty(draft, action == null ? initialDraft.current : actionToDraft(action));
 
     // Providers reload when the browser tab regains focus, so one added in another tab is picked too
     React.useEffect(() => {
@@ -113,18 +121,14 @@ export function ActionEditor(props: IProps) {
 
             if (provider != null) {
                 initialDraft.current = {...initialDraft.current, provider};
-                setDraft((current) => withProvider(current, provider));
+                setDraft((current) => ({...current, provider, model: null}));
             }
         }
     }, [providers]);
 
-    // Not on mount, only once the draft has changed
     React.useEffect(() => {
-        if (notifiedDraft.current !== draft) {
-            notifiedDraft.current = draft;
-            props.onDirtyChange(dirty);
-        }
-    }, [draft]);
+        props.onDirtyChange(dirty);
+    }, [dirty]);
 
     const getFieldLabel = (fieldId: string): string => {
         return getLabelForFieldId(fieldId, customFieldVocabularies);
@@ -138,20 +142,27 @@ export function ActionEditor(props: IProps) {
         ));
     };
 
+    const changeTab = (next: IActionEditorTab) => {
+        currentTab.current = next;
+        setTab(next);
+        props.onTabChange(next);
+    };
+
     const showErrors = (nextErrors: IAIActionDraftErrors) => {
-        const fields = Object.keys(nextErrors)
-            .filter((field) => nextErrors[field] != null) as Array<IAIActionDraftField>;
-        const onConfiguration = fields.some((field) => !AI_SETTINGS_FIELDS.includes(field));
-        const onAiSettings = fields.some((field) => AI_SETTINGS_FIELDS.includes(field));
+        const tabsWithErrors = uniq(
+            (Object.keys(nextErrors) as Array<IAIActionDraftField>)
+                .filter((field) => nextErrors[field] != null)
+                .map((field): IActionEditorTab => AI_SETTINGS_FIELDS.includes(field) ? 'ai-settings' : 'configuration'),
+        );
 
         setErrors(nextErrors);
-        setTab((current) => {
-            const visibleOnCurrentTab = current === 'configuration' ? onConfiguration : onAiSettings;
 
-            return visibleOnCurrentTab ? current : (onConfiguration ? 'configuration' : 'ai-settings');
-        });
+        if (tabsWithErrors.length > 0 && !tabsWithErrors.includes(currentTab.current)) {
+            changeTab(tabsWithErrors[0]);
+            setTabListKey((key) => key + 1);
+        }
 
-        if (onConfiguration && onAiSettings) {
+        if (tabsWithErrors.length > 1) {
             notify.error(gettext('Some fields need attention on both the Configuration and AI Settings tabs.'));
         }
     };
@@ -195,22 +206,22 @@ export function ActionEditor(props: IProps) {
         }
 
         const request = action == null
-            ? createAction(buildCreatePayload(actionType, draft, typeOption))
-            : patchAction(action, buildPatch(action, draft, typeOption));
+            ? createAction(buildCreatePayload(actionType, draft))
+            : patchAction(action, buildPatch(action, draft));
 
         setSaving(true);
 
         request
             .then((saved) => {
-                // Read back whole, so nothing is merged with what the form held
-                return getAction(saved._id).catch(() => saved);
-            })
-            .then((saved) => {
                 notify.success(gettext('AI action saved.'));
                 props.onSaved(saved);
             })
             .catch((error) => {
-                handleSaveError(error);
+                if (mounted.current) {
+                    handleSaveError(error);
+                } else {
+                    notify.error(gettext('The action could not be saved.'));
+                }
             })
             .finally(() => {
                 if (mounted.current) {
@@ -400,10 +411,7 @@ export function ActionEditor(props: IProps) {
                             required
                             value={draft.provider ?? ''}
                             error={errors.provider}
-                            onChange={(value) => {
-                                setDraft((current) => withProvider(current, value === '' ? null : value));
-                                setErrors((current) => ({...current, provider: undefined, model: undefined}));
-                            }}
+                            onChange={(value) => update({provider: value === '' ? null : value, model: null})}
                             data-test-id="ai-action-provider"
                         >
                             {draft.provider == null && <Option value="">{gettext('Select a provider')}</Option>}
@@ -476,6 +484,7 @@ export function ActionEditor(props: IProps) {
                         <Button
                             text={dirty ? gettext('Cancel') : gettext('Close')}
                             type="default"
+                            disabled={saving}
                             onClick={() => props.onCancel()}
                             data-test-id="ai-action-cancel"
                         />
@@ -496,14 +505,13 @@ export function ActionEditor(props: IProps) {
                     <div style={{display: 'flex', flexDirection: 'column', gap: 24}}>
                         <div className="ai-studio-segmented-tabs">
                             <TabList
-                                // The tab list only reads the selected tab on mount
-                                key={tab}
+                                key={tabListKey}
                                 tabs={[
                                     {id: 'configuration', label: gettext('Configuration')},
                                     {id: 'ai-settings', label: gettext('AI Settings')},
                                 ]}
                                 selectedTabId={tab}
-                                onChange={(next: ITab) => setTab(next)}
+                                onChange={(next: IActionEditorTab) => changeTab(next)}
                                 data-test-id="ai-action-tabs"
                             />
                         </div>

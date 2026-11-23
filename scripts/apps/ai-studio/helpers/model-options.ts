@@ -1,6 +1,7 @@
 import {gettext} from 'core/utils';
 import type {IAIProvider} from 'apps/ai-providers/interfaces';
 import type {ISelectOption} from '../interfaces';
+import {withSelectedOptions} from './field-options';
 
 /** Value of the option that stores no model, so a run uses the provider's `default_model` */
 export const PROVIDER_DEFAULT_MODEL = '';
@@ -10,22 +11,17 @@ export function getProviderOptions(
     providers: Array<IAIProvider>,
     selectedProviderId: string | null,
 ): Array<ISelectOption> {
-    const options = providers
+    const active = providers
         .filter(({active}) => active)
         .map(({_id, name}) => ({id: _id, label: name}));
 
-    if (selectedProviderId != null && !options.some(({id}) => id === selectedProviderId)) {
-        const selected = providers.find(({_id}) => _id === selectedProviderId);
+    return withSelectedOptions(active, selectedProviderId == null ? [] : [selectedProviderId], (id) => {
+        const provider = providers.find(({_id}) => _id === id);
 
-        options.push({
-            id: selectedProviderId,
-            label: selected == null
-                ? gettext('{{id}} (deleted)', {id: selectedProviderId})
-                : gettext('{{name}} (inactive)', {name: selected.name}),
-        });
-    }
-
-    return options;
+        return provider == null
+            ? gettext('{{id}} (deleted)', {id})
+            : gettext('{{name}} (inactive)', {name: provider.name});
+    });
 }
 
 /** The provider default comes first, since it need not be on the shortlist; a dropped selection is kept */

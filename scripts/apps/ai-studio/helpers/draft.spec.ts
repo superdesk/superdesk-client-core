@@ -6,10 +6,9 @@ import {
     buildPatch,
     getDefaultProvider,
     getNewDraft,
-    isNewDraftDirty,
+    isDraftDirty,
     numberInputToValue,
     validateDraft,
-    withProvider,
 } from './draft';
 
 const suggestion: IAIActionTypeOption = {
@@ -53,21 +52,21 @@ describe('ai studio: action draft', () => {
     it('sends nothing when the draft matches the stored action', () => {
         const action = getAction();
 
-        expect(buildPatch(action, actionToDraft(action), suggestion)).toEqual({});
+        expect(buildPatch(action, actionToDraft(action))).toEqual({});
     });
 
     it('treats a value the server left out, null and an empty string as the same empty value', () => {
         const action = getAction({model: undefined, parameters: {suggestions_count: 3}});
         const draft = {...actionToDraft(action), model: '', extra_instructions: '   '};
 
-        expect(buildPatch(action, draft, suggestion)).toEqual({});
+        expect(buildPatch(action, draft)).toEqual({});
     });
 
     it('sends only the changed fields', () => {
         const action = getAction();
         const draft = {...actionToDraft(action), name: 'Better headlines', input_fields: ['body_html', 'abstract']};
 
-        expect(buildPatch(action, draft, suggestion)).toEqual({
+        expect(buildPatch(action, draft)).toEqual({
             name: 'Better headlines',
             input_fields: ['body_html', 'abstract'],
         });
@@ -77,37 +76,35 @@ describe('ai studio: action draft', () => {
         const action = getAction();
         const draft = {...actionToDraft(action), suggestions_count: 5};
 
-        expect(buildPatch(action, draft, suggestion)).toEqual({parameters: {suggestions_count: 5}});
+        expect(buildPatch(action, draft)).toEqual({parameters: {suggestions_count: 5}});
     });
 
     it('sends cleared parameters and a cleared model as null, since parameters are merged', () => {
         const action = getAction();
         const draft = {...actionToDraft(action), model: null, max_characters: null, extra_instructions: ''};
 
-        expect(buildPatch(action, draft, suggestion)).toEqual({
+        expect(buildPatch(action, draft)).toEqual({
             model: null,
             parameters: {max_characters: null, extra_instructions: null},
         });
     });
 
-    it('never sends the number of suggestions for a type that does not use it', () => {
-        const action = getAction({action_type: 'summary', parameters: {suggestions_count: 1}});
-        const draft = {...actionToDraft(action), suggestions_count: 4};
+    it('never sends the number of suggestions for a new action of a type that does not use it', () => {
+        const draft = {...getNewDraft(false), name: 'Abstracts', input_fields: ['body_html']};
 
-        expect(buildPatch(action, draft, summary)).toEqual({});
-        expect(buildCreatePayload('summary', draft, summary).parameters?.suggestions_count).toBeUndefined();
+        expect(buildCreatePayload('summary', draft).parameters).toBeUndefined();
     });
 
     it('builds a create payload without empty values', () => {
         const draft = {
-            ...getNewDraft(),
+            ...getNewDraft(true),
             name: 'Abstracts',
             input_fields: ['body_html'],
             output_field: 'abstract',
             provider: 'provider-1',
         };
 
-        expect(buildCreatePayload('suggestion', draft, suggestion)).toEqual({
+        expect(buildCreatePayload('suggestion', draft)).toEqual({
             name: 'Abstracts',
             action_type: 'suggestion',
             active: true,
@@ -119,13 +116,6 @@ describe('ai studio: action draft', () => {
         });
     });
 
-    it('clears the model when the provider changes', () => {
-        const draft = {...getNewDraft(), provider: 'provider-1', model: 'gpt-4o'};
-
-        expect(withProvider(draft, 'provider-2')).toEqual({...draft, provider: 'provider-2', model: null});
-        expect(withProvider(draft, 'provider-1')).toBe(draft);
-    });
-
     it('reads an emptied or unparsable number input as no value', () => {
         expect(numberInputToValue(0)).toBeNull();
         expect(numberInputToValue(NaN)).toBeNull();
@@ -133,18 +123,27 @@ describe('ai studio: action draft', () => {
     });
 
     it('tells an untouched new form from a changed one', () => {
-        expect(isNewDraftDirty(getNewDraft())).toBe(false);
-        expect(isNewDraftDirty({...getNewDraft(), extra_instructions: ''})).toBe(false);
-        expect(isNewDraftDirty({...getNewDraft(), name: 'x'})).toBe(true);
-        expect(isNewDraftDirty({...getNewDraft(), input_fields: ['headline']})).toBe(true);
+        const initial = getNewDraft(true);
+
+        expect(isDraftDirty(initial, initial)).toBe(false);
+        expect(isDraftDirty({...initial, extra_instructions: ''}, initial)).toBe(false);
+        expect(isDraftDirty({...initial, name: 'x'}, initial)).toBe(true);
+        expect(isDraftDirty({...initial, input_fields: ['headline']}, initial)).toBe(true);
+    });
+
+    it('tells an unchanged stored action from a changed one', () => {
+        const action = getAction();
+
+        expect(isDraftDirty({...actionToDraft(action), model: 'gpt-4o-mini'}, actionToDraft(action))).toBe(false);
+        expect(isDraftDirty({...actionToDraft(action), max_characters: null}, actionToDraft(action))).toBe(true);
     });
 
     it('does not count the provider a new form opened with as a change', () => {
-        const initial = getNewDraft('provider-1');
+        const initial = getNewDraft(true, 'provider-1');
 
         expect(initial.provider).toBe('provider-1');
-        expect(isNewDraftDirty(initial, initial)).toBe(false);
-        expect(isNewDraftDirty({...initial, provider: 'provider-2'}, initial)).toBe(true);
+        expect(isDraftDirty(initial, initial)).toBe(false);
+        expect(isDraftDirty({...initial, provider: 'provider-2'}, initial)).toBe(true);
     });
 
     it('picks a default provider only when exactly one is active', () => {
@@ -159,7 +158,7 @@ describe('ai studio: action draft', () => {
 
     describe('validation', () => {
         const valid = {
-            ...getNewDraft(),
+            ...getNewDraft(true),
             name: 'Headlines',
             input_fields: ['body_html'],
             output_field: 'headline',
@@ -171,7 +170,7 @@ describe('ai studio: action draft', () => {
         });
 
         it('requires a name, an input field, an output field and a provider', () => {
-            expect(Object.keys(validateDraft({...getNewDraft(), name: ' '}, suggestion)).sort()).toEqual(
+            expect(Object.keys(validateDraft({...getNewDraft(true), name: ' '}, suggestion)).sort()).toEqual(
                 ['input_fields', 'name', 'output_field', 'provider'],
             );
         });

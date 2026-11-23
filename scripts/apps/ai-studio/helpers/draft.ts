@@ -1,10 +1,11 @@
+import {isEqual} from 'lodash';
 import {gettext} from 'core/utils';
 import type {IAIProvider} from 'apps/ai-providers/interfaces';
 import type {
     IAIAction,
     IAIActionDraft,
     IAIActionDraftErrors,
-    IAIActionParameters,
+    IAIActionDraftField,
     IAIActionPayload,
     IAIActionType,
     IAIActionTypeOption,
@@ -31,7 +32,7 @@ export function getDefaultProvider(providers: Array<IAIProvider>): string | null
     return active.length === 1 ? active[0]._id : null;
 }
 
-export function getNewDraft(provider: string | null = null): IAIActionDraft {
+export function getNewDraft(usesSuggestionsCount: boolean, provider: string | null = null): IAIActionDraft {
     return {
         name: '',
         active: true,
@@ -41,7 +42,7 @@ export function getNewDraft(provider: string | null = null): IAIActionDraft {
         provider,
         model: null,
         max_characters: null,
-        suggestions_count: DEFAULT_SUGGESTIONS_COUNT,
+        suggestions_count: usesSuggestionsCount ? DEFAULT_SUGGESTIONS_COUNT : null,
         extra_instructions: null,
     };
 }
@@ -74,131 +75,54 @@ function normaliseDraft(draft: IAIActionDraft): IAIActionDraft {
     };
 }
 
-function arraysEqual(a: Array<string>, b: Array<string>): boolean {
-    return a.length === b.length && a.every((value, index) => value === b[index]);
+/** Sent nested under `parameters` */
+export const PARAMETER_FIELDS: Array<IAIActionDraftField> = [
+    'max_characters',
+    'suggestions_count',
+    'extra_instructions',
+];
+
+function changedFields(before: IAIActionDraft, after: IAIActionDraft): Array<IAIActionDraftField> {
+    return (Object.keys(after) as Array<IAIActionDraftField>).filter((field) => !isEqual(before[field], after[field]));
 }
 
-/** Changing the provider clears the model, since models belong to a provider */
-export function withProvider(draft: IAIActionDraft, provider: string | null): IAIActionDraft {
-    if (provider === draft.provider) {
-        return draft;
+/** The draft fields as a request body, with the parameters nested */
+function toPayload(draft: IAIActionDraft, fields: Array<IAIActionDraftField>): IAIActionPayload {
+    const payload: Record<string, unknown> = {};
+    const parameters: Record<string, unknown> = {};
+
+    fields.forEach((field) => {
+        (PARAMETER_FIELDS.includes(field) ? parameters : payload)[field] = draft[field];
+    });
+
+    if (Object.keys(parameters).length > 0) {
+        payload.parameters = parameters;
     }
 
-    return {...draft, provider, model: null};
+    return payload as IAIActionPayload;
 }
 
 /**
  * Only what changed; empty means no change. The server merges parameters, so a cleared one is
  * sent as `null`.
  */
-export function buildPatch(
-    original: IAIAction,
-    draft: IAIActionDraft,
-    typeOption: IAIActionTypeOption | undefined,
-): IAIActionPayload {
-    const before = actionToDraft(original);
+export function buildPatch(original: IAIAction, draft: IAIActionDraft): IAIActionPayload {
     const after = normaliseDraft(draft);
-    const patch: IAIActionPayload = {};
-    const parameters: IAIActionParameters = {};
 
-    if (after.name !== before.name) {
-        patch.name = after.name;
-    }
-
-    if (after.active !== before.active) {
-        patch.active = after.active;
-    }
-
-    if (!arraysEqual(after.content_profiles, before.content_profiles)) {
-        patch.content_profiles = after.content_profiles;
-    }
-
-    if (!arraysEqual(after.input_fields, before.input_fields)) {
-        patch.input_fields = after.input_fields;
-    }
-
-    if (after.output_field !== before.output_field) {
-        patch.output_field = after.output_field;
-    }
-
-    if (after.provider !== before.provider) {
-        patch.provider = after.provider;
-    }
-
-    if (after.model !== before.model) {
-        patch.model = after.model;
-    }
-
-    if (after.max_characters !== before.max_characters) {
-        parameters.max_characters = after.max_characters;
-    }
-
-    if (typeOption?.uses_suggestions_count === true && after.suggestions_count !== before.suggestions_count) {
-        parameters.suggestions_count = after.suggestions_count;
-    }
-
-    if (after.extra_instructions !== before.extra_instructions) {
-        parameters.extra_instructions = after.extra_instructions;
-    }
-
-    if (Object.keys(parameters).length > 0) {
-        patch.parameters = parameters;
-    }
-
-    return patch;
+    return toPayload(after, changedFields(actionToDraft(original), after));
 }
 
 /** The POST body for a new action, leaving out empty values so the server applies its defaults */
-export function buildCreatePayload(
-    actionType: IAIActionType,
-    draft: IAIActionDraft,
-    typeOption: IAIActionTypeOption | undefined,
-): IAIActionPayload {
+export function buildCreatePayload(actionType: IAIActionType, draft: IAIActionDraft): IAIActionPayload {
     const values = normaliseDraft(draft);
-    const payload: IAIActionPayload = {
-        name: values.name,
-        action_type: actionType,
-        active: values.active,
-        content_profiles: values.content_profiles,
-        input_fields: values.input_fields,
-        output_field: values.output_field,
-        provider: values.provider,
-    };
-    const parameters: IAIActionParameters = {};
+    const fields = (Object.keys(values) as Array<IAIActionDraftField>).filter((field) => values[field] != null);
 
-    if (values.model != null) {
-        payload.model = values.model;
-    }
-
-    if (values.max_characters != null) {
-        parameters.max_characters = values.max_characters;
-    }
-
-    if (typeOption?.uses_suggestions_count === true && values.suggestions_count != null) {
-        parameters.suggestions_count = values.suggestions_count;
-    }
-
-    if (values.extra_instructions != null) {
-        parameters.extra_instructions = values.extra_instructions;
-    }
-
-    if (Object.keys(parameters).length > 0) {
-        payload.parameters = parameters;
-    }
-
-    return payload;
+    return {action_type: actionType, ...toPayload(values, fields)};
 }
 
-/** Whether a new action's draft differs from the form it was opened with */
-export function isNewDraftDirty(draft: IAIActionDraft, initial: IAIActionDraft = getNewDraft()): boolean {
-    const current = normaliseDraft(draft);
-
-    return (Object.keys(initial) as Array<keyof IAIActionDraft>).some((key) => {
-        const a = initial[key];
-        const b = current[key];
-
-        return Array.isArray(a) && Array.isArray(b) ? !arraysEqual(a, b) : a !== b;
-    });
+/** Whether the draft differs from what the form was opened with */
+export function isDraftDirty(draft: IAIActionDraft, baseline: IAIActionDraft): boolean {
+    return changedFields(baseline, normaliseDraft(draft)).length > 0;
 }
 
 function isPositiveInteger(value: number): boolean {

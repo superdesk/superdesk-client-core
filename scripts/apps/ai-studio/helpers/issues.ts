@@ -1,5 +1,6 @@
 import {gettext} from 'core/utils';
 import type {IAIActionDraftErrors, IAIActionDraftField} from '../interfaces';
+import {PARAMETER_FIELDS} from './draft';
 
 /** Fields whose control can show an error; issues about any other field are toasted */
 const ACTION_FIELDS: Array<IAIActionDraftField> = [
@@ -9,12 +10,6 @@ const ACTION_FIELDS: Array<IAIActionDraftField> = [
     'output_field',
     'provider',
     'model',
-];
-
-const PARAMETER_FIELDS: Array<IAIActionDraftField> = [
-    'max_characters',
-    'suggestions_count',
-    'extra_instructions',
 ];
 
 /** Added by the server next to the field issues, repeating the error message as text */
