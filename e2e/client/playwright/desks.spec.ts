@@ -1,6 +1,8 @@
-import {test, expect, Page} from '@playwright/test';
-import {login, restoreDatabaseSnapshot, s, withTestContext} from './utils';
+import {test, expect, Browser, Locator, Page} from '@playwright/test';
+import {login, loginAs, restoreDatabaseSnapshot, s, withTestContext} from './utils';
+import {getLoggedOutStorageState} from './utils/storage-state';
 import {Monitoring} from './page-object-models/monitoring';
+import {DeskSettings} from './page-object-models/settings/desks';
 
 test('adding a desk', {
     annotation: [
@@ -219,6 +221,92 @@ test('content expiry can not exceed 99999 days on a desk or a stage', async ({pa
     await stageExpiry.locator(s('content-expiry--days')).fill('99999');
     await expect(stageExpiry.locator(s('content-expiry--max-days-error'))).not.toBeVisible();
     await expect(modal.locator(s('save-edited-stage'))).toBeEnabled();
+});
+
+// Sam Gamgee belongs to Sports only. After removal Sam can still open a Sports item from search
+// (its stage is globally readable), but not edit it.
+test.describe('unassigning a user from a desk', () => {
+    async function asSam(browser: Browser, run: (samPage: Page) => Promise<void>): Promise<void> {
+        const context = await browser.newContext({storageState: getLoggedOutStorageState()});
+
+        try {
+            const samPage = await context.newPage();
+
+            await loginAs(samPage, 'samgamgee', 'samgamgee');
+            await run(samPage);
+        } finally {
+            await context.close();
+        }
+    }
+
+    async function openDeskPicker(samPage: Page): Promise<Locator> {
+        const monitoring = new Monitoring(samPage);
+
+        await samPage.goto('/#/workspace/monitoring');
+        await monitoring.waitUntilReady();
+        await samPage.getByTestId('monitoring--selected-desk').click();
+
+        return samPage.getByTestId('monitoring--select-desk-options');
+    }
+
+    // `actions-button` renders in the same pass as Save, so Save is either there by then or not at all.
+    async function openSportsStoryFromSearch(samPage: Page): Promise<Locator> {
+        // an empty query matches too many items for the lazily rendered list
+        await samPage.goto('/#/search?q=sports');
+        await samPage.getByTestId('article-item').and(samPage.locator('[data-test-value="test sports story"]'))
+            .dblclick();
+
+        const topbar = samPage.getByTestId('authoring-topbar');
+
+        await expect(topbar.getByTestId('actions-button')).toBeVisible();
+
+        return topbar.getByTestId('save');
+    }
+
+    test('the user loses the desk in monitoring and can no longer edit its items', {
+        annotation: [
+            {type: 'confluence', description: '1311834261 complete'}, // Unassign user from a desk
+        ],
+    }, async ({page, browser}) => {
+        // two extra sign-ins as Sam
+        test.setTimeout(120000);
+
+        await restoreDatabaseSnapshot();
+
+        await asSam(browser, async (samPage) => {
+            const picker = await openDeskPicker(samPage);
+
+            await expect(picker.getByRole('button', {name: 'Sports'})).toBeVisible();
+            await expect(await openSportsStoryFromSearch(samPage)).toBeVisible();
+        });
+
+        const desks = new DeskSettings(page);
+
+        await desks.open();
+        await desks.openEdit('Sports');
+        await desks.openPeopleStep();
+
+        const sam = desks.member('Sam Gamgee');
+        const remove = sam.getByTestId('desk-member--remove');
+
+        await expect(sam).toBeVisible();
+        await expect(remove).toBeHidden();
+        await sam.hover();
+        await expect(remove).toBeVisible();
+        await remove.click();
+
+        await expect(sam).toHaveCount(0);
+        await expect(desks.member('Frodo Baggins')).toBeVisible();
+        await desks.saveAndClose();
+
+        await asSam(browser, async (samPage) => {
+            const picker = await openDeskPicker(samPage);
+
+            await expect(picker.getByText('No Desks Assigned')).toBeVisible();
+            await expect(picker.getByRole('button', {name: 'Sports'})).toHaveCount(0);
+            await expect(await openSportsStoryFromSearch(samPage)).toHaveCount(0);
+        });
+    });
 });
 
 // The remaining scenarios use the `legacy` snapshot (which has `Politic Desk`,
