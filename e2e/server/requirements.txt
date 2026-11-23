@@ -217,7 +217,7 @@ propcache==0.3.2
     # via
     #   aiohttp
     #   yarl
-pyasn1==0.6.2
+pyasn1==0.6.5
     # via
     #   ldap3
     #   oauth2client
@@ -232,7 +232,11 @@ pydantic==2.11.9
 pydantic-core==2.33.2
     # via pydantic
 pyexiftool==0.5.6
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   superdesk-core
+pyexiv2==2.15.5
+    # via superdesk-core
 pyjwt==2.10.1
     # via superdesk-core
 pymemcache==4.0.0
