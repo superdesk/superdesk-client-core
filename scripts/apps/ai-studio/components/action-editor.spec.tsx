@@ -157,4 +157,17 @@ describe('ai studio: action editor', () => {
 
         expect(byTestId(wrapper, 'ai-action-name').exists()).toBe(true);
     });
+
+    it('locks the fields while saving, so nothing typed meanwhile is lost when the form reloads', () => {
+        spyOn(ng, 'getService').and.returnValue(Promise.resolve({token: 'token'}));
+        spyOn(window, 'fetch').and.returnValue(new Promise<Response>(() => undefined));
+
+        const wrapper = render(summary, 'summary');
+
+        byTestId(wrapper, 'ai-action-name').simulate('change', {target: {value: 'Short abstracts'}});
+        byTestId(wrapper, 'ai-action-save').simulate('click');
+
+        expect(byTestId(wrapper, 'ai-action-name').prop('disabled')).toBe(true);
+        expect(byTestId(wrapper, 'ai-action-cancel').prop('disabled')).toBe(true);
+    });
 });

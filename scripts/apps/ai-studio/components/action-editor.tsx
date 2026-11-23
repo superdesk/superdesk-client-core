@@ -258,6 +258,7 @@ export function ActionEditor(props: IProps) {
                     <Switch
                         label={{content: gettext('Active')}}
                         value={draft.active}
+                        disabled={saving}
                         onChange={(active) => update({active})}
                     />
                 </div>
@@ -269,6 +270,7 @@ export function ActionEditor(props: IProps) {
                     value={draft.name}
                     error={errors.name}
                     onChange={(name) => update({name})}
+                    disabled={saving}
                     data-test-id="ai-action-name"
                 />
 
@@ -283,6 +285,7 @@ export function ActionEditor(props: IProps) {
                     getLabel={({label}) => label}
                     error={errors.content_profiles}
                     onChange={(selected) => update({content_profiles: selected.map(({id}) => id)})}
+                    disabled={saving}
                     data-test-id="ai-action-content-profiles"
                 />
 
@@ -300,6 +303,7 @@ export function ActionEditor(props: IProps) {
                     getLabel={({label}) => label}
                     error={errors.input_fields}
                     onChange={(selected) => update({input_fields: selected.map(({id}) => id)})}
+                    disabled={saving}
                     data-test-id="ai-action-input-fields"
                 />
 
@@ -314,6 +318,7 @@ export function ActionEditor(props: IProps) {
                     value={draft.output_field ?? ''}
                     error={errors.output_field}
                     onChange={(value) => update({output_field: value === '' ? null : value})}
+                    disabled={saving}
                     data-test-id="ai-action-output-field"
                 >
                     {draft.output_field == null && <Option value="">{gettext('Select a field')}</Option>}
@@ -333,6 +338,7 @@ export function ActionEditor(props: IProps) {
                             value={toNumberInputValue(draft.max_characters)}
                             error={errors.max_characters}
                             onChange={(value) => update({max_characters: numberInputToValue(value)})}
+                            disabled={saving}
                             data-test-id="ai-action-max-characters"
                         />,
                         // Spacer gives every child a slot, so a hidden one is left out rather than `false`
@@ -349,6 +355,7 @@ export function ActionEditor(props: IProps) {
                                 value={toNumberInputValue(draft.suggestions_count)}
                                 error={errors.suggestions_count}
                                 onChange={(value) => update({suggestions_count: numberInputToValue(value)})}
+                                disabled={saving}
                                 data-test-id="ai-action-suggestions-count"
                             />
                         ),
@@ -413,6 +420,7 @@ export function ActionEditor(props: IProps) {
                             value={draft.provider ?? ''}
                             error={errors.provider}
                             onChange={(value) => update({provider: value === '' ? null : value, model: null})}
+                            disabled={saving}
                             data-test-id="ai-action-provider"
                         >
                             {draft.provider == null && <Option value="">{gettext('Select a provider')}</Option>}
@@ -433,6 +441,7 @@ export function ActionEditor(props: IProps) {
                         value={draft.model ?? PROVIDER_DEFAULT_MODEL}
                         error={errors.model}
                         onChange={(value) => update({model: value === PROVIDER_DEFAULT_MODEL ? null : value})}
+                        disabled={saving}
                         data-test-id="ai-action-model"
                     >
                         {getModelOptions(provider, draft.model).map(({id, label}) => (
@@ -460,6 +469,7 @@ export function ActionEditor(props: IProps) {
                     maxRows={20}
                     error={errors.extra_instructions}
                     onChange={(value) => update({extra_instructions: value})}
+                    disabled={saving}
                     data-test-id="ai-action-extra-instructions"
                 />
             </div>

@@ -166,7 +166,8 @@ export function EditorialActionsPage() {
     };
 
     const reloadEditedAction = () => {
-        const action = stateRef.current.editing?.action;
+        const editing = stateRef.current.editing;
+        const action = editing?.action;
 
         if (action == null) {
             return;
@@ -175,7 +176,11 @@ export function EditorialActionsPage() {
         getAction(action._id)
             .then((fresh) => {
                 replaceAction(fresh);
-                updateState({editing: {action: fresh, actionType: fresh.action_type}, dirty: false});
+
+                // The user may have closed this form or opened another while it reloaded
+                if (stateRef.current.editing === editing) {
+                    updateState({editing: {action: fresh, actionType: fresh.action_type}, dirty: false});
+                }
             })
             .catch((error) => {
                 if (error instanceof AIStudioRequestError && error.status === 404) {
