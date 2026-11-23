@@ -88,7 +88,7 @@
         <ul class="main-menu__list">
             <li class="main-menu__list-item"
                 ng-repeat="item in menu | filter:{ adminTools: false } | orderBy:'priority'"
-                ng-class="{'main-menu__list-item--active' : item.href === activeMenuItemPath}">
+                ng-class="{'main-menu__list-item--active' : item.href === activeMainMenuItemPath}">
                 <a class="main-menu__menu-item" ng-href="#{{ :: item.href }}"
                     title="{{ :: item.description | translate }}"
                     data-test-id="main-menu-item"
@@ -97,7 +97,7 @@
             <li class="main-menu__group-header" translate ng-if="adminOptions.length > 0">Admin tools</li>
             <li class="main-menu__list-item"
                 ng-repeat="item in menu | filter:{ adminTools: true } | orderBy:'priority' as adminOptions"
-                ng-class="{'main-menu__list-item--active' : item.href === activeMenuItemPath}">
+                ng-class="{'main-menu__list-item--active' : item.href === activeMainMenuItemPath}">
                 <a class="main-menu__menu-item" ng-href="#{{ :: item.href }}"
                     title="{{ :: item.description | translate }}"
                     data-test-id="main-menu-item"
