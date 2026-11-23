@@ -1,6 +1,6 @@
 import React from 'react';
 import {getGenericHttpEntityListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
-import {AiProviderItem} from './AiProviderItem';
+import {AiProviderItem} from './ai-provider-item';
 import {getAiProviderFormConfig, getNameField} from './form-config';
 import type {IAIProvider} from './interfaces';
 
