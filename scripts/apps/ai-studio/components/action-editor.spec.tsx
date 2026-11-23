@@ -42,6 +42,7 @@ function render(
     action: IAIAction | null,
     actionType: IAIActionType,
     initialTab: IActionEditorTab = 'configuration',
+    onConflict: () => Promise<void> = () => Promise.resolve(),
 ): ReactWrapper {
     return mount(
         <ActionEditor
@@ -56,7 +57,7 @@ function render(
             onDirtyChange={() => undefined}
             onCancel={() => undefined}
             onSaved={() => undefined}
-            onConflict={() => undefined}
+            onConflict={onConflict}
         />,
     );
 }
@@ -169,5 +170,19 @@ describe('ai studio: action editor', () => {
 
         expect(byTestId(wrapper, 'ai-action-name').prop('disabled')).toBe(true);
         expect(byTestId(wrapper, 'ai-action-cancel').prop('disabled')).toBe(true);
+    });
+
+    it('keeps the fields locked until a conflict reload is done', async () => {
+        spyOn(ng, 'getService').and.returnValue(Promise.resolve({token: 'token'}));
+        spyOn(window, 'fetch').and.returnValue(Promise.resolve(new Response('{}', {status: 412})));
+
+        const wrapper = render(summary, 'summary', 'configuration', () => new Promise(() => undefined));
+
+        byTestId(wrapper, 'ai-action-name').simulate('change', {target: {value: 'Short abstracts'}});
+        byTestId(wrapper, 'ai-action-save').simulate('click');
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        wrapper.update();
+
+        expect(byTestId(wrapper, 'ai-action-name').prop('disabled')).toBe(true);
     });
 });

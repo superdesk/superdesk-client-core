@@ -165,20 +165,24 @@ export function EditorialActionsPage() {
         }));
     };
 
-    const reloadEditedAction = () => {
+    /** After a save failed with a `412`: loads the current version into the form */
+    const reloadEditedAction = (): Promise<void> => {
         const editing = stateRef.current.editing;
         const action = editing?.action;
 
         if (action == null) {
-            return;
+            return Promise.resolve();
         }
 
-        getAction(action._id)
+        return getAction(action._id)
             .then((fresh) => {
                 replaceAction(fresh);
 
                 // The user may have closed this form or opened another while it reloaded
                 if (stateRef.current.editing === editing) {
+                    notify.warning(
+                        gettext('Someone else changed this action. It has been reloaded, so make your changes again.'),
+                    );
                     updateState({editing: {action: fresh, actionType: fresh.action_type}, dirty: false});
                 }
             })

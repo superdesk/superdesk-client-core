@@ -78,7 +78,7 @@ interface IProps {
     onSaved(action: IAIAction): void;
 
     /** On a `412`; the page reloads the action, which resets this form */
-    onConflict(): void;
+    onConflict(): Promise<void>;
 }
 
 /** The number `Input` needs `''` when empty; `undefined` would keep showing the old number */
@@ -168,18 +168,15 @@ export function ActionEditor(props: IProps) {
         }
     };
 
-    const handleSaveError = (error: unknown) => {
+    /** Resolves once a conflict reload is done, so the form stays locked until then */
+    const handleSaveError = (error: unknown): Promise<void> | void => {
         if (!(error instanceof AIStudioRequestError)) {
             notify.error(gettext('The action could not be saved. Check your connection and try again.'));
             return;
         }
 
         if (error.status === 412 && action != null) {
-            notify.warning(
-                gettext('Someone else changed this action. It has been reloaded, so make your changes again.'),
-            );
-            props.onConflict();
-            return;
+            return props.onConflict();
         }
 
         const body = error.body as {_issues?: unknown} | null;
@@ -219,10 +216,10 @@ export function ActionEditor(props: IProps) {
             })
             .catch((error) => {
                 if (mounted.current) {
-                    handleSaveError(error);
-                } else {
-                    notify.error(gettext('The action could not be saved.'));
+                    return handleSaveError(error);
                 }
+
+                notify.error(gettext('The action could not be saved.'));
             })
             .finally(() => {
                 if (mounted.current) {
