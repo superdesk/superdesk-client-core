@@ -29,6 +29,14 @@ describe('ai studio: model options', () => {
         expect(options.map(({id}) => id)).toContain('openai/gpt-3.5');
     });
 
+    it('flags a stored model as missing only when the provider has a list to miss it from', () => {
+        const label = (provider: IAIProvider) => getModelOptions(provider, 'openai/gpt-3.5')
+            .find(({id}) => id === 'openai/gpt-3.5').label;
+
+        expect(label(getProvider())).toContain('not in the provider');
+        expect(label(getProvider({available_models: []}))).toBe('openai/gpt-3.5');
+    });
+
     it('offers only the provider default when the provider has no shortlist', () => {
         expect(getModelOptions(getProvider({available_models: []}), null).map(({id}) => id))
             .toEqual([PROVIDER_DEFAULT_MODEL]);

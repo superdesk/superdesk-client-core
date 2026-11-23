@@ -29,10 +29,8 @@ export class AIProviders {
         await form.getByTestId('gform-input--base_url').fill(provider.baseUrl);
         await form.getByTestId('gform-input--api_key').fill(provider.apiKey);
 
-        if (provider.defaultModel != null) {
-            // the create form has a plain text input here: listing the models needs the stored key
-            await form.getByTestId('gform-input--default_model').fill(provider.defaultModel);
-        }
+        // the create form has a plain text input here: listing the models needs the stored key
+        await form.getByTestId('gform-input--default_model').fill(provider.defaultModel ?? 'gpt-4o-mini');
 
         const [createResponse] = await Promise.all([
             this.page.waitForResponse((response) => response.request().method() === 'POST'

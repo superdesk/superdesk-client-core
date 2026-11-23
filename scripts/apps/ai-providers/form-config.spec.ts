@@ -66,6 +66,11 @@ describe('ai providers form config', () => {
         ]);
     });
 
+    it('requires a default model, so an AI action without a model of its own can always run', () => {
+        expect(getFields().find(({field}) => field === 'default_model').required).toBe(true);
+        expect(getFields({_id: 'provider-1'}).find(({field}) => field === 'default_model').required).toBe(true);
+    });
+
     it('types the default model by hand when creating a provider', () => {
         const defaultModelField = getFields().find(({field}) => field === 'default_model');
 

@@ -244,53 +244,49 @@ test.describe('AI providers settings', () => {
         await expect(defaultModel.getByTestId('item')).toHaveText('gpt-4o');
     });
 
-    test('clears the default model of a provider that has available models', async ({page}) => {
+    test('requires a default model', async ({page}) => {
         await page.route('**/ai_providers/*/models', (route) => route.fulfill({
             status: 200,
             contentType: 'application/json',
-            body: JSON.stringify({models: ['gpt-4o-mini', 'gpt-4o', 'o1-mini']}),
+            body: JSON.stringify({models: ['gpt-4o-mini', 'gpt-4o']}),
         }));
+
+        const writes: Array<string> = [];
+
+        page.on('request', (request) => {
+            if (['POST', 'PATCH'].includes(request.method()) && request.url().includes('/ai_providers')) {
+                writes.push(request.method());
+            }
+        });
+
+        await page.getByTestId('list-page--add-item').click();
+
+        const newForm = page.getByTestId('list-page--new-item');
+
+        await newForm.getByTestId('gform-input--name').fill('Local OpenAI');
+        await newForm.getByTestId('gform-input--provider_type').selectOption('openai_compatible');
+        await newForm.getByTestId('gform-input--base_url').fill('https://example.test/v1');
+        await newForm.getByTestId('gform-input--api_key').fill('secret-key');
+        await newForm.getByTestId('item-view-edit--save').click();
+
+        await expect(newForm.getByText('Field is required')).toBeVisible();
+        expect(writes).toEqual([]);
+
+        await newForm.getByTestId('gform-input--default_model').fill('gpt-4o');
+        await newForm.getByTestId('item-view-edit--save').click();
 
         const items = page.getByTestId('list-page--items').getByTestId('ai-providers-item');
 
-        const providerId = await new AIProviders(page).createProvider({
-            name: 'Local OpenAI',
-            baseUrl: 'https://example.test/v1',
-            apiKey: 'secret-key',
-            defaultModel: 'gpt-4o',
-        });
-
         await expect(items).toHaveCount(1);
 
-        const firstItem = items.first();
+        await items.first().hover();
+        await items.first().getByTestId('edit').click();
 
-        await firstItem.hover();
-        await firstItem.getByTestId('edit').click();
+        // A required picker offers no way to clear it once a model is stored
+        const defaultModel = page.getByTestId('list-page--view-edit').getByTestId('gform-input--default_model');
 
-        const form = page.getByTestId('list-page--view-edit');
-        const availableModels = form.getByTestId('gform-input--available_models');
-        const defaultModel = form.getByTestId('gform-input--default_model');
-        const popover = page.getByTestId('tree-select-popover');
-
-        await availableModels.getByTestId('open-popover').click();
-        await popover.getByTestId('option').filter({hasText: /^o1-mini$/}).click();
-
-        await defaultModel.getByTestId('clear-value').click();
-        await expect(defaultModel.getByTestId('item')).toHaveCount(0);
-
-        const patchRequest = waitForProviderPatch(page, providerId);
-
-        await form.getByTestId('item-view-edit--save').click();
-
-        // Emptying the picker is the only way the form can say "no default", so it sends an empty
-        // string and the server stores no model.
-        expect((await patchRequest).postDataJSON().default_model).toBe('');
-
-        await firstItem.hover();
-        await firstItem.getByTestId('edit').click();
-
-        await expect(availableModels.getByTestId('item')).toHaveText(['o1-mini']);
-        await expect(defaultModel.getByTestId('item')).toHaveCount(0);
+        await expect(defaultModel.getByTestId('item')).toHaveText('gpt-4o');
+        await expect(defaultModel.getByTestId('clear-value')).toHaveCount(0);
     });
 
     test('keeps editing possible when the models cannot be listed', async ({page}) => {

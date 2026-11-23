@@ -38,9 +38,14 @@ export function getModelOptions(provider: IAIProvider | null, selectedModel: str
     ];
 
     if (selectedModel != null && !options.some(({id}) => id === selectedModel)) {
+        // An empty list does not restrict the model, so a stored one is only flagged against a real list
+        const restricted = (provider?.available_models ?? []).length > 0;
+
         options.push({
             id: selectedModel,
-            label: gettext('{{model}} (not in the provider\'s models)', {model: selectedModel}),
+            label: restricted
+                ? gettext('{{model}} (not in the provider\'s models)', {model: selectedModel})
+                : selectedModel,
         });
     }
 
@@ -57,8 +62,5 @@ export function getModelWarning(provider: IAIProvider | null, selectedModel: str
         return gettext('The provider has no default model, so pick a model or the action can\'t run.');
     }
 
-    return gettext(
-        'The provider has no models listed and no default model, so the action can\'t run. '
-        + 'Set them on the provider in Settings > AI Providers.',
-    );
+    return gettext('The provider has no default model, so the action can\'t run. Set one in Settings > AI Providers.');
 }
