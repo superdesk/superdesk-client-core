@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {uniq} from 'lodash';
 import {
     Alert,
@@ -87,24 +87,24 @@ export function ActionEditor(props: IProps) {
     const typeOption = options.action_types.find(({action_type}) => action_type === actionType);
 
     // So an automatically picked provider does not count as a change
-    const initialDraft = React.useRef(
+    const initialDraft = useRef(
         getNewDraft(typeOption?.uses_suggestions_count === true, getDefaultProvider(providers)),
     );
-    const [draft, setDraft] = React.useState<IAIActionDraft>(
+    const [draft, setDraft] = useState<IAIActionDraft>(
         () => action == null ? initialDraft.current : actionToDraft(action),
     );
-    const [errors, setErrors] = React.useState<IAIActionDraftErrors>({});
-    const [tab, setTab] = React.useState<IActionEditorTab>(props.initialTab);
+    const [errors, setErrors] = useState<IAIActionDraftErrors>({});
+    const [tab, setTab] = useState<IActionEditorTab>(props.initialTab);
 
     // Save errors arrive after the request, when the user may be on another tab
-    const currentTab = React.useRef(tab);
+    const currentTab = useRef(tab);
 
     // The tab list only reads the selected tab on mount, so a switch from code remounts it
-    const [tabListKey, setTabListKey] = React.useState(0);
-    const [saving, setSaving] = React.useState(false);
-    const mounted = React.useRef(false);
+    const [tabListKey, setTabListKey] = useState(0);
+    const [saving, setSaving] = useState(false);
+    const mounted = useRef(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         mounted.current = true;
 
         return () => {
@@ -115,7 +115,7 @@ export function ActionEditor(props: IProps) {
     const dirty = isDraftDirty(draft, action == null ? initialDraft.current : actionToDraft(action));
 
     // Providers reload when the browser tab regains focus, so one added in another tab is picked too
-    React.useEffect(() => {
+    useEffect(() => {
         if (action == null && draft.provider == null) {
             const provider = getDefaultProvider(providers);
 
@@ -126,7 +126,7 @@ export function ActionEditor(props: IProps) {
         }
     }, [providers]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         props.onDirtyChange(dirty);
     }, [dirty]);
 

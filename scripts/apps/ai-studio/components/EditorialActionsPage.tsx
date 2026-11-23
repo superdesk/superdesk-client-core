@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
     ButtonGroup,
     CreateButton,
@@ -68,12 +68,12 @@ const INITIAL_STATE: IState = {
 };
 
 export function EditorialActionsPage() {
-    const [state, setState] = React.useState<IState>(INITIAL_STATE);
-    const lastNewFormId = React.useRef(0);
-    const editorTab = React.useRef<IActionEditorTab>('configuration');
+    const [state, setState] = useState<IState>(INITIAL_STATE);
+    const lastNewFormId = useRef(0);
+    const editorTab = useRef<IActionEditorTab>('configuration');
 
     // For handlers that run after a prompt or a request, when the state may have changed
-    const stateRef = React.useRef(state);
+    const stateRef = useRef(state);
 
     stateRef.current = state;
 
@@ -81,7 +81,7 @@ export function EditorialActionsPage() {
         setState((previous) => ({...previous, ...changes}));
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         Promise.all([
             getActionOptions(),
             getActions(),
