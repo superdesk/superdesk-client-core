@@ -239,18 +239,18 @@ angular.module('superdesk.core.menu', [
                         For example, if current path is /a/b/c and there is only menu item for /a/b,
                         /a/b should be set active.
                     */
-                    function getActiveMenuItemPath(currentPath: string) {
+                    function getActiveMenuItemPath(currentPath: string, items: Array<{href?: unknown}>) {
                         if (typeof currentPath !== 'string') {
                             return null;
                         }
 
-                        const matchingUrls = scope.items
-                            .filter((item) =>
-                                typeof item.href === 'string'
-                                && item.href.length > 0
-                                && currentPath.startsWith(item.href),
-                            )
-                            .map((item) => item.href);
+                        const matchingUrls = items
+                            .map((item) => item.href)
+                            .filter((href): href is string =>
+                                typeof href === 'string'
+                                && href.length > 0
+                                && currentPath.startsWith(href),
+                            );
 
                         if (matchingUrls.length < 1) {
                             return null;
@@ -305,7 +305,9 @@ angular.module('superdesk.core.menu', [
                         });
 
                         if (route && route.href) {
-                            scope.activeMenuItemPath = getActiveMenuItemPath(route.href);
+                            scope.activeMenuItemPath = getActiveMenuItemPath(route.href, scope.items);
+                            // The drawer has its own entries, most of which are not in the side menu
+                            scope.activeMainMenuItemPath = getActiveMenuItemPath(route.href, scope.menu ?? []);
                         }
                     }
 
