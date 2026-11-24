@@ -86,14 +86,16 @@ function getLockedUserId(article: IArticle): IUser['_id'] | null {
     return typeof lockUser === 'string' ? lockUser : lockUser._id;
 }
 
-export function getSideWidgetLockState(article: IArticle, readOnly: boolean): ISideWidgetLockState {
-    const lockedByCurrentUser = getLockedUserId(article) === sdApi.user.getCurrentUserId();
-    const canUnlock = lockedByCurrentUser
+/** Mirrors angular's `LockService.can_unlock`. */
+export function canUnlockArticle(article: IArticle): boolean {
+    return getLockedUserId(article) === sdApi.user.getCurrentUserId()
         || (article.state !== 'draft' && sdApi.user.hasPrivilege('unlock'));
+}
 
+export function getSideWidgetLockState(article: IArticle, readOnly: boolean): ISideWidgetLockState {
     return {
         readOnly: readOnly,
-        lockedByAnotherUser: sdApi.article.isLockedInOtherSession(article) && !canUnlock,
+        lockedByAnotherUser: sdApi.article.isLockedInOtherSession(article) && !canUnlockArticle(article),
         readOnlyStage: article.task?.stage != null && ng.get('desks').isReadOnlyStage(article.task.stage) === true,
     };
 }

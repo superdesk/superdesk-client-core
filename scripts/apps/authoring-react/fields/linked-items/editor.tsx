@@ -23,6 +23,9 @@ import {getDroppedItem} from 'utils/dragging';
 
 type IProps = IEditorComponentProps<ILinkedItemsValueOperational, ILinkedItemsConfig, ILinkedItemsUserPreferences>;
 
+// angular marks a locked related item the same way
+const lockedItemStyle: React.CSSProperties = {borderInlineStart: '2px solid var(--sd-colour--locked-info)'};
+
 function getItemTemplate(that: Editor) {
     return class SortableItemComponent extends React.PureComponent<{item: IArticle}> {
         render() {
@@ -31,7 +34,14 @@ function getItemTemplate(that: Editor) {
             const {removeItem} = that;
 
             return (
-                <Spacer h gap="8" noWrap alignItems="center">
+                <Spacer
+                    h
+                    gap="8"
+                    noWrap
+                    alignItems="center"
+                    style={sdApi.article.isLocked(item) ? lockedItemStyle : undefined}
+                    data-test-id={sdApi.article.isLocked(item) ? 'linked-item-locked' : undefined}
+                >
                     {
                         !readOnly && (
                             <div>
@@ -146,7 +156,12 @@ export class Editor extends React.PureComponent<IProps> {
                                         options={{
                                             shouldCancelStart: () => readOnly,
                                             onSortEnd: ({oldIndex, newIndex}) => {
-                                                this.props.onChange(arrayMove(linkedItems, oldIndex, newIndex));
+                                                // indexes are of the items shown, without the ones that can't be found
+                                                this.props.onChange(
+                                                    arrayMove(items, oldIndex, newIndex).map(
+                                                        ({_id}) => linkedItems.find(({id}) => id === _id),
+                                                    ),
+                                                );
                                             },
                                             distance: 10,
                                             helperClass: 'dragging-in-progress',

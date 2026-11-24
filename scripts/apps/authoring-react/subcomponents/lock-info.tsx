@@ -6,6 +6,7 @@ import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {gettext} from 'core/utils';
 import {sdApi} from 'api';
 import {store} from 'core/data';
+import {canUnlockArticle} from '../side-widgets';
 
 interface IProps {
     article: IArticle;
@@ -49,15 +50,19 @@ class LockInfoComponent extends React.PureComponent<IProps, IState> {
 
                 <div className="locked-info__name">{user.display_name}</div>
 
-                <button
-                    className="locked-info__button"
-                    data-test-id="unlock"
-                    onClick={() => {
-                        this.props.unlock();
-                    }}
-                >
-                    {gettext('Unlock')}
-                </button>
+                {
+                    canUnlockArticle(this.props.article) && (
+                        <button
+                            className="locked-info__button"
+                            data-test-id="unlock"
+                            onClick={() => {
+                                this.props.unlock();
+                            }}
+                        >
+                            {gettext('Unlock')}
+                        </button>
+                    )
+                }
             </div>
         );
     }

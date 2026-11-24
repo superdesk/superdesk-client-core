@@ -494,10 +494,10 @@ test('replying to an inline comment with and without a mention, and only the aut
     await confirm.getByRole('button', {name: 'OK', exact: true}).click();
 
     await expect(confirm).toBeHidden();
-
-    // unlike angular, deleting the reply closes the popup, so it is reopened to read it
-    await expectCommentText(page, body, COMMENT_TEXT);
     await expect(reply).toHaveCount(0);
+
+    // with the reply gone the popup holds one message again, the comment's own
+    await expect(popup.getByTestId('comment-text')).toHaveText(COMMENT_TEXT);
 
     await focusReplyField(popup);
     await mentionSamGamgee(page, replyInput);
@@ -603,7 +603,7 @@ async function createArticleWithTwoComments(
 test('listing inline comments in the widget grouped by field, and resolving one moving it across the tabs', {
     annotation: [
         {type: 'confluence', description: '1311834927 complete'}, // Resolve inline comment
-        {type: 'confluence', description: '1311834935 partial'}, // Inline comments in Editor Sidebar
+        {type: 'confluence', description: '1311834935 complete'}, // Inline comments in Editor Sidebar
     ],
 }, async ({page}) => {
     test.setTimeout(120000);
@@ -662,10 +662,9 @@ test('listing inline comments in the widget grouped by field, and resolving one 
     await expect(getWidgetTab(reopenedWidget, 'Unresolved')).toHaveText('Unresolved (1)');
 });
 
-// React gap: the Inline comments widget shows no selected text for unresolved comments, no replies and no resolver.
-test.fixme('the widget lists the selected text, the replies and who resolved a comment, as the angular widget does', {
+test('the widget lists the selected text, the replies and who resolved a comment, as the angular widget does', {
     annotation: [
-        {type: 'confluence', description: '1311834935 partial'}, // Inline comments in Editor Sidebar
+        {type: 'confluence', description: '1311834935 complete'}, // Inline comments in Editor Sidebar
     ],
 }, async ({page}) => {
     test.setTimeout(120000);
@@ -768,10 +767,9 @@ test('notifying a user mentioned in an inline comment, who opens the article and
     }
 });
 
-// React gap: the Inline comments widget prints a mention as raw `@[name](user:id)` markup instead of the user's name.
-test.fixme('the widget renders a mention in a comment as the mentioned user\'s name', {
+test('the widget renders a mention in a comment as the mentioned user\'s name', {
     annotation: [
-        {type: 'confluence', description: '1311834938 partial'}, // Notify user via inline comment
+        {type: 'confluence', description: '1311834938 complete'}, // Notify user via inline comment
     ],
 }, async ({page}) => {
     await restoreDatabaseSnapshot({snapshotName: SNAPSHOT});

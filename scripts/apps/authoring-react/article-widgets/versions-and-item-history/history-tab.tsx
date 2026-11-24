@@ -11,6 +11,7 @@ import {IHighlight} from 'apps/highlights/services/HighlightsService';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {TransmissionDetails} from './transmission-details';
+import {isNewArticleVersion} from './is-new-article-version';
 
 type IProps = React.ComponentProps<
     IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
@@ -38,6 +39,16 @@ export class HistoryTab extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount() {
+        this.load();
+    }
+
+    componentDidUpdate(prevProps: IProps) {
+        if (isNewArticleVersion(prevProps.article, this.props.article)) {
+            this.load();
+        }
+    }
+
+    private load() {
         Promise.all([
             getHistoryItems(this.props.article),
             httpRequestJsonLocal<IRestApiResponse<IHighlight>>({method: 'GET', path: '/highlights'}),

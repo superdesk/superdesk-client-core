@@ -2,6 +2,7 @@ import {CustomEditor3Entity} from 'core/editor3/constants';
 import {EditorState, ContentState, SelectionState, RichUtils} from 'draft-js';
 import reducer from '..';
 import {applyLink} from '../../actions/toolbar';
+import {changeImageCaption, mergeEntityDataByKey} from '../../actions/editor3';
 import {IEditorDragDropPayload} from '../editor3';
 
 /**
@@ -350,6 +351,51 @@ describe('editor3.reducers', () => {
 
         expect(entity.data.link.link).toBe('http://foo.com');
         expect(nextState.onChangeValue).toHaveBeenCalled();
+
+        // authoring-react detects edits by ContentState reference
+        expect(updatedContent).not.toBe(state.editorState.getCurrentContent());
+    });
+
+    describe('entity data edits give a new ContentState reference', () => {
+        function getStateWithEntity(data: object) {
+            const contentState = ContentState.createFromText('some text')
+                .createEntity(CustomEditor3Entity.MEDIA, 'MUTABLE', data);
+
+            return {
+                state: {
+                    editorState: EditorState.createWithContent(contentState),
+                    onChangeValue: () => { /* no-op */ },
+                },
+                blockKey: contentState.getFirstBlock().getKey(),
+                entityKey: contentState.getLastCreatedEntityKey(),
+            };
+        }
+
+        it('MERGE_ENTITY_DATA_BY_KEY', () => {
+            const {state, blockKey, entityKey} = getStateWithEntity({description: 'before'});
+            const contentBefore = state.editorState.getCurrentContent();
+
+            const nextState = reducer(state, mergeEntityDataByKey(blockKey, entityKey, {description: 'after'}));
+            const contentAfter = nextState.editorState.getCurrentContent();
+
+            expect(contentAfter.getEntity(entityKey).getData().description).toBe('after');
+            expect(contentAfter).not.toBe(contentBefore);
+        });
+
+        it('EDITOR_CHANGE_IMAGE_CAPTION', () => {
+            const media = {headline: 'before'};
+            const {state, entityKey} = getStateWithEntity({media});
+            const contentBefore = state.editorState.getCurrentContent();
+
+            const nextState = reducer(state, changeImageCaption(entityKey, 'after', 'headline'));
+            const contentAfter = nextState.editorState.getCurrentContent();
+
+            expect(contentAfter.getEntity(entityKey).getData().media.headline).toBe('after');
+            expect(contentAfter).not.toBe(contentBefore);
+
+            // the data the editor was loaded from is what authoring-react diffs the save against
+            expect(media.headline).toBe('before');
+        });
     });
 
     it('EDITOR_PUSH_STATE', () => {

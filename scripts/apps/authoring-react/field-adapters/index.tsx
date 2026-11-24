@@ -53,6 +53,7 @@ import {description_text} from './description_text';
 import {body_footer} from './body_footer';
 import {sign_off} from './sign_off';
 import {mediaSelf} from './_media_self';
+import {company_codes, COMPANY_CODES_VOCABULARY_ID} from './company_codes';
 
 export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
     const adapter: IFieldsAdapter<IArticle> = {
@@ -83,6 +84,11 @@ export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
         sign_off: sign_off,
         _media_self: mediaSelf,
     };
+
+    // angular shows the field only when the vocabulary exists
+    if (sdApi.vocabularies.getAll().has(COMPANY_CODES_VOCABULARY_ID)) {
+        adapter.company_codes = company_codes;
+    }
 
     return adapter;
 }

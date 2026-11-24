@@ -32,7 +32,7 @@ class FindAndReplaceWidget extends React.PureComponent<IArticleSideWidgetCompone
         this.state = this.props.initialState ?? {
             findValue: '',
             replaceValue: '',
-            caseSensitive: false,
+            caseSensitive: true,
         };
 
         this.highlightMatches.bind(this);
@@ -131,8 +131,9 @@ class FindAndReplaceWidget extends React.PureComponent<IArticleSideWidgetCompone
                                             replaceAllMatches: false,
                                         });
 
+                                        // selects the match after the replaced one and renders the highlights again
                                         setTimeout(() => {
-                                            this.highlightMatches();
+                                            dispatchEditorEvent('find_and_replace__find_next', {editorId});
                                         });
                                     }}
                                     disabled={(this.state.replaceValue ?? '').trim().length < 1}

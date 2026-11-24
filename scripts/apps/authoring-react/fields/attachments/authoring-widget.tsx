@@ -13,6 +13,7 @@ import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {ATTACHMENTS_WIDGET_ID, getWidgetLabel} from '.';
+import {attachments as attachmentsAdapter} from '../../field-adapters/attachments';
 
 /**
  * ID is hardcoded.
@@ -21,6 +22,34 @@ import {ATTACHMENTS_WIDGET_ID, getWidgetLabel} from '.';
  * and would instead receive a value and `onChange` function.
  */
 const fieldId = 'attachments';
+
+/**
+ * The widget is available whether or not the content profile has the attachments field. Without the field,
+ * `fieldsData` has no entry for it and is not serialized on save, so the value is kept on the article instead.
+ */
+function profileHasAttachmentsField(props: IArticleSideWidgetComponentType): boolean {
+    return props.fieldsData?.has(fieldId) === true;
+}
+
+export function getWidgetAttachments(props: IArticleSideWidgetComponentType): IAttachmentsValueOperational {
+    if (profileHasAttachmentsField(props)) {
+        return (props.fieldsData.get(fieldId) ?? []) as IAttachmentsValueOperational;
+    } else {
+        return attachmentsAdapter.retrieveStoredValue(
+            props.article,
+            props.authoringStorage,
+            {},
+        ) as IAttachmentsValueOperational;
+    }
+}
+
+export function setWidgetAttachments(props: IArticleSideWidgetComponentType, val: IAttachmentsValueOperational) {
+    if (profileHasAttachmentsField(props)) {
+        props.onFieldsDataChange(props.fieldsData.set(fieldId, val));
+    } else {
+        props.onItemChange(attachmentsAdapter.storeValue(val, props.article, {}, false));
+    }
+}
 
 export class AuthoringAttachmentsWidget extends React.PureComponent<IArticleSideWidgetComponentType> {
     constructor(props: IArticleSideWidgetComponentType) {
@@ -34,13 +63,11 @@ export class AuthoringAttachmentsWidget extends React.PureComponent<IArticleSide
     }
 
     private getAttachments(): IAttachmentsValueOperational {
-        return (this.props.fieldsData.get(fieldId) ?? []) as unknown as IAttachmentsValueOperational;
+        return getWidgetAttachments(this.props);
     }
 
     private setAttachments(val: IAttachmentsValueOperational) {
-        this.props.onFieldsDataChange(
-            this.props.fieldsData.set(fieldId, val),
-        );
+        setWidgetAttachments(this.props, val);
     }
 
     private addAttachments(val: Array<IAttachment>) {

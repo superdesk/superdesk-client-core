@@ -29,6 +29,7 @@ const SortableItem = SortableElement(
                 <div>
                     <button
                         className="sd-media-carousel__thumb sd-focusable"
+                        data-test-id="media-thumbnail"
                         onClick={() => {
                             onSelect(item);
                         }}

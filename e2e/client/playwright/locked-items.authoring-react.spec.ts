@@ -4,7 +4,7 @@ import {Monitoring} from './page-object-models/monitoring';
 import {Users} from './page-object-models/users';
 import {UserRolesSettings} from './page-object-models/settings/user-roles';
 import {expectErrorNotification, newSession, restoreDatabaseSnapshot} from './utils';
-import {assertOk, withApiContext} from './utils/api';
+import {lockArchiveItem, patchArchiveItem} from './utils/archive-api';
 import {dropArticle} from './utils/drag-and-drop';
 import {getStorageState} from './utils/storage-state';
 
@@ -151,22 +151,10 @@ async function openLockingSession(browser: Browser, label: string): Promise<ILoc
     }
 }
 
-/**
- * authoring-react's media field adds the dropped JSON as the association itself, without
- * re-fetching it (`fields/media/editor.tsx`), so the drop carries the full item, as a drag out
- * of the monitoring list does.
- */
-async function dropItem(target: Locator, label: string): Promise<void> {
+async function dropItem(target: Locator, label: string, type: 'picture' | 'text'): Promise<void> {
     const id = await workingStageItem(target.page(), label).evaluate((element) => element.id);
-    const item = await withApiContext(async (api) => {
-        const response = await api.get(`archive/${id}`);
 
-        await assertOk(response, `fetching "${label}"`);
-
-        return response.json();
-    });
-
-    await dropArticle(target, item);
+    await dropArticle(target, {_id: id, type});
 }
 
 /**
@@ -180,6 +168,11 @@ async function expectLockedByYouRefusal(page: Page, label: string): Promise<void
 
 function dropZone(authoring: Authoring, fieldId: string): Locator {
     return authoring.fieldContainer(fieldId).getByTestId('drop-zone').last();
+}
+
+// the media field fetches a dropped item before adding it, so a drop lands after a round trip
+function galleryThumbnails(authoring: Authoring): Locator {
+    return authoring.fieldContainer(GALLERY_FIELD).getByTestId('media-thumbnail');
 }
 
 function relatedItem(authoring: Authoring, label: string): Locator {
@@ -202,7 +195,7 @@ async function associationKeys(authoring: Authoring): Promise<Array<string>> {
 
 test.describe('locking an item that is open for editing', {
     annotation: [
-        {type: 'confluence', description: '1308524847 partial'}, // Lock item
+        {type: 'confluence', description: '1308524847 complete'}, // Lock item
     ],
 }, () => {
     test('another user gets it read-only, naming the lock owner', async ({page, browser}) => {
@@ -222,8 +215,7 @@ test.describe('locking an item that is open for editing', {
         }
     });
 
-    // React gap: `subcomponents/lock-info.tsx` renders Unlock without the `unlock` privilege; the click does nothing
-    test.fixme('a user without the Unlock content privilege is offered no Unlock button', async ({page, browser}) => {
+    test('a user without the Unlock content privilege is offered no Unlock button', async ({page, browser}) => {
         await restoreDatabaseSnapshot();
         await lockForEditing(page);
 
@@ -263,8 +255,11 @@ test.describe('locking an item that is open for editing', {
         }
     });
 
-    // React gap: the "Item Unlocked" dialog lives only in angular's ConfirmDirtyService.unlock
-    test.fixme('the user whose lock was taken is told who unlocked the item', async ({page, browser}) => {
+    test('the user whose lock was taken is told who unlocked the item', {
+        annotation: [
+            {type: 'confluence', description: '1311834225 complete'}, // Unlock item
+        ],
+    }, async ({page, browser}) => {
         await restoreDatabaseSnapshot();
 
         const owner = await newSession(browser, GRANTEE);
@@ -282,6 +277,45 @@ test.describe('locking an item that is open for editing', {
         } finally {
             await owner.context.close();
         }
+    });
+});
+
+test.describe('a locked related item', () => {
+    // ids baked into the `association-fields` snapshot; "Story 5" is published
+    const ITEMS = {
+        article: 'urn:newsml:localhost:5000:2023-11-15T10:53:56.032654:3503f3f4-1d5f-48b2-8f3d-35120820d8ee',
+        published: 'urn:newsml:localhost:5000:2025-04-29T08:18:00.176925:d15f9b5a-55e1-4abb-9312-9224c7654ed6',
+        inProgress: 'urn:newsml:localhost:5000:2026-08-10T00:00:01.000000:association-fields-1',
+    };
+
+    function lockedRelatedItem(page: Page, label: string): Locator {
+        return new Authoring(page).fieldContainer(RELATED_FIELD).getByTestId('linked-item-locked')
+            .filter({has: page.getByTestId('field--slugline').filter({hasText: label})});
+    }
+
+    test('is marked in the related items field, published or not, as it gets locked', async ({page}) => {
+        const authoring = new Authoring(page);
+
+        await restoreDatabaseSnapshot({snapshotName: ASSOCIATION_FIELDS});
+        await patchArchiveItem(ITEMS.article, {
+            associations: {
+                [`${RELATED_FIELD}--1`]: {_id: ITEMS.published, type: 'text', order: 0},
+                [`${RELATED_FIELD}--2`]: {_id: ITEMS.inProgress, type: 'text', order: 1},
+            },
+        });
+        await lockArchiveItem(ITEMS.published);
+
+        await openSportsMonitoring(page);
+        await workingStageItem(page, ARTICLE).dblclick();
+        await expectAuthoringReact(page);
+        await authoring.waitForAuthoringReactToInitialize();
+
+        await expect(relatedItem(authoring, RELATED_ITEMS[0])).toBeVisible();
+        await expect(lockedRelatedItem(page, 'Story 5')).toBeVisible();
+        await expect(lockedRelatedItem(page, RELATED_ITEMS[0])).toHaveCount(0);
+
+        await lockArchiveItem(ITEMS.inProgress);
+        await expect(lockedRelatedItem(page, RELATED_ITEMS[0])).toBeVisible();
     });
 });
 
@@ -306,7 +340,7 @@ test.describe('granting the Unlock content privilege', () => {
     test('granted to an individual user, it lets that user unlock the item', {
         annotation: [
             {type: 'confluence', description: '1311834235 complete'}, // Grant Unlock content to individual user
-            {type: 'confluence', description: '1311834225 partial'}, // Unlock item
+            {type: 'confluence', description: '1311834225 complete'}, // Unlock item
         ],
     }, async ({page, browser}) => {
         await restoreDatabaseSnapshot();
@@ -360,8 +394,7 @@ test.describe('granting the Unlock content privilege', () => {
 });
 
 test.describe('publishing an item whose association is locked', () => {
-    // React gap: `fields/media/editor.tsx` accepts a dropped item without checking its lock
-    test.fixme('a Feature media picture locked by another user is refused on drop', {
+    test('a Feature media picture locked by another user is refused on drop', {
         annotation: [
             // Publishing article with locked item in Feature media
             {type: 'confluence', description: '1328906297 partial'},
@@ -378,7 +411,7 @@ test.describe('publishing an item whose association is locked', () => {
             await lockForEditing(page);
             await authoring.waitForAuthoringReactToInitialize();
 
-            await dropItem(dropZone(authoring, 'feature_media'), PICTURE);
+            await dropItem(dropZone(authoring, 'feature_media'), PICTURE, 'picture');
             await expectErrorNotification(page, 'Item is locked. Cannot associate media item.');
         } finally {
             await lockOwner.context.close();
@@ -397,7 +430,8 @@ test.describe('publishing an item whose association is locked', () => {
         await lockForEditing(page);
         await authoring.waitForAuthoringReactToInitialize();
 
-        await dropItem(dropZone(authoring, 'feature_media'), PICTURE);
+        await dropItem(dropZone(authoring, 'feature_media'), PICTURE, 'picture');
+        await expect(authoring.fieldContainer('feature_media').getByTestId('media-carousel-image')).toBeVisible();
         expect(await associationKeys(authoring)).toContain('featuremedia');
 
         const lockOwner = await openLockingSession(browser, PICTURE);
@@ -483,7 +517,7 @@ test.describe('publishing an item whose association is locked', () => {
 
         // each drop derives its key from the ones already there, so wait for one before the next
         for (const label of RELATED_ITEMS) {
-            await dropItem(dropZone(authoring, RELATED_FIELD), label);
+            await dropItem(dropZone(authoring, RELATED_FIELD), label, 'text');
             await expect(relatedItem(authoring, label)).toBeVisible();
         }
 
@@ -525,7 +559,8 @@ test.describe('publishing an item whose association is locked', () => {
         await lockForEditing(page);
         await authoring.waitForAuthoringReactToInitialize();
 
-        await dropItem(dropZone(authoring, GALLERY_FIELD), GALLERY_PICTURES[0]);
+        await dropItem(dropZone(authoring, GALLERY_FIELD), GALLERY_PICTURES[0], 'picture');
+        await expect(galleryThumbnails(authoring)).toHaveCount(1);
         expect((await associationKeys(authoring)).filter((key) => key.startsWith(GALLERY_FIELD))).toHaveLength(1);
 
         const lockOwner = await openLockingSession(browser, GALLERY_PICTURES[0]);
@@ -549,8 +584,7 @@ test.describe('publishing an item whose association is locked', () => {
         }
     });
 
-    // React gap: `fields/media/editor.tsx` accepts a dropped item without checking its lock
-    test.fixme('a locked picture dropped into the gallery is refused', {
+    test('a locked picture dropped into the gallery is refused', {
         annotation: [
             // Publishing gallery with locked item
             {type: 'confluence', description: '1328906307 partial'},
@@ -567,7 +601,7 @@ test.describe('publishing an item whose association is locked', () => {
             await lockForEditing(page);
             await authoring.waitForAuthoringReactToInitialize();
 
-            await dropItem(dropZone(authoring, GALLERY_FIELD), GALLERY_PICTURES[0]);
+            await dropItem(dropZone(authoring, GALLERY_FIELD), GALLERY_PICTURES[0], 'picture');
             await expectErrorNotification(page, 'Item is locked. Cannot associate media item.');
         } finally {
             await lockOwner.context.close();
@@ -587,11 +621,13 @@ test.describe('correcting an item whose association is locked', () => {
         await lockForEditing(page);
         await authoring.waitForAuthoringReactToInitialize();
 
-        for (const label of labels) {
-            await dropItem(dropZone(authoring, field), label);
-
+        for (const [index, label] of labels.entries()) {
             if (field === RELATED_FIELD) {
+                await dropItem(dropZone(authoring, field), label, 'text');
                 await expect(relatedItem(authoring, label)).toBeVisible();
+            } else {
+                await dropItem(dropZone(authoring, field), label, 'picture');
+                await expect(galleryThumbnails(authoring)).toHaveCount(index + 1);
             }
         }
 
@@ -638,18 +674,17 @@ test.describe('correcting an item whose association is locked', () => {
         }
     }
 
-    // React gap: `core/with-articles.tsx` searches by `_id`, which misses published items, so the field stays empty
-    test.fixme('an article gaining a locked related item in the correction', {
+    test('an article gaining a locked related item in the correction', {
         annotation: [
             // Correcting article with related locked item
-            {type: 'confluence', description: '1328906267 blocker'},
+            {type: 'confluence', description: '1328906267 complete'},
         ],
     }, async ({page, browser}) => {
         await restoreDatabaseSnapshot({snapshotName: ASSOCIATION_FIELDS});
 
         const authoring = await publishThenCorrect(page, RELATED_FIELD, RELATED_ITEMS);
 
-        await dropItem(dropZone(authoring, RELATED_FIELD), CORRECTION_RELATED_ITEM);
+        await dropItem(dropZone(authoring, RELATED_FIELD), CORRECTION_RELATED_ITEM, 'text');
         await expect(relatedItem(authoring, CORRECTION_RELATED_ITEM)).toBeVisible();
 
         await sendCorrectionRefusedThenAccepted(page, browser, CORRECTION_RELATED_ITEM);
@@ -665,7 +700,8 @@ test.describe('correcting an item whose association is locked', () => {
 
         const authoring = await publishThenCorrect(page, GALLERY_FIELD, GALLERY_PICTURES);
 
-        await dropItem(dropZone(authoring, GALLERY_FIELD), CORRECTION_PICTURE);
+        await dropItem(dropZone(authoring, GALLERY_FIELD), CORRECTION_PICTURE, 'picture');
+        await expect(galleryThumbnails(authoring)).toHaveCount(GALLERY_PICTURES.length + 1);
 
         await sendCorrectionRefusedThenAccepted(page, browser, CORRECTION_PICTURE);
     });

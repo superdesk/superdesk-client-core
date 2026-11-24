@@ -167,8 +167,7 @@ test.describe('Feature media (authoring-react)', () => {
         await expect(featureMedia).toContainText(metadata.headline);
     });
 
-    // React gap: the drop opens an empty Upload media dialog instead of refusing the files with an error.
-    test.fixme('refuses more than one file dropped on the field', {
+    test('refuses more than one file dropped on the field', {
         annotation: FEATURE_MEDIA_CASE,
     }, async ({page}) => {
         const featureMedia = mediaField(page, 'feature_media');
@@ -184,8 +183,7 @@ test.describe('Feature media (authoring-react)', () => {
         await expect(new MediaUpload(page).getModal()).toHaveCount(0);
     });
 
-    // React gap: the drop opens an empty Upload media dialog instead of refusing the file with an error.
-    test.fixme('refuses a file that is not media dropped on the field', {
+    test('refuses a file that is not media dropped on the field', {
         annotation: FEATURE_MEDIA_CASE,
     }, async ({page}) => {
         const featureMedia = mediaField(page, 'feature_media');
@@ -201,8 +199,7 @@ test.describe('Feature media (authoring-react)', () => {
         await expect(new MediaUpload(page).getModal()).toHaveCount(0);
     });
 
-    // React gap: a picture locked by another user is added to the field; angular refuses it.
-    test.fixme('refuses a locked picture dropped on the field', {
+    test('refuses a locked picture dropped on the field', {
         annotation: FEATURE_MEDIA_CASE,
     }, async ({browser, page}) => {
         const featureMedia = mediaField(page, 'feature_media');
@@ -221,7 +218,6 @@ test.describe('Feature media (authoring-react)', () => {
         try {
             await openArticle(page, 'test sports story');
 
-            // A real drag: authoring-react reads the whole item from the drag payload instead of re-fetching it.
             await picture.dragTo(placeholder(featureMedia));
 
             await expectErrorNotification(page, /locked/i);

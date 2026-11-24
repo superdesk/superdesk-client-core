@@ -159,7 +159,7 @@ test.describe('media in the body (authoring-react)', () => {
 
     test('picture preview: overlay metadata and edit actions revealed on hover', {
         annotation: [
-            {type: 'confluence', description: '1327759422 partial'}, // Image preview in Editor3
+            {type: 'confluence', description: '1327759422 complete'}, // Image preview in Editor3
             {type: 'confluence', description: '1310851187 partial'}, // Add image to Editor3
         ],
     }, async ({page}) => {
@@ -292,21 +292,27 @@ test.describe('media in the body (authoring-react)', () => {
     });
 
     /**
-     * Editing a media block's title or description in the body. Both go through editor3's
-     * `changeImageCaption`, which uses Draft's `replaceEntityData`; that keeps the ContentState
-     * reference, and authoring-react's editor3 field only reports a change when the reference
-     * differs, so the edit never reaches the article.
+     * Editing a media block's title or description in the body. `coverage` follows the preview
+     * cases: audio and video stay partial for the player controls listed in the header.
      */
     const EDITS: Array<{
         case: string;
+        coverage: 'complete' | 'partial';
         item: string;
         type: 'picture' | 'audio' | 'video';
         title?: string;
         description: string;
     }> = [
-        {case: '1327759422', item: 'Rivendell picture', type: 'picture', description: 'Rivendell seen from the ford'},
+        {
+            case: '1327759422',
+            coverage: 'complete',
+            item: 'Rivendell picture',
+            type: 'picture',
+            description: 'Rivendell seen from the ford',
+        },
         {
             case: '1327759424',
+            coverage: 'partial',
             item: 'Lothlorien audio',
             type: 'audio',
             title: 'Lothlorien lament',
@@ -314,6 +320,7 @@ test.describe('media in the body (authoring-react)', () => {
         },
         {
             case: '1327759426',
+            coverage: 'partial',
             item: 'Isengard video',
             type: 'video',
             title: 'Isengard from the tower',
@@ -322,10 +329,8 @@ test.describe('media in the body (authoring-react)', () => {
     ];
 
     for (const edit of EDITS) {
-        // React gap: media block title and description edits never reach the model
-        // (changeImageCaption keeps the ContentState reference).
-        test.fixme(`editing the ${edit.type} block's title and description in the body survives save and reopen`, {
-            annotation: [{type: 'confluence', description: `${edit.case} partial`}],
+        test(`editing the ${edit.type} block's title and description in the body survives save and reopen`, {
+            annotation: [{type: 'confluence', description: `${edit.case} ${edit.coverage}`}],
         }, async ({page}) => {
             await restoreDatabaseSnapshot({snapshotName: 'media-items'});
             await goToSports(page);
@@ -352,4 +357,24 @@ test.describe('media in the body (authoring-react)', () => {
             await expect(getDescription(reopened)).toHaveText(edit.description);
         });
     }
+
+    test('editing the picture block\'s description in the body updates the picture\'s association', {
+        annotation: [{type: 'confluence', description: '1327759422 complete'}], // Image preview in Editor3
+    }, async ({page}) => {
+        await restoreDatabaseSnapshot({snapshotName: 'media-items'});
+        await goToSports(page);
+
+        const authoring = new Authoring(page);
+        const body = await openArticleWithMedia(page, 'Rivendell picture');
+        const description = 'Rivendell seen from the ford';
+
+        await setEditor3FieldValue(getDescription(getMediaBlock(body, 'picture')), description);
+
+        const {response} = await authoring.saveAndGetRequest();
+        const bodyMedia = Object.entries(response.associations ?? {})
+            .filter(([key, value]) => key.startsWith('editor_') && value != null)
+            .map(([, value]) => value);
+
+        expect(bodyMedia).toEqual([expect.objectContaining({description_text: description})]);
+    });
 });

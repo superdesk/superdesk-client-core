@@ -140,10 +140,8 @@ test.describe('links in the body (authoring-react)', () => {
         await expect(getBody(page).getByRole('textbox').locator(`a[href="${URL}"]`)).toHaveText(LINK_TEXT);
     });
 
-    // React gap: editing a link's URL never reaches the model (Save stays disabled),
-    // mergeEntityData keeps the ContentState reference.
-    test.fixme('editing a link from the link controls changes its URL, and the edit survives reopen', {
-        annotation: [{type: 'confluence', description: '1327759499 partial'}], // Edit link in Body Editor3
+    test('editing a link from the link controls changes its URL, and the edit survives reopen', {
+        annotation: [{type: 'confluence', description: '1327759499 complete'}], // Edit link in Body Editor3
     }, async ({page}) => {
         await restoreDatabaseSnapshot();
         await openArticle(page);

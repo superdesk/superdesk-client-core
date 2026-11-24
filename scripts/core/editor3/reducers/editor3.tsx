@@ -195,8 +195,16 @@ export const onChange = (
     keepSelection = false,
     skipOnChange = false,
 ): IEditorStore => {
-    const editorStateNext = updateDecorators(state, newEditorState, 'store-based');
+    let editorStateNext = updateDecorators(state, newEditorState, 'store-based');
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
+
+    if (force && !contentChanged && !skipOnChange) {
+        // Draft's `replaceEntityData` and `mergeEntityData` mutate the entity in place and return the
+        // same ContentState, so a fresh reference is needed for consumers detecting changes by reference.
+        editorStateNext = EditorState.set(editorStateNext, {
+            currentContent: editorStateNext.getCurrentContent().asMutable().asImmutable(),
+        });
+    }
 
     if (!skipOnChange && (contentChanged || force)) {
         state.onChangeValue(editorStateNext.getCurrentContent());
@@ -503,9 +511,8 @@ const changeImageCaption = (state, {entityKey, newCaption, field}) => {
     const {editorState} = state;
     const contentState = editorState.getCurrentContent();
     const entity = contentState.getEntity(entityKey);
-    const {media} = entity.getData();
-
-    media[field] = newCaption;
+    // a copy, since the entity data can be shared with the article the editor was loaded from
+    const media = {...entity.getData().media, [field]: newCaption};
 
     const newContentState = contentState.replaceEntityData(entityKey, {media});
     const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
