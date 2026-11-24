@@ -59,6 +59,7 @@ export function getMarkForUserModal(options: {
                     position="top"
                     onHide={this.props.closeModal}
                     headerTemplate={gettext('Mark for user')}
+                    data-test-id="mark-for-user-modal"
                     footerTemplate={
                         (
                             <ButtonGroup align="end">

@@ -31,7 +31,7 @@ export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, 
 
         if (isGroup(item)) {
             return (
-                <div style={{paddingInlineStart: (20 * level + 'px')}}>
+                <div style={{paddingInlineStart: (20 * level + 'px')}} data-test-id="dropdown-tree-group">
                     {typeof item.render === 'function' ? item.render() : null}
                     <div style={{paddingInlineStart: (20 * level + 'px')}}>
                         {
