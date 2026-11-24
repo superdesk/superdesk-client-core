@@ -112,6 +112,7 @@ export class DropZone3 extends React.PureComponent<IDropZoneComponentProps, ISta
 
         return (
             <div
+                data-test-id="drop-zone"
                 onDragOver={(e) => {
                     e.preventDefault();
 

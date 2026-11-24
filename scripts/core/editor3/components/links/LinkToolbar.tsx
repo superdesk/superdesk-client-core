@@ -46,17 +46,26 @@ export class LinkToolbarComponent extends React.Component<IProps, any> {
         });
 
         return (
-            <div className={cx}>
+            <div className={cx} data-test-id="link-toolbar">
                 {!isLink ? <span>&nbsp;</span> : (
                     <span>
                         {gettext('Link controls:')}
                         {
                             link && link.href
-                                ? <a href={link.href} target="_blank" rel="noopener noreferrer">{gettext('Open')}</a>
+                                ? (
+                                    <a
+                                        href={link.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        data-test-id="link-open"
+                                    >
+                                        {gettext('Open')}
+                                    </a>
+                                )
                                 : null
                         }
-                        <a onClick={() => onEdit(link)}>{gettext('Edit')}</a>
-                        <a onClick={this.onRemove}>{gettext('Delete')}</a>
+                        <a onClick={() => onEdit(link)} data-test-id="link-edit">{gettext('Edit')}</a>
+                        <a onClick={this.onRemove} data-test-id="link-delete">{gettext('Delete')}</a>
                     </span>
                 )}
             </div>

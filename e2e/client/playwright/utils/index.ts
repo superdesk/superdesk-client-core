@@ -1,5 +1,6 @@
 import * as request from 'request';
-import {expect, Locator, Page} from '@playwright/test';
+import {Browser, BrowserContext, expect, Locator, Page} from '@playwright/test';
+import {getLoggedOutStorageState, getStorageState} from './storage-state';
 
 export const SUPERDESK_API_URL = (process.env.SUPERDESK_URL || 'http://localhost:5002/api').replace(/\/$/, '');
 
@@ -285,4 +286,55 @@ export async function getCellValueByColumTitle(
     const item = row.locator(`td:nth-child(${columnIndex + 1})`);
 
     return item.innerText();
+}
+
+/**
+ * Asserts an error notification came up, then dismisses it: notifications stack over the
+ * send / publish panel, where they can swallow the next click on Publish.
+ */
+export async function expectErrorNotification(page: Page, text: string | RegExp): Promise<void> {
+    const notification = page.getByTestId('notifications').getByTestId('notification--error')
+        .filter({hasText: text});
+
+    await expect(notification).toBeVisible();
+    await notification.click({timeout: 2000}).catch(() => undefined);
+    await expect(notification).toBeHidden();
+}
+
+/**
+ * A second authoring-react session, as the default admin or logged in as `actor`. Contexts made
+ * from the `browser` fixture outlive a failed test, so the caller closes it in a `finally`, and
+ * anything that throws before handing it over closes it here.
+ */
+export async function newSession(
+    browser: Browser,
+    actor?: {username: string; password: string},
+): Promise<{context: BrowserContext; page: Page}> {
+    const context = await browser.newContext({
+        storageState: actor == null
+            ? getStorageState({}, {authoringReact: true})
+            : getLoggedOutStorageState({authoringReact: true}),
+    });
+
+    try {
+        const page = await context.newPage();
+
+        if (actor != null) {
+            await loginAs(page, actor.username, actor.password);
+        }
+
+        return {context, page};
+    } catch (error) {
+        await context.close();
+
+        throw error;
+    }
+}
+
+/**
+ * The unread notifications badge of the main menu. It has no test id (an angular template) and the
+ * authoring sidebar reuses its element id, so it is taken by position.
+ */
+export function getUnreadNotificationsBadge(page: Page): Locator {
+    return page.locator('#unread-count').first();
 }

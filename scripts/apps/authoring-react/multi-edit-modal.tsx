@@ -83,6 +83,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             component: () => (
                 <Button
                     text={gettext('Save')}
+                    data-test-id="save"
                     style="filled"
                     type="primary"
                     disabled={!hasUnsavedChanges()}
@@ -238,6 +239,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                 onHide={this.handleModalClose}
                 visible
                 headerTemplate={gettext('Multi Edit')}
+                data-test-id="multiedit-modal"
             >
                 <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}}>
                     <Spacer h gap="0" noWrap style={{height: '100%'}}>
@@ -252,7 +254,11 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                                                 />
                                             )
                                         }
-                                        <div style={{width: '100%'}}>
+                                        <div
+                                            style={{width: '100%'}}
+                                            data-test-id="multiedit-article"
+                                            data-test-value={_id}
+                                        >
                                             <AuthoringIntegrationWrapper
                                                 getAuthoringPrimaryToolbarWidgets={getMultiEditPrimaryToolbarWidgets}
                                                 authoringStorage={authoringStorageIArticle}

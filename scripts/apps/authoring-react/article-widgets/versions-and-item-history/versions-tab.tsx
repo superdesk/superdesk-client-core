@@ -248,7 +248,15 @@ export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponent
                                 <Spacer h gap="8" justifyContent="space-between" alignItems="center" noGrow>
                                     <div />
 
-                                    <Spacer h gap="4" justifyContent="start" alignItems="center" noGrow>
+                                    <Spacer
+                                        h
+                                        gap="4"
+                                        justifyContent="start"
+                                        alignItems="center"
+                                        noGrow
+                                        data-test-id="article-version-actions"
+                                        data-test-value={String(item._current_version)}
+                                    >
                                         <div>
                                             <Button
                                                 text={gettext('Preview')}

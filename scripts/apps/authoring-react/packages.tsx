@@ -95,7 +95,7 @@ class PackagesWidget extends React.Component<IArticleSideWidgetComponentType, IS
                                 {
                                     this.state.packages.map((packageItem) => (
                                         <BoxedListItem key={packageItem._id}>
-                                            <Spacer h gap="16" noWrap>
+                                            <Spacer h gap="16" noWrap data-test-id="packages-list-item">
                                                 <Icon icon="big-icon--package" />
                                                 <Spacer v gap="4">
                                                     <DateTime dateTime={packageItem.versioncreated} />

@@ -47,7 +47,7 @@ const SelectionButtonComponent: React.StatelessComponent<IProps> = (
             style={uiTheme == null ? undefined : {color: uiTheme.textColor}}
             role="button"
         >
-            <span className={cx} onClick={clickHandler}>
+            <span className={cx} onClick={clickHandler} data-test-id="selection-button">
                 <i className={`icon-${iconName}`} />
             </span>
         </div>

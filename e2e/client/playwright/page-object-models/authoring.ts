@@ -183,6 +183,32 @@ export class Authoring {
         return panel;
     }
 
+    /**
+     * Opens the send / publish panel from the open item's editor, angular or authoring-react, and
+     * waits for its footer, which renders only once the panel has loaded its destinations.
+     */
+    async openActionsPanel(tab?: 'Send to' | 'Publish'): Promise<Locator> {
+        const panel = this.interactiveActionsPanel;
+
+        await this.page.getByTestId('authoring').getByTestId('open-send-publish-pane').click();
+        await expect(panel.getByTestId('panel-footer')).toBeVisible();
+
+        if (tab != null) {
+            await panel.getByTestId('tabs').getByRole('tab', {name: tab}).click();
+        }
+
+        return panel;
+    }
+
+    /** `sendTo` for either editor: that one reaches the panel through the angular topbar only. */
+    async sendToFromEditor(destination: {desk: string; stage: string}): Promise<void> {
+        const panel = await this.openActionsPanel('Send to');
+
+        await new TreeSelectDriver(this.page, panel.getByTestId('destination-select')).setValues(destination.desk);
+        await panel.getByTestId('stage-select').getByRole('radio', {name: destination.stage}).check();
+        await panel.getByTestId('send').click();
+    }
+
     async closeSendPublishPane(): Promise<void> {
         const panel = this.page.getByTestId('interactive-actions-panel');
 
@@ -291,6 +317,16 @@ export class Authoring {
         await expect(save).toBeDisabled();
 
         return {request: response.request().postDataJSON(), response: await response.json()};
+    }
+
+    /**
+     * Saves through the toolbar Save button and closes, in either editor. After an editor3 edit
+     * the Save button enables only once editor3 has handed the edit to the model, so waiting for
+     * it (inside `saveAndGetRequest`) also keeps the close from discarding that edit.
+     */
+    async saveAndClose(): Promise<void> {
+        await this.saveAndGetRequest();
+        await this.close();
     }
 
     field(field: string): Locator {
@@ -470,10 +506,17 @@ export class Authoring {
 
     /**
      * Opens the authoring-react "Save as template" modal, fills the name and saves.
-     * Menu items render in a portal outside the actions wrapper, so locate them by
-     * role/text rather than a test-id chain.
      */
     async saveAsTemplate(templateName: string): Promise<void> {
+        const modal = await this.openSaveAsTemplate();
+
+        await modal.getByLabel('Template name').fill(templateName);
+        await modal.getByRole('button', {name: 'Save'}).click();
+        await expect(modal).not.toBeVisible();
+    }
+
+    /** Menu items render in a portal outside the actions wrapper, so the entry is found by its text. */
+    async openSaveAsTemplate(): Promise<Locator> {
         const {page} = this;
         const modal = page.getByTestId('modal-save-as-template');
 
@@ -481,9 +524,7 @@ export class Authoring {
         await page.getByText('Save as template', {exact: true}).click();
         await expect(modal).toBeVisible();
 
-        await modal.getByLabel('Template name').fill(templateName);
-        await modal.getByRole('button', {name: 'Save'}).click();
-        await expect(modal).not.toBeVisible();
+        return modal;
     }
 }
 

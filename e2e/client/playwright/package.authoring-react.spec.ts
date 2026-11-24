@@ -91,7 +91,11 @@ test.describe('package (authoring-react)', () => {
         expect(request).not.toHaveProperty('groups');
     });
 
-    test('adds an item to the chosen group with "Add to current"', async ({page}) => {
+    test('adds an item to the chosen group with "Add to current"', {
+        annotation: [
+            {type: 'confluence', description: '1310294142 partial'}, // Add single item to existing package
+        ],
+    }, async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'packages'});
 
         const {monitoring, authoring} = await openPackage(page);
@@ -134,7 +138,11 @@ test.describe('package (authoring-react)', () => {
         await expect(contextMenu.getByRole('button', {name: 'Add to current'})).toHaveCount(0);
     });
 
-    test('adds the selected items to the main group with "Add to Current Package"', async ({page}) => {
+    test('adds the selected items to the main group with "Add to Current Package"', {
+        annotation: [
+            {type: 'confluence', description: '1310294139 partial'}, // Add multiple items to existing package
+        ],
+    }, async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'packages'});
 
         const {monitoring, authoring} = await openPackage(page);

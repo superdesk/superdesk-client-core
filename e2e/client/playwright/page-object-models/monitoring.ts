@@ -376,4 +376,24 @@ export class Monitoring {
 
         return list;
     }
+
+    /**
+     * Opens an item for editing and waits for `opened` (a locator only the editor renders). Saving
+     * re-sorts the list, closing unlocks the item and a fresh upload settles its renditions; each
+     * re-renders the rows and closes an actions menu opened meanwhile, so the open is retried for
+     * as long as the editor has not appeared.
+     */
+    async editItem(item: Locator, opened: Locator): Promise<void> {
+        await expect(async () => {
+            if (!await opened.isVisible()) {
+                const contextMenu = this.page.getByTestId('context-menu');
+
+                await item.hover();
+                await item.getByTestId('context-menu-button').click({timeout: 2000});
+                await contextMenu.getByRole('button', {name: 'Edit', exact: true}).click({timeout: 2000});
+            }
+
+            await expect(opened).toBeVisible({timeout: 5000});
+        }).toPass({timeout: 60000});
+    }
 }

@@ -25,7 +25,11 @@ export class ImageCrops extends React.PureComponent<IProps> {
                             cropSizes
                                 .map((cropSize, i) => (
                                     <Card borderRadius={0} key={i}>
-                                        <div className="image-crop">
+                                        <div
+                                            className="image-crop"
+                                            data-test-id="image-crop"
+                                            data-test-value={cropSize.name}
+                                        >
                                             <img
                                                 src={renditions[cropSize.name].href}
                                                 style={{maxWidth: '100%', maxHeight: '100%'}}
