@@ -145,7 +145,7 @@ hermescache==1.1.0
     # via superdesk-core
 honcho==2.0.0
     # via -r requirements.in
-hpack==4.1.0
+hpack==4.2.0
     # via h2
 httplib2==0.31.0
     # via oauth2client
