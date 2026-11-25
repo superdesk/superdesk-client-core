@@ -113,7 +113,12 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
 
         return (
             <div
-                className="authoring-section"
+                // the class sets the editor3 border and toolbar colours, as in angular
+                className={
+                    editorTheme == null
+                        ? 'authoring-section'
+                        : `authoring-section sd-editor--theme-${editorTheme.theme}`
+                }
                 data-test-id={editorTheme == null ? undefined : 'authoring-theme-container'}
                 data-editor-theme={editorTheme?.theme}
                 data-editor-font={editorTheme?.font}

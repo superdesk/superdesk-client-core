@@ -250,9 +250,6 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                 className={cx}
                 style={{
                     width: this.state.width,
-                    backgroundColor: this.props.uiTheme == null
-                        ? undefined
-                        : this.props.uiTheme.backgroundColorSecondary,
                     color: this.props.uiTheme == null ? undefined : this.props.uiTheme.textColor,
                 }}
                 ref={this.toolbarNode}
