@@ -4,7 +4,12 @@ import {Monitoring} from './page-object-models/monitoring';
 import {OpenedArticles} from './page-object-models/opened-articles';
 import {restoreDatabaseSnapshot} from './utils';
 import {getStorageState} from './utils/storage-state';
-import {createArticleFromTemplate, editArticle} from './scenarios/authoring-react-article';
+import {
+    archiveStatus,
+    createArticleFromTemplate,
+    editArticle,
+    openArticleId,
+} from './scenarios/authoring-react-article';
 
 test.use({storageState: getStorageState({}, {authoringReact: true})});
 
@@ -31,6 +36,7 @@ test.describe('creating, saving and closing an article (authoring-react)', {
 }, () => {
     test('Cancel in the unsaved changes prompt keeps the article open, Ignore discards it', async ({page}) => {
         const {monitoring, authoring} = await createStory(page);
+        const articleId = openArticleId(page);
 
         await authoring.input('slugline').fill('discarded article');
         await authoring.closeButton.click();
@@ -46,6 +52,8 @@ test.describe('creating, saving and closing an article (authoring-react)', {
         await expect(authoring.root).toHaveCount(0);
         await expect(monitoring.getGroupedArticleLocator(WORKING_STAGE, ANCHOR)).toBeVisible();
         await expect(workingStageItem(monitoring, 'discarded article')).toHaveCount(0);
+        // the list can lag behind a save, the archive cannot
+        await expect.poll(() => archiveStatus(page, articleId)).toBe(404);
     });
 
     test('Save in the unsaved changes prompt saves and closes the article', async ({page}) => {
@@ -67,6 +75,7 @@ test.describe('creating, saving and closing an article (authoring-react)', {
 
         await workingStageItem(monitoring, 'saved article').dblclick();
         await authoring.waitUntilOpen();
+        await expect(authoring.input('slugline')).toHaveText('saved article');
         await expect(authoring.input('headline')).toHaveText('saved article headline');
     });
 

@@ -90,7 +90,10 @@ test.describe('creating a new empty package (authoring-react)', {
         await editor.unsavedChangesDialog.getByRole('button', {name: 'Ignore', exact: true}).click();
         await expect(editor.root).toBeHidden();
 
-        // anchor: the list has rendered before the absence is checked
+        // The list is reloaded: a package saved on Ignore only shows up in the open list after a delay,
+        // so a count of 0 taken straight away would pass either way.
+        await page.reload();
+        await monitoring.openMonitoringForDesk('Sports');
         await expect(monitoring.getListedArticle('test sports story')).toBeVisible();
         await expect(monitoring.getListedArticle(HEADLINE)).toHaveCount(0);
     });

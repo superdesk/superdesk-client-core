@@ -117,8 +117,18 @@ test.describe('publishing from authoring-react', () => {
         const panel = await authoring.openActionsPanel('Publish');
 
         await new TreeSelectDriver(page, panel.getByTestId('target-subscribers')).setValues(['Subscriber 1']);
+
+        const publishRequest = page.waitForRequest(
+            (r) => r.method() === 'PATCH' && r.url().includes('/api/archive/publish/'),
+        );
+
         await panel.getByTestId('publish').click();
         await saveChangesPrompt(page).getByRole('button', {name: 'Save', exact: true}).click();
+
+        // the queue below would look the same if the target were dropped and every matching subscriber got the item
+        expect((await publishRequest).postDataJSON().target_subscribers).toEqual([
+            expect.objectContaining({name: 'Subscriber 1'}),
+        ]);
 
         await expect(authoring.root).toBeHidden();
 
@@ -229,6 +239,13 @@ test.describe('scheduled publishing from authoring-react', () => {
         const panel = await authoring.openActionsPanel('Publish');
         const enteredDate = await fillDateTime(panel.getByTestId('publish-schedule'), inTwoDaysAtTen());
         const prompt = saveChangesPrompt(page);
+        const writes: Array<'save' | 'publish'> = [];
+
+        page.on('request', (r) => {
+            if (r.method() === 'PATCH' && r.url().includes('/api/archive/')) {
+                writes.push(r.url().includes('/api/archive/publish/') ? 'publish' : 'save');
+            }
+        });
 
         await panel.getByTestId('publish').click();
         await expect(prompt).toContainText('There are some unsaved changes');
@@ -248,6 +265,9 @@ test.describe('scheduled publishing from authoring-react', () => {
         await expect(scheduled).toBeVisible();
         await expect(scheduled.getByText('Scheduled')).toBeVisible();
         await expect(scheduled.getByTitle(/^Article is scheduled for /)).toContainText(enteredDate);
+
+        // a publish that went ahead on Cancel would come before the save the second attempt makes
+        expect(writes).toEqual(['save', 'publish']);
 
         await scheduled.dblclick();
         await authoring.root.getByTestId('deschedule').click();

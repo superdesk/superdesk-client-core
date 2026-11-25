@@ -1,6 +1,7 @@
 import {Page, expect} from '@playwright/test';
 import {AuthoringReact} from '../page-object-models/authoring-react';
 import {Monitoring} from '../page-object-models/monitoring';
+import {SUPERDESK_API_URL} from '../utils';
 
 /**
  * Creates an article on Sports from the desk's default template and gives it `headline`, which is
@@ -84,4 +85,26 @@ export async function reopenArticle(page: Page, headline: string): Promise<void>
 export async function saveCloseAndReopen(page: Page, headline: string): Promise<void> {
     await new AuthoringReact(page).saveAndClose();
     await reopenArticle(page, headline);
+}
+
+/** The id of the article open in the editor, read from the `item` URL parameter. */
+export function openArticleId(page: Page): string {
+    const match = page.url().match(/[?&]item=([^&]+)/);
+
+    if (match == null) {
+        throw new Error(`no article is open in ${page.url()}`);
+    }
+
+    return decodeURIComponent(match[1]);
+}
+
+/** The status `GET /archive/<id>` answers with: 404 once the article is gone, whatever the list shows. */
+export async function archiveStatus(page: Page, articleId: string): Promise<number> {
+    const token = await page.evaluate(() => window.localStorage.getItem('sess:token'));
+    const response = await page.request.get(`${SUPERDESK_API_URL}/archive/${articleId}`, {
+        headers: {Authorization: token ?? ''},
+        failOnStatusCode: false,
+    });
+
+    return response.status();
 }

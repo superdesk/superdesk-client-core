@@ -1,8 +1,9 @@
 import {test, expect, type Page} from '@playwright/test';
 import {AuthoringReact} from './page-object-models/authoring-react';
 import {Monitoring} from './page-object-models/monitoring';
-import {restoreDatabaseSnapshot, SUPERDESK_API_URL} from './utils';
+import {restoreDatabaseSnapshot} from './utils';
 import {getStorageState} from './utils/storage-state';
+import {archiveStatus, openArticleId} from './scenarios/authoring-react-article';
 
 /**
  * QA case "Create new article with a keyboard shortcut" (1310851155) on authoring-react.
@@ -15,26 +16,6 @@ test.use({storageState: getStorageState({}, {authoringReact: true})});
 test.setTimeout(60000);
 
 const ANCHOR_ARTICLE = 'test sports story';
-
-function openArticleId(page: Page): string {
-    const match = page.url().match(/[?&]item=([^&]+)/);
-
-    if (match == null) {
-        throw new Error(`no article is open in ${page.url()}`);
-    }
-
-    return decodeURIComponent(match[1]);
-}
-
-async function archiveStatus(page: Page, articleId: string): Promise<number> {
-    const token = await page.evaluate(() => window.localStorage.getItem('sess:token'));
-    const response = await page.request.get(`${SUPERDESK_API_URL}/archive/${articleId}`, {
-        headers: {Authorization: token ?? ''},
-        failOnStatusCode: false,
-    });
-
-    return response.status();
-}
 
 async function openSportsAndPressShortcut(page: Page): Promise<{monitoring: Monitoring; authoring: AuthoringReact}> {
     const monitoring = new Monitoring(page);
