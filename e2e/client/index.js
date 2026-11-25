@@ -16,6 +16,10 @@ setTimeout(() => {
                 load: () => import('superdesk-core/scripts/extensions/content-lists'),
             },
             {
+                id: 'markForUser',
+                load: () => import('superdesk-core/scripts/extensions/markForUser'),
+            },
+            {
                 id: 'publishing-sections',
                 load: () => import('./test-extensions/publishing-sections'),
             },

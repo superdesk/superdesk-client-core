@@ -862,12 +862,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                     onFocus={() => {
                         this.setState({contentChangesAfterLastFocus: 0});
                     }}
-                    style={this.props.uiTheme == null
-                        ? {width: '100%'}
-                        : {
-                            width: '100%',
-                            borderColor: this.props.uiTheme.backgroundColorSecondary,
-                        }}
+                    style={{width: '100%'}}
                 >
                     {showToolbar && (
                         <Toolbar
