@@ -1182,10 +1182,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
     }
 
     /**
-     * Unlocks article from other user that holds the lock
-     * and locks for current user.
-     */
-    /**
      * Only patches lock fields, so unsaved changes are preserved.
      * FINISH: remove IArticle usage
      */
@@ -1223,6 +1219,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
         }
     }
 
+    /**
+     * Unlocks article from other user that holds the lock
+     * and locks for current user.
+     */
     forceLock(state: IStateLoaded<T>): void {
         const {authoringStorage} = this.props;
 
