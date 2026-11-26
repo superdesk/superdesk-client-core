@@ -32,6 +32,15 @@ export function getAssociationsWithBodyMedia(
     return result;
 }
 
+function getAssociationsIfBodyChanged(
+    item: IArticle,
+    rawContentState: RawDraftContentState,
+): Pick<IArticle, 'associations'> | {} {
+    return isEqual(item.fields_meta?.body_html?.draftjsState?.[0], rawContentState)
+        ? {}
+        : {associations: getAssociationsWithBodyMedia(item.associations, rawContentState)};
+}
+
 export const body_html: IFieldAdapter<IArticle> = {
     getFieldV2: (fieldEditor, fieldSchema) => {
         const fieldConfig: IEditor3Config = {
@@ -65,8 +74,11 @@ export const body_html: IFieldAdapter<IArticle> = {
 
     storeValue: (value: IEditor3ValueStorage, item, config, preferIncomplete) => {
         if (preferIncomplete) {
+            // An autosave reopened later becomes the item a save starts from, so its `associations` have to
+            // match its body already: the save below sees that body as unchanged and does not rewrite them.
             return {
                 ...item,
+                ...getAssociationsIfBodyChanged(item, value.rawContentState),
                 fields_meta: {
                     ...(item.fields_meta ?? {}),
                     body_html: {
@@ -82,17 +94,16 @@ export const body_html: IFieldAdapter<IArticle> = {
                 config,
             );
 
-            const articleUpdated = {...result.article};
+            const articleUpdated = {
+                ...result.article,
+                ...getAssociationsIfBodyChanged(item, value.rawContentState),
+            };
 
             articleUpdated.body_html = result.stringValue;
 
             // Keep compatibility with existing output format.
             // (only applicable to body_html field)
             articleUpdated.annotations = result.annotations;
-
-            if (!isEqual(item.fields_meta?.body_html?.draftjsState?.[0], value.rawContentState)) {
-                articleUpdated.associations = getAssociationsWithBodyMedia(item.associations, value.rawContentState);
-            }
 
             const contentState = editor3ToOperationalFormat(value, item.language).contentState;
 

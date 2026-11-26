@@ -36,6 +36,12 @@ function getDescription(mediaBlock: Locator): Locator {
     return mediaBlock.getByRole('textbox').and(mediaBlock.locator('[contenteditable="true"]'));
 }
 
+function getBodyMediaAssociations(article: {associations?: {[key: string]: unknown}}): Array<unknown> {
+    return Object.entries(article.associations ?? {})
+        .filter(([key, value]) => key.startsWith('editor_') && value != null)
+        .map(([, value]) => value);
+}
+
 function goToSports(page: Page): Promise<void> {
     return new Monitoring(page).openMonitoringForDesk('Sports');
 }
@@ -371,10 +377,32 @@ test.describe('media in the body (authoring-react)', () => {
         await setEditor3FieldValue(getDescription(getMediaBlock(body, 'picture')), description);
 
         const {response} = await authoring.saveAndGetRequest();
-        const bodyMedia = Object.entries(response.associations ?? {})
-            .filter(([key, value]) => key.startsWith('editor_') && value != null)
-            .map(([, value]) => value);
 
-        expect(bodyMedia).toEqual([expect.objectContaining({description_text: description})]);
+        expect(getBodyMediaAssociations(response)).toEqual([expect.objectContaining({description_text: description})]);
+    });
+
+    test('a description edit only autosaved and reopened reaches the picture\'s association on save', {
+        annotation: [{type: 'confluence', description: '1327759422 complete'}], // Image preview in Editor3
+    }, async ({page}) => {
+        await restoreDatabaseSnapshot({snapshotName: 'media-items'});
+        await goToSports(page);
+
+        const authoring = new Authoring(page);
+        const body = await openArticleWithMedia(page, 'Rivendell picture');
+        const description = 'Rivendell seen from the ford';
+        const autosaved = page.waitForResponse(
+            (r) => new URL(r.url()).pathname.endsWith('/archive_autosave') && r.request().method() === 'POST',
+        );
+
+        await setEditor3FieldValue(getDescription(getMediaBlock(body, 'picture')), description);
+        await autosaved;
+
+        // the reload drops the editor's state, so the article reopens from its autosave
+        await page.reload();
+        await expect(getDescription(getMediaBlock(getBody(page), 'picture'))).toHaveText(description);
+
+        const {response} = await authoring.saveAndGetRequest();
+
+        expect(getBodyMediaAssociations(response)).toEqual([expect.objectContaining({description_text: description})]);
     });
 });

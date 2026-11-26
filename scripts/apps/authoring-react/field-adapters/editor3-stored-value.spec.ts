@@ -236,5 +236,29 @@ describe('editor3 stored value retrieval', () => {
 
             expect(updated.associations).toBe(article.associations);
         });
+
+        it('are rewritten in an autosave of an edited body, which a later save may start from', () => {
+            const autosaved = body_html.storeValue(
+                {rawContentState: getRawWithPicture('edited caption')},
+                article,
+                getConfig(false),
+                true,
+            );
+
+            expect((autosaved.associations.editor_0 as IArticle).description_text).toBe('edited caption');
+            expect(autosaved.associations.editor_1).toBe(null);
+            expect(autosaved.associations.featuremedia).toBe(article.associations.featuremedia);
+        });
+
+        it('are left as they are in an autosave of an unchanged body', () => {
+            const autosaved = body_html.storeValue(
+                {rawContentState: getRawWithPicture('saved caption')},
+                article,
+                getConfig(false),
+                true,
+            );
+
+            expect(autosaved.associations).toBe(article.associations);
+        });
     });
 });
