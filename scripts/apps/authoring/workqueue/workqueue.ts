@@ -6,6 +6,7 @@ import {showUnsavedChangesPrompt, IUnsavedChangesAction} from 'core/ui/component
 import {assertNever} from 'core/helpers/typescript-helpers';
 import ng from 'core/services/ng';
 import {applicationState} from 'core/get-superdesk-api-implementation';
+import {authoringReactViewEnabled} from 'appConfig';
 import {WorkQueueCreateNewButton} from './work-queue-create-new-button';
 
 /**
@@ -150,7 +151,13 @@ function WorkqueueCtrl(
             each(item.linked_in_packages, (_item) => {
                 var pck = find(workqueue.items, {_id: _item.package});
 
-                if (pck) {
+                // Reopening refreshes angular's package view. authoring-react's package item cards
+                // refresh themselves, and reopening the open package remounts the editor, which
+                // closes the publish panel and drops edits autosave has not stored yet.
+                const openInAuthoringReact = authoringReactViewEnabled
+                    && applicationState.articleInEditMode === _item.package;
+
+                if (pck && !openInAuthoringReact) {
                     authoringWorkspace.edit(pck);
                 }
             });

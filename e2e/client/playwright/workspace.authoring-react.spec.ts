@@ -177,9 +177,23 @@ test('the open items icon lists every open article and reopens the selected one'
     await expect(authoring.input('slugline')).toHaveText(SELECTED);
 
     await openedArticles.openDashboard();
-    await openedArticles.closeDashboard();
 
-    // the X only dismisses the view, nothing is closed
+    // closing an item unlocks it, and the unlock request goes out as soon as the close starts
+    const unlocks: Array<string> = [];
+
+    page.on('request', (request) => {
+        if (request.url().includes('/unlock')) {
+            unlocks.push(request.url());
+        }
+    });
+
+    await openedArticles.closeDashboard();
     await expect(authoring.input('slugline')).toHaveText(SELECTED);
+
+    // a later round trip, so a close the X started has had its request sent
+    await openedArticles.getBarItem(OTHER).click();
+    await expect(authoring.input('slugline')).toHaveText(OTHER);
+
+    expect(unlocks).toEqual([]);
     await expect(openedArticles.getBarItems()).toHaveCount(3);
 });

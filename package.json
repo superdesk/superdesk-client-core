@@ -99,7 +99,7 @@
     "memoize-one": "^6.0.0",
     "ment.io": "0.9.23",
     "mini-css-extract-plugin": "^1.6.2",
-    "moment": "2.30.1",
+    "moment": "2.31.0",
     "moment-timezone": "0.5.41",
     "ng-file-upload": "12.2.13",
     "node-polyfill-webpack-plugin": "^4.1.0",
@@ -163,7 +163,7 @@
     "superdesk-code-style": "1.5.0"
   },
   "resolutions": {
-    "moment": "2.30.1"
+    "moment": "2.31.0"
   },
   "overrides": {
     "cheerio": "0.22.0"

@@ -75,7 +75,13 @@ test.describe('validate for publish macro (authoring-react)', {
         const response = await authoring.runMacro('Validate for Publish');
 
         expect(response.ok()).toBe(true);
-        await expect(page.getByTestId('notification--error')).toHaveCount(0);
+
+        // A toast stays up for 8s and a retrying `toHaveCount(0)` waits that long, so it would pass on a toast
+        // that did show. Look once, after the client has had a frame to render the response.
+        await page.evaluate(() => new Promise<void>((resolve) => {
+            requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+        }));
+        expect(await page.getByTestId('notification--error').count()).toBe(0);
         await expect(authoring.root).toBeVisible();
     });
 

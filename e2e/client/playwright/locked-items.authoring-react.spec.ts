@@ -491,7 +491,16 @@ test.describe('publishing an item whose association is locked', () => {
             await expectLockedByYouRefusal(page, ARTICLE);
             await expect(page.getByTestId('authoring')).toBeVisible();
 
+            // the editor refreshes its work queue 150ms after the unlock reaches it, so by then a
+            // reopen of the package (`workqueue.ts`) would have remounted it and closed the panel
+            const workqueueRefreshed = page.waitForResponse(
+                (r) => new URL(r.url()).pathname.endsWith('/workqueue'),
+                {timeout: 15000},
+            );
+
             await lockOwner.unlock();
+            await workqueueRefreshed;
+            await expect(panel.getByTestId('publish')).toBeVisible();
             await panel.getByTestId('publish').click();
 
             await expect(page.getByTestId('authoring')).toBeHidden();

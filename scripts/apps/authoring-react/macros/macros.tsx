@@ -30,6 +30,7 @@ import {prepareHtmlForPatching, patchHTMLonTopOfEditorState} from 'core/editor3/
 import {EditorState} from 'draft-js';
 import {OrderedMap} from 'immutable';
 import {notify} from 'core/notify/notify';
+import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
 
 // POTENTIAL-IMPROVEMENTS: don't allow replacing the same thing twice
 // -> body_html: $101 (CAD 13) -> click replace again -> $101 (CAD 13) (CAD 13)
@@ -281,6 +282,7 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
             },
         }).then((res) => {
             macroProcessor.afterPatch(res.item as IArticle);
+            widgetReactIntegration.closeActiveWidget();
         }).catch((err) => {
             if ((err._message?.length ?? 0) > 0) {
                 notify.error(err._message);
