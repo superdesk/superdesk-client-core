@@ -16,7 +16,7 @@ import {getStorageState} from './utils/storage-state';
  *
  * The angular spec reaches the `attachments` field through `legacy`'s "Plain text" profile. Here
  * "test sports story" is moved to `main`'s stock "Text" profile instead, the only `main` profile
- * that enables the field; switching the profile is one atomic UI action.
+ * that enables the field.
  */
 test.use({storageState: getStorageState({}, {authoringReact: true})});
 

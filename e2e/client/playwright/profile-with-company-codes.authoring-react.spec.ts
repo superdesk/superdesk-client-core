@@ -10,8 +10,7 @@ import {addVocabularyItem, createVocabulary} from './utils/vocabularies-api';
 
 /**
  * `legacy`'s "Plain text" profile enables `company_codes`, but `legacy` has no `company_codes` vocabulary, so the
- * field is left out and the rest of the profile must still render. It is also the profile the angular attachment
- * cases run on.
+ * field is left out and the rest of the profile must still render.
  */
 test.describe('a profile with company codes and no company codes vocabulary (authoring-react)', () => {
     test.use({storageState: getLoggedOutStorageState({authoringReact: true})});
