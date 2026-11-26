@@ -132,9 +132,6 @@ test('a new custom date field starts empty on a new article', {
         {type: 'confluence', description: '1344443799 partial'}, // Custom date
     ],
 }, async ({page}) => {
-    // React gap: the empty field shows 01/01/1970, DatePickerISO turns a null value into new Date(null)
-    test.fixme();
-
     await restoreDatabaseSnapshot();
     await createFieldInStoryProfile(
         page,
@@ -319,9 +316,6 @@ test('a new vocabulary field in the header takes a value that survives save and 
         {type: 'confluence', description: '10815143953 partial'}, // Vocabularies
     ],
 }, async ({page}) => {
-    // React gap: the Subject adapter rewrites `subject` from subject codes only and drops this field's value
-    test.fixme();
-
     await restoreDatabaseSnapshot();
 
     const metadata = new MetadataSettings(page);
