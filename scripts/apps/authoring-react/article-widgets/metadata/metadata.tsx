@@ -103,7 +103,7 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
                 )}
                 body={(
                     <Spacer v gap="16" noWrap>
-                        <Spacer h gap="64" justifyContent="space-between" noWrap>
+                        <Spacer h gap="64" justifyContent="space-between" noWrap data-test-id="not-for-publication">
                             <Heading type="h6" align="start">
                                 {gettext('Not For Publication')}
                             </Heading>
@@ -124,7 +124,7 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
 
                         <ContentDivider border type="dotted" margin="none" />
 
-                        <Spacer h gap="64" justifyContent="space-between" noWrap>
+                        <Spacer h gap="64" justifyContent="space-between" noWrap data-test-id="legal">
                             <Heading type="h6" align="start">
                                 {gettext('Legal')}
                             </Heading>

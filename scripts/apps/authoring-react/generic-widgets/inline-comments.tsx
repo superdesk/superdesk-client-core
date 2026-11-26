@@ -50,7 +50,7 @@ class Comment extends React.PureComponent<{comment: IInlineComment}> {
 
         return (
             <Card>
-                <Spacer h gap="8" justifyContent="start" noGrow>
+                <Spacer h gap="8" justifyContent="start" noGrow data-test-id="inline-comment">
                     <UserAvatar user={user} />
 
                     <div>
@@ -68,6 +68,7 @@ class Comment extends React.PureComponent<{comment: IInlineComment}> {
                     comment.commentedText != null && (
                         <div
                             className="commented-text"
+                            data-test-id="commented-text"
                             style={{
                                 paddingBlockStart: 10,
                                 marginBottom: 0,
@@ -187,7 +188,11 @@ export class InlineCommentsWidget<T> extends React.PureComponent<IProps<T>, ISta
                         {
                             commentsByField.map(({fieldId, comments}, i) => {
                                 return (
-                                    <div key={i}>
+                                    <div
+                                        key={i}
+                                        data-test-id="inline-comments-group"
+                                        data-test-value={allFields.get(fieldId).name}
+                                    >
                                         <div className="field-label--base">
                                             {allFields.get(fieldId).name}
                                         </div>

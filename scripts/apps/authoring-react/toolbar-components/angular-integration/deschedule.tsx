@@ -7,6 +7,7 @@ import {sdApi} from 'api';
 export const DescheduleComponent: React.ComponentType<{entity: IArticle}> = ({entity}) => (
     <Button
         text={gettext('Deschedule')}
+        data-test-id="deschedule"
         style="filled"
         type="primary"
         onClick={() => sdApi.article.deschedule(entity)}

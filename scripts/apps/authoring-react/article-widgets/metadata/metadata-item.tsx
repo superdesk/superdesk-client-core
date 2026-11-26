@@ -13,7 +13,15 @@ export class MetadataItem extends React.Component<IProps> {
 
         return (
             <>
-                <Spacer h gap="32" justifyContent="space-between" alignItems="center" noWrap>
+                <Spacer
+                    h
+                    gap="32"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    noWrap
+                    data-test-id="metadata-item"
+                    data-test-value={label}
+                >
                     <Heading type="h6" align="start">
                         {label.toUpperCase()}
                     </Heading>

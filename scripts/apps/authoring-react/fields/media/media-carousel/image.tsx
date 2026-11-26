@@ -65,7 +65,11 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
             <div>
                 <div className="field--media--carousel">
                     <div style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
-                        <img src={item.renditions.viewImage.href} style={{maxHeight: '50vh'}} />
+                        <img
+                            src={item.renditions.viewImage.href}
+                            style={{maxHeight: '50vh'}}
+                            data-test-id="media-carousel-image"
+                        />
                     </div>
 
                     <div className="field--media--carousel-overlay">
@@ -143,7 +147,11 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
                                         <ImageCrops
                                             renditions={renditions}
                                             cropSizes={cropSizes}
-                                            wrapper={({children}) => <div style={{width: '100%'}}>{children}</div>}
+                                            wrapper={({children}) => (
+                                                <div style={{width: '100%'}} data-test-id="image-crops">
+                                                    {children}
+                                                </div>
+                                            )}
                                         />
                                     )
                                 }

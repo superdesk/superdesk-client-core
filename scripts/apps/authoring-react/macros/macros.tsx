@@ -335,6 +335,7 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
                                 : this.runInteractiveMacro(macro);
                         }}
                         text={macro.label}
+                        data-test-id="macro-item"
                     />
                 </div>
             );

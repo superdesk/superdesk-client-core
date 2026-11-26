@@ -11,7 +11,11 @@ test.use({
 const WORKING_STAGE = 'Sports / Working Stage';
 
 test.describe('creating a package (authoring-react)', () => {
-    test('from the selected items with "Create Package"', async ({page}) => {
+    test('from the selected items with "Create Package"', {
+        annotation: [
+            {type: 'confluence', description: '1308524947 partial'}, // Create package from multiple items
+        ],
+    }, async ({page}) => {
         await restoreDatabaseSnapshot();
 
         const monitoring = new Monitoring(page);
@@ -52,7 +56,11 @@ test.describe('creating a package (authoring-react)', () => {
         await expect(authoring.item('story 2')).toBeVisible();
     });
 
-    test('from a published item found in global search', async ({page}) => {
+    test('from a published item found in global search', {
+        annotation: [
+            {type: 'confluence', description: '1310294136 partial'}, // Create a package from a single item
+        ],
+    }, async ({page}) => {
         await restoreDatabaseSnapshot();
 
         const monitoring = new Monitoring(page);

@@ -90,7 +90,7 @@ class CommentTextArea extends React.Component<any, any> {
      */
     renderSuggestion(item: IUserSuggestion | IDeskSuggestion, search, highlightedDisplay) {
         return (
-            <div className="entry">
+            <div className="entry" data-test-id="mention-suggestion">
                 {item.type === 'desk'
                     ? <i className="icon-tasks" />
                     : <UserAvatar size="small" user={item.user} />

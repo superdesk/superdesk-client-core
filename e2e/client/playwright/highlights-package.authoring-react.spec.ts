@@ -73,7 +73,11 @@ async function createHighlightsPackage(
 }
 
 test.describe('highlights package (authoring-react)', () => {
-    test('creates a highlights package and shows what it exports to', async ({page}) => {
+    test('creates a highlights package and shows what it exports to', {
+        annotation: [
+            {type: 'confluence', description: '1311834315 complete'}, // Create highlights package
+        ],
+    }, async ({page}) => {
         await restoreDatabaseSnapshot();
 
         const authoring = await createHighlightsPackage(page);

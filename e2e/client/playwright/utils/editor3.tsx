@@ -276,3 +276,65 @@ export async function setEditor3FieldValue(locator: Locator, value: string) {
 
     throw new Error(`Failed to fill input with "${value}" after 10 attempts.`);
 }
+
+/**
+ * A toolbar button that acts on a selection (link, comment, annotation, remove format). Its
+ * accessible name comes from the tooltip on the outer element, while the click handler and the
+ * `inactive` ("nothing selected") class sit on the inner `selection-button`.
+ */
+export function getEditor3SelectionButton(field: Locator, name: string): Locator {
+    return field.getByTestId('toolbar')
+        .getByRole('button', {name, exact: true})
+        .getByTestId('selection-button');
+}
+
+/** Types `text` into the empty editor3 field `fieldId` and waits for it to render as one run. */
+export async function typeIntoEditor3Field(page: Page, fieldId: string, text: string): Promise<Locator> {
+    const field = getEditor3Field(page, fieldId);
+    const input = field.getByRole('textbox');
+
+    await expect(input).toBeVisible();
+    await input.click();
+    await page.keyboard.type(text);
+    await expect(getEditor3TextRun(field, text)).toBeVisible();
+
+    return field;
+}
+
+/** Selects the trailing word `trailing` of `text`, the field's whole content, with counted arrow presses. */
+export async function selectEditor3TrailingText(
+    page: Page,
+    field: Locator,
+    text: string,
+    trailing: string,
+): Promise<void> {
+    await getEditor3TextRun(field, trailing).click();
+    await pressRepeatedly(page, 'ArrowRight', text.length);
+    await pressRepeatedly(page, 'Shift+ArrowLeft', trailing.length);
+}
+
+/**
+ * Clicks a control inside an editor3 highlight popup (comment, annotation). `HighlightsPopup`
+ * re-renders by unmounting and remounting, and the positioner moves it after every document click,
+ * so Playwright's actionability checks lose the race (unstable, then detached). A dispatched event
+ * only needs the element attached, and React listens at the document, so its handler still runs.
+ */
+export function clickInPopup(target: Locator, options?: {timeout?: number}): Promise<void> {
+    return target.dispatchEvent('click', undefined, options);
+}
+
+/**
+ * Picks `name` from the mention suggestions of a react-mentions input. The mention has to be typed:
+ * react-mentions only queries its data source from keystrokes, and only picking a suggestion writes
+ * the `@[name](user:id)` markup the backend scans for.
+ */
+export async function mentionUser(
+    page: Page,
+    input: Locator,
+    typed: string,
+    name: string,
+    options?: {timeout?: number},
+): Promise<void> {
+    await input.pressSequentially(typed);
+    await page.getByTestId('mention-suggestion').filter({hasText: name}).click(options);
+}
