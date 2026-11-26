@@ -76,6 +76,33 @@ describe('WithArticles', () => {
         });
     });
 
+    it('keeps loading when an item fails to load for a reason other than 404', (done) => {
+        const failingId = 'unreachable-1';
+        const children = jasmine.createSpy('children').and.returnValue(<div />);
+        const wrapper = shallow(
+            <WithArticles ids={[draft._id, failingId]}>{children}</WithArticles>,
+            {disableLifecycleMethods: true},
+        );
+        const instance = wrapper.instance() as WithArticles;
+
+        spyOn(instance.asyncHelpers, 'httpRequestJsonLocal').and.callFake((options: IRequestOptions) => (
+            options.path === '/search'
+                ? fakeSearch(options)
+                : Promise.reject({_status: 'ERR', _error: {code: 500}})
+        ));
+
+        instance.fetchItems();
+
+        setTimeout(() => {
+            wrapper.update();
+
+            expect(instance.state.items.has(failingId)).toBe(false);
+            expect(wrapper.find('SmoothLoaderOuter').prop('loading')).toBe(true);
+
+            done();
+        });
+    });
+
     it('reads an item that /search does not return from archive', (done) => {
         const notIndexed = {_id: 'not-indexed-1', state: 'in_progress'} as IArticle;
         const children = jasmine.createSpy('children').and.returnValue(<div />);

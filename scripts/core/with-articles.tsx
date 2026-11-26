@@ -78,10 +78,14 @@ export class WithArticles extends SuperdeskReactComponent<IProps, IState> {
         });
     }
 
+    // Only a 404 means the item is gone. Any other error rejects and leaves the item loading: an editor that
+    // saves the items it shows would otherwise drop one that only failed to load.
     fetchFromArchive(id: IArticle['_id']): Promise<[IArticle['_id'], IArticle | null]> {
         return this.asyncHelpers.httpRequestJsonLocal<IArticle>({method: 'GET', path: `/archive/${id}`})
             .then((item): [IArticle['_id'], IArticle | null] => [id, item])
-            .catch((): [IArticle['_id'], IArticle | null] => [id, null]);
+            .catch((error): [IArticle['_id'], IArticle | null] | Promise<never> => (
+                error?._error?.code === 404 ? [id, null] : Promise.reject(error)
+            ));
     }
 
     fetchItems() {
@@ -97,6 +101,8 @@ export class WithArticles extends SuperdeskReactComponent<IProps, IState> {
         if (this.props.ids.includes(id)) {
             this.fetchFromArchive(id).then((entry) => {
                 this.setState((state) => ({items: state.items.merge(Map([entry]))}));
+            }).catch(() => {
+                // the item stays as last loaded
             });
         }
     }
