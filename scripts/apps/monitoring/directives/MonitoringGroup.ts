@@ -299,7 +299,9 @@ export function MonitoringGroup(
                         // check if stage contains updated items
                         if (
                             !!data.items[updatedItemGuid] &&
-                            scope.items._items.find((item) => item.guid === updatedItemGuid)
+                            // scope.items is undefined until the initial query resolves; an update
+                            // arriving before that can't match anyway and the pending query is fresh
+                            scope.items?._items.find((item) => item.guid === updatedItemGuid)
                         ) {
                             scheduleQuery(event, data);
                             break;

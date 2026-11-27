@@ -1,5 +1,6 @@
 import {Page, Locator, expect} from '@playwright/test';
 import {dismissSessionExpiry, s} from '../utils';
+import {TreeSelectDriver} from '../utils/tree-select-driver';
 
 export class Monitoring {
     private page: Page;
@@ -272,6 +273,29 @@ export class Monitoring {
         await this.page.keyboard.press('Control+m');
 
         await expect(this.page.getByTestId('authoring-topbar')).toBeVisible();
+    }
+
+    async duplicateTo(item: Locator, destination: {desk: string; stage: string}): Promise<void> {
+        await this.executeActionOnMonitoringItem(item, 'Duplicate', 'Duplicate To');
+
+        const panel = this.page.getByTestId('interactive-actions-panel');
+
+        await expect(panel).toBeVisible();
+
+        await new TreeSelectDriver(
+            this.page,
+            this.page.locator(s('destination-select')),
+        ).setValues(destination.desk);
+
+        await panel.getByTestId('stage-select')
+            .getByRole('radio', {name: destination.stage})
+            .check();
+
+        await panel.getByTestId('duplicate').click();
+
+        // the panel closes asynchronously; returning before it is gone lets the
+        // closing overlay intercept the caller's next click
+        await expect(panel).toBeHidden();
     }
 
     async openMediaUploadView(): Promise<void> {
