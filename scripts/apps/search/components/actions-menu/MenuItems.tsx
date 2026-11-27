@@ -19,6 +19,7 @@ interface IProps {
     scopeApply: IScopeApply;
     onActioning: any;
     target?: Element;
+    extraItems?: Array<JSX.Element>;
 }
 
 interface IState {
@@ -223,6 +224,10 @@ export default class MenuItems extends React.Component<IProps, IState> {
                 groupedItems[action.groupId].push({label: action.label, element, priority});
             }
         });
+
+        if ((this.props.extraItems ?? []).length > 0) {
+            groupedItems['extra-items'] = this.props.extraItems.map((element) => ({label: '', element}));
+        }
 
         var menu: Array<JSX.Element> = [];
 

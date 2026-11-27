@@ -10,6 +10,7 @@ export const RequiredIndicatorForHeader = () => (
     <span
         className="sd-font-size--x-small"
         style={{color: 'var(--sd-colour-alert)'}}
+        data-test-id="required-indicator"
     >
         *
     </span>

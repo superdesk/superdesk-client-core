@@ -121,10 +121,13 @@ export function getProfileFields<T>(
 
         const fieldEditor = editor[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
         const fieldSchema = schema[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
+        const section = getSection(fieldId, editorItem);
 
         const commonConfigs: ICommonFieldConfig = {
             readOnly: fieldEditor.readonly === true,
-            required: fieldEditor.required === true,
+            // Profiles created by superdesk-core set `required` only in the schema. Angular's header marks
+            // required fields from the schema; its content area does not mark headline, abstract or body.
+            required: fieldEditor.required === true || (section === 'header' && fieldSchema.required === true),
             allow_toggling: fieldEditor.allow_toggling === true,
             width: convertWidth(fieldEditor.sdWidth),
         };
@@ -171,7 +174,7 @@ export function getProfileFields<T>(
             continue;
         }
 
-        if (getSection(fieldId, editorItem) === 'header') {
+        if (section === 'header') {
             headerFields = headerFields.set(fieldV2.id, fieldV2);
         } else {
             contentFields = contentFields.set(fieldV2.id, fieldV2);

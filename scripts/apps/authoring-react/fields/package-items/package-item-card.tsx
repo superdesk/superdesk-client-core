@@ -1,5 +1,5 @@
 import React from 'react';
-import {IconButton, Label, Menu} from 'superdesk-ui-framework/react';
+import {IconButton, Label} from 'superdesk-ui-framework/react';
 import {IArticle, IPackageItem, IVocabularyItem} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {sdApi} from 'api';
@@ -10,10 +10,18 @@ import {TypeIcon} from 'apps/search/components';
 import {slugline as Slugline} from 'apps/search/components/fields/slugline';
 import {headline as Headline} from 'apps/search/components/fields/headline';
 import {state as State} from 'apps/search/components/fields/state';
-import {openArticle} from 'core/get-superdesk-api-implementation';
-import {fullPreview} from 'apps/authoring/preview/fullPreviewMultiple';
+import {noop} from 'lodash';
+import ng from 'core/services/ng';
+import {ActionsMenu} from 'apps/search/components/actions-menu/ActionsMenu';
+import SubmenuDropdown from 'apps/search/components/actions-menu/SubmenuDropdown';
+import {closeActionsMenu} from 'apps/search/helpers';
 
 const PACKAGE_STORY_LABELS_VOCABULARY_ID = 'package-story-labels';
+
+// the actions menu runs angular activities, which change angular state
+function applyInAngularScope(callback: () => void): void {
+    ng.get('$rootScope').$applyAsync(callback);
+}
 
 function getPackageStoryLabels(): Array<IVocabularyItem> {
     return sdApi.vocabularies.getAll().get(PACKAGE_STORY_LABELS_VOCABULARY_ID)?.items ?? [];
@@ -64,6 +72,48 @@ export class PackageItemCard extends SuperdeskReactComponent<IProps, IState> {
         this.fetchItem = this.fetchItem.bind(this);
     }
 
+    /**
+     * Angular's "Set label in current package" is an angular dropdown that the React actions menu can't render,
+     * so the card supplies its own.
+     */
+    private getLabelMenuItems(item: IArticle): Array<JSX.Element> {
+        const {packageItem, readOnly, onLabelChange} = this.props;
+        const storyLabels = getPackageStoryLabels();
+
+        if (readOnly || onLabelChange == null || storyLabels.length < 1) {
+            return [];
+        }
+
+        const setLabel = (label: IVocabularyItem['qcode'] | null) => {
+            closeActionsMenu(item._id);
+            onLabelChange(label);
+        };
+
+        const labelButtons = [
+            {qcode: null, name: gettext('No label')},
+            ...storyLabels,
+        ].map(({qcode, name}) => (
+            <li key={qcode ?? 'no-label'}>
+                <button
+                    disabled={qcode === (packageItem.label ?? null)}
+                    onClick={() => setLabel(qcode)}
+                >
+                    {name}
+                </button>
+            </li>
+        ));
+
+        return [
+            <li key="set-label">
+                <SubmenuDropdown
+                    label={gettext('Set label in current package')}
+                    submenu={labelButtons}
+                    icon={null}
+                />
+            </li>,
+        ];
+    }
+
     fetchItem() {
         const {path, urlParams} = getPackageItemRequest(this.props.packageItem);
 
@@ -106,10 +156,14 @@ export class PackageItemCard extends SuperdeskReactComponent<IProps, IState> {
 
     componentWillUnmount() {
         this.removeListeners.forEach((removeListener) => removeListener());
+
+        if (this.state.item != null) {
+            closeActionsMenu(this.state.item._id);
+        }
     }
 
     render() {
-        const {packageItem, readOnly, onRemove, onLabelChange, backgroundColor} = this.props;
+        const {packageItem, readOnly, onRemove, backgroundColor} = this.props;
         const {item, error} = this.state;
 
         // until the item loads, or if it can't be loaded, the copy of its metadata in the ref is shown
@@ -123,49 +177,6 @@ export class PackageItemCard extends SuperdeskReactComponent<IProps, IState> {
         const storyLabels = getPackageStoryLabels();
         const storyLabel = storyLabels.find(({qcode}) => qcode === packageItem.label);
         const isLocked = item?.lock_user != null;
-
-        const actions: React.ComponentProps<typeof Menu>['items'] = [];
-
-        if (item != null) {
-            actions.push(
-                {
-                    label: gettext('Preview'),
-                    onClick: () => {
-                        fullPreview.previewItems([item]);
-                    },
-                },
-                {
-                    label: gettext('Open'),
-                    onClick: () => {
-                        openArticle(item._id, 'edit');
-                    },
-                },
-                {
-                    label: gettext('Open in new window'),
-                    onClick: () => {
-                        openArticle(item._id, 'edit-new-window');
-                    },
-                },
-            );
-        }
-
-        if (!readOnly && onLabelChange != null && storyLabels.length > 0) {
-            actions.push({
-                label: gettext('Set label'),
-                children: [
-                    {
-                        label: gettext('No label'),
-                        onClick: () => onLabelChange(null),
-                        disabled: packageItem.label == null,
-                    },
-                    ...storyLabels.map((label) => ({
-                        label: label.name,
-                        onClick: () => onLabelChange(label.qcode),
-                        disabled: label.qcode === packageItem.label,
-                    })),
-                ],
-            });
-        }
 
         return (
             <div
@@ -244,21 +255,25 @@ export class PackageItemCard extends SuperdeskReactComponent<IProps, IState> {
                     </ListItemColumn>
 
                     {
-                        actions.length > 0 && (
+                        item != null && (
                             <ListItemColumn>
-                                <span data-test-id="package-item-actions">
-                                    <Menu items={actions}>
-                                        {(toggle) => (
-                                            <IconButton
-                                                icon="dots-vertical"
-                                                ariaValue={gettext('Item actions')}
-                                                onClick={(event) => {
-                                                    toggle(event);
-                                                }}
-                                            />
-                                        )}
-                                    </Menu>
-                                </span>
+                                <ActionsMenu
+                                    item={item}
+                                    onActioning={noop}
+                                    scopeApply={applyInAngularScope}
+                                    extraItems={this.getLabelMenuItems(item)}
+                                    template={(toggle, stopEvent) => (
+                                        <span data-test-id="package-item-actions" onClick={stopEvent}>
+                                            <button
+                                                className="icn-btn"
+                                                onClick={toggle}
+                                                aria-label={gettext('Item actions')}
+                                            >
+                                                <i className="icon-dots-vertical" />
+                                            </button>
+                                        </span>
+                                    )}
+                                />
                             </ListItemColumn>
                         )
                     }
