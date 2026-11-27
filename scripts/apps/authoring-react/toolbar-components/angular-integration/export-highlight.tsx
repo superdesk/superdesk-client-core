@@ -10,7 +10,7 @@ export const ExportHighlightComponent: React.ComponentType<{entity: IArticle}> =
 
     return (
         <Button
-            type="default"
+            type="primary"
             onClick={() => sdApi.highlights.exportHighlight(
                 entity._id,
                 exposed?.hasUnsavedChanges() ?? false,
