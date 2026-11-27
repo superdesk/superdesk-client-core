@@ -12,6 +12,18 @@ const featureMediaConfig: IMediaConfig = {
     allowedWorkflows: {inProgress: true, published: true},
 };
 
+// the file picker's `accept` attribute; its order does not matter to browsers
+const ACCEPT: {[allowed: string]: string} = {
+    '{"allowPicture":false,"allowVideo":false,"allowAudio":false}': '',
+    '{"allowPicture":false,"allowVideo":false,"allowAudio":true}': 'audio/*',
+    '{"allowPicture":false,"allowVideo":true,"allowAudio":false}': 'video/*',
+    '{"allowPicture":false,"allowVideo":true,"allowAudio":true}': 'video/*,audio/*',
+    '{"allowPicture":true,"allowVideo":false,"allowAudio":false}': 'image/*',
+    '{"allowPicture":true,"allowVideo":false,"allowAudio":true}': 'image/*,audio/*',
+    '{"allowPicture":true,"allowVideo":true,"allowAudio":false}': 'image/*,video/*',
+    '{"allowPicture":true,"allowVideo":true,"allowAudio":true}': 'image/*,video/*,audio/*',
+};
+
 describe('authoring-react media field editor', () => {
     let notifyError: jasmine.Spy;
     let dropItem: jasmine.Spy;
@@ -102,6 +114,91 @@ describe('authoring-react media field editor', () => {
                 .toHaveBeenCalledWith('Item is locked. Cannot associate media item.', undefined, undefined);
             expect(onChange).not.toHaveBeenCalled();
             done();
+        });
+    });
+
+    describe('for every combination of allowed media kinds', () => {
+        const combinations: Array<Pick<IMediaConfig, 'allowPicture' | 'allowVideo' | 'allowAudio'>> = [];
+
+        [false, true].forEach((allowPicture) => {
+            [false, true].forEach((allowVideo) => {
+                [false, true].forEach((allowAudio) => {
+                    combinations.push({allowPicture, allowVideo, allowAudio});
+                });
+            });
+        });
+
+        function getRefusalMessage(allowed: Pick<IMediaConfig, 'allowPicture' | 'allowVideo' | 'allowAudio'>): string {
+            const types = [
+                allowed.allowPicture ? 'image' : null,
+                allowed.allowVideo ? 'video' : null,
+                allowed.allowAudio ? 'audio' : null,
+            ].filter((type) => type != null);
+
+            return `Only the following media types are allowed: ${types.join(', ')}`;
+        }
+
+        combinations.forEach((allowed) => {
+            const config = {...featureMediaConfig, ...allowed};
+            const refusal = getRefusalMessage(allowed);
+            const name = JSON.stringify(allowed);
+
+            it(`accepts and refuses files by their type, ${name}`, () => {
+                const files = [
+                    {file: image('a.jpg'), allowed: allowed.allowPicture},
+                    {file: new File([''], 'a.mp4', {type: 'video/mp4'}), allowed: allowed.allowVideo},
+                    {file: new File([''], 'a.mp3', {type: 'audio/mpeg'}), allowed: allowed.allowAudio},
+                    {file: new File([''], 'notes.txt', {type: 'text/plain'}), allowed: false},
+                ];
+
+                files.forEach(({file, allowed: isAllowed}) => {
+                    notifyError.calls.reset();
+                    uploadIntent.calls.reset();
+
+                    drop(config, {types: ['Files'], files: [file]});
+
+                    if (isAllowed) {
+                        expect(uploadIntent).toHaveBeenCalled();
+                        expect(notifyError).not.toHaveBeenCalled();
+                    } else {
+                        expect(uploadIntent).not.toHaveBeenCalled();
+                        expect(notifyError).toHaveBeenCalledWith(refusal, undefined, undefined);
+                    }
+                });
+            });
+
+            it(`accepts and refuses dropped items by their type, ${name}`, () => {
+                const items = [
+                    {type: 'application/superdesk.item.picture', allowed: allowed.allowPicture},
+                    {type: 'application/superdesk.item.graphic', allowed: allowed.allowPicture},
+                    {type: 'application/superdesk.item.video', allowed: allowed.allowVideo},
+                    {type: 'application/superdesk.item.audio', allowed: allowed.allowAudio},
+                ];
+
+                dropItem.and.returnValue(new Promise(() => undefined));
+
+                items.forEach(({type, allowed: isAllowed}) => {
+                    notifyError.calls.reset();
+                    dropItem.calls.reset();
+
+                    drop(config, {types: [type], data: {_id: 'item1'}});
+
+                    if (isAllowed) {
+                        expect(dropItem).toHaveBeenCalled();
+                        expect(notifyError).not.toHaveBeenCalled();
+                    } else {
+                        expect(dropItem).not.toHaveBeenCalled();
+                        expect(notifyError).toHaveBeenCalledWith(refusal, undefined, undefined);
+                    }
+                });
+            });
+
+            it(`offers the allowed file types to the file picker, ${name}`, () => {
+                const props = {config, value: [], onChange, readOnly: false, container: () => null} as any;
+                const editor = shallow(<Editor {...props} />).instance() as any;
+
+                expect(editor.getAllowedMimeTypes()).toBe(ACCEPT[name]);
+            });
         });
     });
 

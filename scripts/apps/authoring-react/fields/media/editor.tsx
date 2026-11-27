@@ -20,6 +20,13 @@ import {getDroppedItem, getSuperdeskType} from 'utils/dragging';
 
 type IProps = IEditorComponentProps<IMediaValueOperational, IMediaConfig, IMediaUserPreferences>;
 
+interface IMediaKind {
+    allowed: boolean;
+    label: string;
+    mimePrefix: string;
+    superdeskTypes: Array<string>;
+}
+
 export class Editor extends React.PureComponent<IProps> {
     private mediaCarouselRef: MediaCarousel;
 
@@ -31,6 +38,7 @@ export class Editor extends React.PureComponent<IProps> {
         };
 
         this.getMediaItems = this.getMediaItems.bind(this);
+        this.getAllowedMediaKinds = this.getAllowedMediaKinds.bind(this);
         this.getAllowedMimeTypes = this.getAllowedMimeTypes.bind(this);
         this.getMaxRemainingItemsCount = this.getMaxRemainingItemsCount.bind(this);
         this.isMediaTypeAllowed = this.isMediaTypeAllowed.bind(this);
@@ -43,24 +51,33 @@ export class Editor extends React.PureComponent<IProps> {
         return this.props.value ?? [];
     }
 
-    private getAllowedMimeTypes(): string {
+    private getAllowedMediaKinds(): Array<IMediaKind> {
         const {config} = this.props;
 
-        const acceptFileTypes = [];
+        return [
+            {
+                allowed: config.allowPicture,
+                label: gettext('image'),
+                mimePrefix: 'image/',
+                superdeskTypes: [SUPERDESK_MEDIA_TYPES.PICTURE, SUPERDESK_MEDIA_TYPES.GRAPHIC],
+            },
+            {
+                allowed: config.allowVideo,
+                label: gettext('video'),
+                mimePrefix: 'video/',
+                superdeskTypes: [SUPERDESK_MEDIA_TYPES.VIDEO],
+            },
+            {
+                allowed: config.allowAudio,
+                label: gettext('audio'),
+                mimePrefix: 'audio/',
+                superdeskTypes: [SUPERDESK_MEDIA_TYPES.AUDIO],
+            },
+        ].filter(({allowed}) => allowed === true);
+    }
 
-        if (config.allowPicture) {
-            acceptFileTypes.push('image/*');
-        }
-
-        if (config.allowAudio) {
-            acceptFileTypes.push('audio/*');
-        }
-
-        if (config.allowVideo) {
-            acceptFileTypes.push('video/*');
-        }
-
-        return acceptFileTypes.join(',');
+    private getAllowedMimeTypes(): string {
+        return this.getAllowedMediaKinds().map(({mimePrefix}) => mimePrefix + '*').join(',');
     }
 
     private getMaxRemainingItemsCount(): number | undefined {
@@ -78,21 +95,16 @@ export class Editor extends React.PureComponent<IProps> {
 
     /** Mirrors angular's `isAllowedMediaType` in `ItemAssociationDirective`. */
     private isMediaTypeAllowed(event): boolean {
-        const {config} = this.props;
+        const kinds = this.getAllowedMediaKinds();
         const superdeskType = getSuperdeskType(event);
 
         if (superdeskType === 'Files') {
             return Array.from(event.dataTransfer.files as FileList).every(
-                ({type}) => (config.allowPicture === true && type.startsWith('image/'))
-                    || (config.allowVideo === true && type.startsWith('video/'))
-                    || (config.allowAudio === true && type.startsWith('audio/')),
+                ({type}) => kinds.some(({mimePrefix}) => type.startsWith(mimePrefix)),
             );
         }
 
-        return (config.allowPicture === true && superdeskType === SUPERDESK_MEDIA_TYPES.PICTURE)
-            || (config.allowPicture === true && superdeskType === SUPERDESK_MEDIA_TYPES.GRAPHIC)
-            || (config.allowVideo === true && superdeskType === SUPERDESK_MEDIA_TYPES.VIDEO)
-            || (config.allowAudio === true && superdeskType === SUPERDESK_MEDIA_TYPES.AUDIO);
+        return kinds.some(({superdeskTypes}) => superdeskTypes.includes(superdeskType));
     }
 
     private upload(files: Array<File>): void {
@@ -152,24 +164,10 @@ export class Editor extends React.PureComponent<IProps> {
         }
 
         if (!this.isMediaTypeAllowed(event)) {
-            const allowedMediaTypes = [];
-
-            if (config.allowPicture) {
-                allowedMediaTypes.push(gettext('image'));
-            }
-
-            if (config.allowVideo) {
-                allowedMediaTypes.push(gettext('video'));
-            }
-
-            if (config.allowAudio) {
-                allowedMediaTypes.push(gettext('audio'));
-            }
-
             notify.error(
                 gettext(
                     'Only the following media types are allowed: {{types}}',
-                    {types: allowedMediaTypes.join(', ')},
+                    {types: this.getAllowedMediaKinds().map(({label}) => label).join(', ')},
                 ),
             );
 
