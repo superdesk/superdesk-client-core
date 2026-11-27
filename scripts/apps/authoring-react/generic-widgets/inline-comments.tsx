@@ -76,90 +76,82 @@ function getUserName(userId: IUser['_id']): string {
     return user?.display_name || user?.username || '';
 }
 
-class CommentMessage extends React.PureComponent<{authorId: IUser['_id']; msg: string; date: string | Date}> {
-    render() {
-        const {authorId, msg, date} = this.props;
+function CommentMessage({authorId, msg, date}: {authorId: IUser['_id']; msg: string; date: string | Date}) {
+    return (
+        <Spacer h gap="8" justifyContent="start" noGrow>
+            <UserAvatar user={store.getState().entities.users[authorId]} />
 
-        return (
-            <Spacer h gap="8" justifyContent="start" noGrow>
-                <UserAvatar user={store.getState().entities.users[authorId]} />
+            <div>
+                <strong>{getUserName(authorId)}:</strong>
+                &nbsp;
+                <TextWithMentions message={msg} />
 
                 <div>
-                    <strong>{getUserName(authorId)}:</strong>
-                    &nbsp;
-                    <TextWithMentions message={msg} />
-
-                    <div>
-                        <TimeElem date={date} />
-                    </div>
+                    <TimeElem date={date} />
                 </div>
-            </Spacer>
-        );
-    }
+            </div>
+        </Spacer>
+    );
 }
 
-class Comment extends React.PureComponent<{comment: IInlineComment}> {
-    render() {
-        const {comment} = this.props;
+function Comment({comment}: {comment: IInlineComment}) {
+    return (
+        <Card>
+            <div data-test-id="inline-comment">
+                <CommentMessage authorId={comment.authorId} msg={comment.msg} date={comment.date} />
 
-        return (
-            <Card>
-                <div data-test-id="inline-comment">
-                    <CommentMessage authorId={comment.authorId} msg={comment.msg} date={comment.date} />
+                {
+                    (comment.replies ?? []).length > 0 && (
+                        <Spacer v gap="8" style={{paddingBlockStart: 8, paddingInlineStart: 16}}>
+                            {
+                                comment.replies.map((reply, i) => (
+                                    <div key={i} data-test-id="inline-comment-reply">
+                                        <CommentMessage
+                                            authorId={reply.authorId}
+                                            msg={reply.msg}
+                                            date={reply.date}
+                                        />
+                                    </div>
+                                ))
+                            }
+                        </Spacer>
+                    )
+                }
 
-                    {
-                        (comment.replies ?? []).length > 0 && (
-                            <Spacer v gap="8" style={{paddingBlockStart: 8, paddingInlineStart: 16}}>
-                                {
-                                    comment.replies.map((reply, i) => (
-                                        <div key={i} data-test-id="inline-comment-reply">
-                                            <CommentMessage
-                                                authorId={reply.authorId}
-                                                msg={reply.msg}
-                                                date={reply.date}
-                                            />
-                                        </div>
-                                    ))
-                                }
-                            </Spacer>
-                        )
-                    }
+                {
+                    comment.commentedText != null && (
+                        <div
+                            className="commented-text"
+                            data-test-id="commented-text"
+                            style={{
+                                paddingBlockStart: 10,
+                                marginBottom: 0,
+                            }}
+                        >
+                            <div>
+                                {gettext('Selected text:')}
+                            </div>
 
-                    {
-                        comment.commentedText != null && (
-                            <div
-                                className="commented-text"
-                                data-test-id="commented-text"
-                                style={{
-                                    paddingBlockStart: 10,
-                                    marginBottom: 0,
-                                }}
+                            <strong
+                                title={comment.commentedText}
                             >
-                                <div>
-                                    {gettext('Selected text:')}
-                                </div>
+                                {comment.commentedText}
+                            </strong>
+                        </div>
+                    )
+                }
 
-                                <strong
-                                    title={comment.commentedText}
-                                >
-                                    {comment.commentedText}
-                                </strong>
-                            </div>
-                        )
-                    }
-
-                    {
-                        comment.resolutionInfo != null && (
-                            <div data-test-id="resolution" style={{paddingBlockStart: 10}}>
-                                {`${gettext('Resolved by')} ${getUserName(comment.resolutionInfo.resolverUserId)} `}
-                                <TimeElem date={comment.resolutionInfo.date} />
-                            </div>
-                        )
-                    }
-                </div>
-            </Card>
-        );
-    }
+                {
+                    comment.resolutionInfo != null && (
+                        <div data-test-id="resolution" style={{paddingBlockStart: 10}}>
+                            {`${gettext('Resolved by')} ${getUserName(comment.resolutionInfo.resolverUserId)} `}
+                            <TimeElem date={comment.resolutionInfo.date} />
+                        </div>
+                    )
+                }
+            </div>
+        </Card>
+    );
 }
 
 export class InlineCommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
