@@ -36,15 +36,6 @@ export class Editor extends React.PureComponent<IProps> {
         this.state = {
             previewEnabled: false,
         };
-
-        this.getMediaItems = this.getMediaItems.bind(this);
-        this.getAllowedMediaKinds = this.getAllowedMediaKinds.bind(this);
-        this.getAllowedMimeTypes = this.getAllowedMimeTypes.bind(this);
-        this.getMaxRemainingItemsCount = this.getMaxRemainingItemsCount.bind(this);
-        this.isMediaTypeAllowed = this.isMediaTypeAllowed.bind(this);
-        this.upload = this.upload.bind(this);
-        this.handleDragDrop = this.handleDragDrop.bind(this);
-        this.addItem = this.addItem.bind(this);
     }
 
     private getMediaItems(): IMediaValueOperational {
@@ -107,7 +98,7 @@ export class Editor extends React.PureComponent<IProps> {
         return kinds.some(({superdeskTypes}) => superdeskTypes.includes(superdeskType));
     }
 
-    private upload(files: Array<File>): void {
+    private upload = (files: Array<File>): void => {
         const {config} = this.props;
         const mediaItems = this.getMediaItems();
         const maxUploadsRemaining: number | undefined = this.getMaxRemainingItemsCount();
@@ -131,9 +122,9 @@ export class Editor extends React.PureComponent<IProps> {
                     this.mediaCarouselRef.goToPage(nextItems.length - 1);
                 }
             });
-    }
+    };
 
-    private handleDragDrop(event): void {
+    private handleDragDrop = (event): void => {
         const superdeskType = getSuperdeskType(event);
         const {config} = this.props;
         const maxRemainingItemsCount = this.getMaxRemainingItemsCount();
@@ -180,26 +171,26 @@ export class Editor extends React.PureComponent<IProps> {
             // the drag payload is a snapshot taken when the drag started, so its lock may be stale
             ng.get('content').dropItem(getDroppedItem(event)).then(this.addItem);
         }
-    }
+    };
 
-    private addItem(__item: IArticle): void {
+    private addItem = (item: IArticle): void => {
         const {config} = this.props;
         const mediaItems = this.getMediaItems();
 
-        if (__item.lock_user != null) {
+        if (item.lock_user != null) {
             notify.error(gettext('Item is locked. Cannot associate media item.'));
 
             return;
         }
 
-        if (mediaItems.find((mediaItem) => mediaItem._id === __item._id) != null) {
+        if (mediaItems.find((mediaItem) => mediaItem._id === item._id) != null) {
             notify.error(gettext('This item is already added'));
 
             return;
         }
 
         const workflowValidation = validateWorkflow(
-            __item,
+            item,
             {
                 in_progress: config.allowedWorkflows.inProgress,
                 published: config.allowedWorkflows.published,
@@ -211,14 +202,14 @@ export class Editor extends React.PureComponent<IProps> {
             return;
         }
 
-        const nextItems = mediaItems.concat(__item);
+        const nextItems = mediaItems.concat(item);
 
         this.props.onChange(nextItems);
 
         if (this.mediaCarouselRef != null) {
             this.mediaCarouselRef.goToPage(nextItems.length - 1);
         }
-    }
+    };
 
     render() {
         const Container = this.props.container;

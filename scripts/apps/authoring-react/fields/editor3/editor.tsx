@@ -75,11 +75,6 @@ export class Editor extends React.PureComponent<IProps, IState> {
 
         this.eventListenersToRemoveBeforeUnmounting = [];
         this.unmountAbortController = new AbortController();
-
-        this.getCharacterLimitPreference = this.getCharacterLimitPreference.bind(this);
-        this.syncPropsWithReduxStore = this.syncPropsWithReduxStore.bind(this);
-        this.getItemForEditor = this.getItemForEditor.bind(this);
-        this.initializeEditor = this.initializeEditor.bind(this);
     }
 
     getCharacterLimitPreference(): EditorLimit | null {
