@@ -65,7 +65,10 @@ export class ContentProfileDropdown<T> extends React.PureComponent<IProps<T>, IS
                             });
                         }}
                     >
-                        <option value="" />
+                        {
+                            // only shown, never selectable, while the item's profile is not one of the options
+                            this.state.selectedProfileId === '' && <option value="" disabled hidden />
+                        }
                         {this.state.profiles.map((profile) => (
                             <option key={profile._id} value={profile._id}>
                                 {profile.label}

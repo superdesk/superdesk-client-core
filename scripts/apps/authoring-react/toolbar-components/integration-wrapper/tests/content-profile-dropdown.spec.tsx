@@ -37,6 +37,19 @@ describe('authoring-react content profile dropdown', () => {
         expect(wrapper.find('[data-test-id="content-profile-select"]').prop('data-test-value')).toBe('');
     });
 
+    // choosing an empty profile would leave the editor with no fields
+    it('offers no empty choice', () => {
+        const wrapper = renderWith({type: 'text', profile: 'story'}, textProfiles);
+
+        expect(wrapper.find('[data-test-id="content-profile-select"] option[value=""]').exists()).toBe(false);
+    });
+
+    it('shows a blank for a profile that is not listed, but does not let it be chosen', () => {
+        const wrapper = renderWith({type: 'text', profile: 'a-disabled-profile'}, textProfiles);
+
+        expect(wrapper.find('[data-test-id="content-profile-select"] option[value=""]').prop('disabled')).toBe(true);
+    });
+
     it('renders nothing for an item that has no profile, like a kill template', () => {
         const wrapper = renderWith({type: 'text'}, textProfiles);
 
@@ -56,7 +69,7 @@ describe('authoring-react content profile dropdown', () => {
         const options = wrapper.find('[data-test-id="content-profile-select"] option')
             .map((option) => option.prop('value'));
 
-        expect(options).toEqual(['', 'story']);
+        expect(options).toEqual(['story']);
     });
 
     ['picture', 'audio', 'video', 'composite'].forEach((type) => {
