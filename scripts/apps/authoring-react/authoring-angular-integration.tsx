@@ -189,9 +189,10 @@ const deskAndStageWidget: ITopBarWidget<IArticle> = {
     availableOffline: false,
 };
 
+// between save and minimize, as in angular
 const exportHighlightWidget: ITopBarWidget<IArticle> = {
     group: 'end',
-    priority: 0.4,
+    priority: 0.25,
     component: ExportHighlightComponent,
     availableOffline: false,
 };

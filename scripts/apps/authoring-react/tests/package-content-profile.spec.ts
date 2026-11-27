@@ -33,8 +33,8 @@ const compositeProfile = {
     type: 'composite',
     label: 'Package',
     schema: {
-        slugline: {type: 'string', maxlength: 24, readonly: true},
-        headline: {type: 'string', maxlength: 64},
+        slugline: {type: 'string', maxlength: 24, readonly: true, required: true},
+        headline: {type: 'string', maxlength: 64, required: true},
         genre: {type: 'list'},
         keywords: {type: 'list'},
         abstract: {type: 'string'},
@@ -57,6 +57,19 @@ describe('package content profile', () => {
         expect(profile.header.keySeq().toArray()).toEqual(['slugline', 'genre']);
         expect(profile.header.get('genre').fieldConfig.width).toBe(50);
         expect(profile.header.get('slugline').fieldConfig.readOnly).toBe(true);
+    });
+
+    it('marks a header field required by the schema as required, as angular does', () => {
+        const profile = getPackageContentProfile(compositeProfile, fieldsAdapter, (id) => id);
+
+        expect(profile.header.get('slugline').fieldConfig.required).toBe(true);
+        expect(profile.header.get('genre').fieldConfig.required).toBe(false);
+    });
+
+    it('leaves a content field required only by the schema unmarked, as angular does', () => {
+        const profile = getPackageContentProfile(compositeProfile, fieldsAdapter, (id) => id);
+
+        expect(profile.content.get('headline').fieldConfig.required).toBe(false);
     });
 
     it('puts the headline in the content, above the package items', () => {

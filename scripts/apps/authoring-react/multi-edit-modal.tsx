@@ -170,9 +170,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             component: ({entity}) => (
                 <LockInfo
                     article={entity}
-                    unlock={() => {
-                        stealLock();
-                    }}
+                    unlock={stealLock}
                     isLockedInOtherSession={(article) => sdApi.article.isLockedInOtherSession(article)}
                 />
             ),

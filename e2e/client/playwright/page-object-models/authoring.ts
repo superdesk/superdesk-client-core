@@ -526,6 +526,29 @@ export class Authoring {
 
         return modal;
     }
+
+    /**
+     * Types `linkText` at the end of an editor3 field, selects it and opens the link dialog on its
+     * Attachment tab, which it returns.
+     */
+    async openAttachmentLinkDialog(fieldId: string, linkText: string): Promise<Locator> {
+        const {page} = this;
+        const field = this.fieldContainer(fieldId);
+
+        await field.getByRole('textbox').click();
+        await page.keyboard.press('ControlOrMeta+End');
+        await page.keyboard.type(linkText);
+
+        // Home/End move by visual line, so the typed text is selected character by character
+        for (let i = 0; i < linkText.length; i++) {
+            await page.keyboard.press('Shift+ArrowLeft');
+        }
+
+        await field.getByTestId('toolbar').getByRole('button', {name: 'Link (Ctrl+K)'}).click();
+        await page.getByRole('button', {name: 'Attachment', exact: true}).click();
+
+        return page.getByTestId('link-attachments');
+    }
 }
 
 export class PictureAuthoring extends Authoring {

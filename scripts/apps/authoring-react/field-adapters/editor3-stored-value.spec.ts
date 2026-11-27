@@ -1,5 +1,5 @@
 import {OrderedMap} from 'immutable';
-import {ContentState, convertToRaw} from 'draft-js';
+import {ContentState, convertToRaw, RawDraftContentState} from 'draft-js';
 import {sdApi} from 'api';
 import ng from 'core/services/ng';
 import {IArticle, IEditor3Config, IEditor3ValueStorage, IVocabulary} from 'superdesk-api';
@@ -173,6 +173,92 @@ describe('editor3 stored value retrieval', () => {
             const updated = ednote.storeValue(stored, article, config, false);
 
             expect(updated.ednote).toBe('Contact: John\nPhone: 123');
+        });
+    });
+
+    describe('body media in `associations`', () => {
+        function getRawWithPicture(descriptionText: string): RawDraftContentState {
+            return {
+                blocks: [{
+                    key: 'picture',
+                    text: ' ',
+                    type: 'atomic',
+                    depth: 0,
+                    inlineStyleRanges: [],
+                    entityRanges: [{offset: 0, length: 1, key: 0}],
+                    data: {},
+                }],
+                entityMap: {
+                    0: {
+                        type: 'MEDIA',
+                        mutability: 'MUTABLE',
+                        data: {media: {
+                            _id: 'picture-1',
+                            type: 'picture',
+                            description_text: descriptionText,
+                            renditions: {original: {href: 'picture.jpg'}},
+                        }},
+                    },
+                },
+            };
+        }
+
+        const article: IArticle = {
+            ...testArticle,
+            associations: {
+                editor_0: {...testArticle, _id: 'picture-1', type: 'picture', description_text: 'saved caption'},
+                editor_1: {...testArticle, _id: 'picture-removed', type: 'picture'},
+                featuremedia: {...testArticle, _id: 'feature-picture', type: 'picture'},
+            },
+            fields_meta: {body_html: {draftjsState: [getRawWithPicture('saved caption')]}},
+        };
+
+        it('are rewritten from an edited body', () => {
+            const updated = body_html.storeValue(
+                {rawContentState: getRawWithPicture('edited caption')},
+                article,
+                getConfig(false),
+                false,
+            );
+
+            expect((updated.associations.editor_0 as IArticle).description_text).toBe('edited caption');
+            expect(updated.associations.editor_1).toBe(null);
+            expect(updated.associations.featuremedia).toBe(article.associations.featuremedia);
+        });
+
+        it('are left as they are when the body is unchanged', () => {
+            const updated = body_html.storeValue(
+                {rawContentState: getRawWithPicture('saved caption')},
+                article,
+                getConfig(false),
+                false,
+            );
+
+            expect(updated.associations).toBe(article.associations);
+        });
+
+        it('are rewritten in an autosave of an edited body, which a later save may start from', () => {
+            const autosaved = body_html.storeValue(
+                {rawContentState: getRawWithPicture('edited caption')},
+                article,
+                getConfig(false),
+                true,
+            );
+
+            expect((autosaved.associations.editor_0 as IArticle).description_text).toBe('edited caption');
+            expect(autosaved.associations.editor_1).toBe(null);
+            expect(autosaved.associations.featuremedia).toBe(article.associations.featuremedia);
+        });
+
+        it('are left as they are in an autosave of an unchanged body', () => {
+            const autosaved = body_html.storeValue(
+                {rawContentState: getRawWithPicture('saved caption')},
+                article,
+                getConfig(false),
+                true,
+            );
+
+            expect(autosaved.associations).toBe(article.associations);
         });
     });
 });

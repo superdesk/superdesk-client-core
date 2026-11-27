@@ -106,10 +106,8 @@ test.describe('embeds in the body (authoring-react)', () => {
         await expect(embedWithMarker(body, EMBEDS[0].marker)).toHaveCount(1);
     });
 
-    // React gap: an edited embed never reaches the model (Save stays disabled),
-    // mergeEntityData keeps the ContentState reference.
-    test.fixme('the embed edit dialog discards on Cancel and applies on Submit, and the edit survives reopen', {
-        annotation: [{type: 'confluence', description: '1327759385 partial'}], // Edit embed
+    test('the embed edit dialog discards on Cancel and applies on Submit, and the edit survives reopen', {
+        annotation: [{type: 'confluence', description: '1327759385 complete'}], // Edit embed
     }, async ({page}) => {
         const EDITED_HTML = '<blockquote class="edited-embed">edited embed content</blockquote>';
 

@@ -25,6 +25,7 @@ import {Loader, SubNav} from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {gettext} from 'core/utils';
 import {AuthoringSection} from './authoring-section/authoring-section';
+import {COMPANY_CODES_VOCABULARY_ID, shouldOfferCompanyCodes} from './field-adapters/company_codes';
 import {
     PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
     closedIntentionally,
@@ -57,6 +58,7 @@ import {notify} from 'core/notify/notify';
 import {isHttpApiError} from 'core/helpers/network';
 import ng from 'core/services/ng';
 import {focusFirstChildInput} from 'utils/focus-first-child-input';
+import {isUnlockedFromAnotherSession} from './item-unlock';
 import {EDITOR_3_FIELD_TYPE} from './fields/editor3';
 import memoizeOne from 'memoize-one';
 import {InlineToolbarContextProvider} from './toolbar-components/angular-integration';
@@ -562,8 +564,25 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
     getVocabularyItems(vocabularyId): Array<IVocabularyItem> {
         const vocabulary = sdApi.vocabularies.getAll().get(vocabularyId);
 
+        // a profile can enable a field whose vocabulary does not exist (e.g. `language` without `languages`)
+        if (vocabulary == null) {
+            return [];
+        }
+
         if (vocabularyId === ANPA_CATEGORY.vocabularyId) {
             return vocabulary.items;
+        }
+
+        // without options the dropdown hides itself, which is how angular hides company codes
+        if (vocabularyId === COMPANY_CODES_VOCABULARY_ID) {
+            const fieldsData = this.state.initialized ? this.state.fieldsDataWithChanges : null;
+            const offered = fieldsData != null && shouldOfferCompanyCodes(
+                fieldsData.get(COMPANY_CODES_VOCABULARY_ID),
+                fieldsData.get(ANPA_CATEGORY.fieldId),
+                fieldsData.get('subject'),
+            );
+
+            return offered ? vocabulary.items : [];
         }
 
         const anpaCategoryQcodes: Array<string> = this.state.initialized ?
@@ -745,50 +764,33 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                 const state = this.state;
 
                 if (state.initialized && (state.itemOriginal._id === data.extra.item)) {
-                    /**
-                     * Only patch these fields to preserve
-                     * unsaved changes.
-                     * FINISH: remove IArticle usage
-                     */
-                    const patch: Partial<IArticle> = {
+                    this.patchLockFields(state, {
                         _etag,
                         lock_session,
                         lock_time,
                         lock_user: user,
                         lock_action: 'edit',
-                    };
+                    });
+                }
+            }),
+        );
 
-                    if (!this.hasUnsavedChanges()) {
-                        /**
-                         * if object references are the same before patching
-                         * they should be the same after patching too
-                         * in order for checking for changes to work correctly
-                         * (reference equality is used for change detection)
-                         */
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
+            addInternalWebsocketEventListener('item:unlock', (data) => {
+                const state = this.state;
 
-                        const patched = {
-                            ...state.itemOriginal,
-                            ...patch,
-                        };
+                if (
+                    state.initialized
+                    && isUnlockedFromAnotherSession(state.itemOriginal, data.extra, sdApi.user.getSessionId())
+                ) {
+                    this.patchLockFields(state, {
+                        lock_session: null,
+                        lock_time: null,
+                        lock_user: null,
+                        lock_action: null,
+                    });
 
-                        this.setState({
-                            ...state,
-                            itemOriginal: patched,
-                            itemWithChanges: patched,
-                        });
-                    } else {
-                        this.setState({
-                            ...state,
-                            itemOriginal: {
-                                ...state.itemOriginal,
-                                ...patch,
-                            },
-                            itemWithChanges: {
-                                ...state.itemWithChanges,
-                                ...patch,
-                            },
-                        });
-                    }
+                    ng.get('confirm').unlock(data.extra.user, (state.itemOriginal as unknown as IArticle).headline);
                 }
             }),
         );
@@ -1177,6 +1179,44 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
 
                 return item;
             });
+    }
+
+    /**
+     * Only patches lock fields, so unsaved changes are preserved.
+     * FINISH: remove IArticle usage
+     */
+    patchLockFields(state: IStateLoaded<T>, patch: Partial<IArticle>): void {
+        if (!this.hasUnsavedChanges()) {
+            /**
+             * if object references are the same before patching
+             * they should be the same after patching too
+             * in order for checking for changes to work correctly
+             * (reference equality is used for change detection)
+             */
+
+            const patched = {
+                ...state.itemOriginal,
+                ...patch,
+            };
+
+            this.setState({
+                ...state,
+                itemOriginal: patched,
+                itemWithChanges: patched,
+            });
+        } else {
+            this.setState({
+                ...state,
+                itemOriginal: {
+                    ...state.itemOriginal,
+                    ...patch,
+                },
+                itemWithChanges: {
+                    ...state.itemWithChanges,
+                    ...patch,
+                },
+            });
+        }
     }
 
     /**

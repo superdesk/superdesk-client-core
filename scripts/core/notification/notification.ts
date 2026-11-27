@@ -61,6 +61,9 @@ interface IInternalWebsocketMessages { // not exposed to client API
     'item:unlock': IWebsocketMessage<{
         item: IArticle['_id'];
         user: IUser['_id'];
+
+        /** the session the unlock was requested from */
+        lock_session: string;
     }>;
     'item:spike': IWebsocketMessage<never>;
     'item:unspike': IWebsocketMessage<never>;

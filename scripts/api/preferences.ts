@@ -6,6 +6,11 @@ function get(key: string) {
     return preferencesService.getSync(key);
 }
 
+// waits for the preferences to load, unlike `get`
+function getAll(): Promise<any> {
+    return ng.get('preferencesService').get();
+}
+
 function update(key: string, value: any): void {
     const preferencesService = ng.get('preferencesService');
 
@@ -14,5 +19,6 @@ function update(key: string, value: any): void {
 
 export const preferences = {
     get,
+    getAll,
     update,
 };

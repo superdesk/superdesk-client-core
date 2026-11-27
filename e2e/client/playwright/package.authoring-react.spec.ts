@@ -1,4 +1,4 @@
-import {test, expect, Page} from '@playwright/test';
+import {test, expect, Page, Locator} from '@playwright/test';
 import {PackageAuthoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
 import {login, restoreDatabaseSnapshot} from './utils';
@@ -11,6 +11,16 @@ test.use({
 // "Fellowship package" holds "Hobbiton notice" and "Buckland notice" in `main`, "Bywater notice" in `story`
 const PACKAGE = 'Fellowship package';
 const WORKING_STAGE = 'Sports / Working Stage';
+
+async function openItemActions(page: Page, authoring: PackageAuthoring, slugline: string): Promise<Locator> {
+    await authoring.item(slugline).getByTestId('package-item-actions').getByRole('button').click();
+
+    const menu = page.getByTestId('context-menu');
+
+    await expect(menu).toBeVisible();
+
+    return menu;
+}
 
 async function openPackage(page: Page, name = PACKAGE): Promise<{monitoring: Monitoring; authoring: PackageAuthoring}> {
     const monitoring = new Monitoring(page);
@@ -170,14 +180,37 @@ test.describe('package (authoring-react)', () => {
         await expect(authoring.groupItems('story')).toHaveCount(1);
     });
 
+    test('marks the header fields the Package profile requires', async ({page}) => {
+        await restoreDatabaseSnapshot({snapshotName: 'packages'});
+
+        const {authoring} = await openPackage(page);
+        const required = (fieldId: string) => authoring.fieldContainer(fieldId).getByTestId('required-indicator');
+
+        await expect(required('slugline')).toBeVisible();
+        await expect(required('subject')).toBeVisible();
+        await expect(required('genre')).toHaveCount(0);
+    });
+
+    test('offers the same actions on an item as angular does', async ({page}) => {
+        await restoreDatabaseSnapshot({snapshotName: 'packages'});
+
+        const {authoring} = await openPackage(page);
+        const menu = await openItemActions(page, authoring, 'Bywater notice');
+
+        for (const action of ['Edit', 'Spike Item', 'Send to', 'Set label in current package']) {
+            await expect(menu.getByRole('button', {name: action, exact: true})).toBeVisible();
+        }
+    });
+
     test('sets a story label on an item', async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'packages'});
 
         const {authoring} = await openPackage(page);
 
-        await authoring.item('Bywater notice').getByTestId('package-item-actions').getByRole('button').click();
-        await page.getByRole('menuitem', {name: 'Set label'}).hover();
-        await page.getByRole('menuitem', {name: 'Featured'}).click();
+        const menu = await openItemActions(page, authoring, 'Bywater notice');
+
+        await menu.getByRole('button', {name: 'Set label in current package'}).hover();
+        await menu.getByRole('button', {name: 'Featured'}).click();
 
         const label = authoring.item('Bywater notice').getByTestId('package-item-label');
 

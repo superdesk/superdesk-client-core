@@ -4,6 +4,7 @@ import {Monitoring} from './page-object-models/monitoring';
 import {ContentProfileSettings} from './page-object-models/settings/content-profile';
 import {ICustomFieldValues, MetadataSettings} from './page-object-models/settings/metadata';
 import {restoreDatabaseSnapshot} from './utils';
+import {patchArchiveItem} from './utils/archive-api';
 import {getStorageState} from './utils/storage-state';
 import {createArticleFromTemplate} from './scenarios/authoring-react-article';
 
@@ -17,6 +18,11 @@ test.use({storageState: getStorageState({}, {authoringReact: true})});
 test.describe.configure({timeout: 90000});
 
 const SLUGLINE = 'custom field story';
+
+// ids baked into the `association-fields` snapshot
+const TEST_SPORTS_STORY_ID =
+    'urn:newsml:localhost:5000:2023-11-15T10:53:56.032654:3503f3f4-1d5f-48b2-8f3d-35120820d8ee';
+const BREE_BULLETIN_ID = 'urn:newsml:localhost:5000:2026-08-10T00:00:01.000000:association-fields-1';
 
 async function createFieldInStoryProfile(
     page: Page,
@@ -126,9 +132,6 @@ test('a new custom date field starts empty on a new article', {
         {type: 'confluence', description: '1344443799 partial'}, // Custom date
     ],
 }, async ({page}) => {
-    // React gap: the empty field shows 01/01/1970, DatePickerISO turns a null value into new Date(null)
-    test.fixme();
-
     await restoreDatabaseSnapshot();
     await createFieldInStoryProfile(
         page,
@@ -254,6 +257,28 @@ test('a new related items field takes a dropped article that survives save and r
     await expect(field).toContainText('Bree bulletin');
 });
 
+test('a related items field lists its items when one of them no longer exists', async ({page}) => {
+    await restoreDatabaseSnapshot({snapshotName: 'association-fields'});
+    await patchArchiveItem(TEST_SPORTS_STORY_ID, {
+        associations: {
+            'shire_related_items--1': {_id: BREE_BULLETIN_ID, type: 'text', order: 0},
+            'shire_related_items--2': {_id: 'urn:newsml:localhost:5000:deleted-related-item', type: 'text', order: 1},
+        },
+    });
+
+    const authoring = new AuthoringReact(page);
+
+    await page.goto('/#/workspace/monitoring');
+    await new Monitoring(page).selectDeskOrWorkspace('Sports');
+    await new Monitoring(page).getArticleLocator('test sports story').dblclick();
+    await authoring.waitUntilOpen();
+
+    const field = authoring.fieldContainer('shire_related_items');
+
+    await expect(field.getByTestId('field--slugline')).toHaveCount(1);
+    await expect(field).toContainText('Bree bulletin');
+});
+
 test('a new custom URL field takes a link that survives save and reopen', {
     annotation: [
         {type: 'confluence', description: '1311835079 complete'}, // Add new URL field
@@ -291,9 +316,6 @@ test('a new vocabulary field in the header takes a value that survives save and 
         {type: 'confluence', description: '10815143953 partial'}, // Vocabularies
     ],
 }, async ({page}) => {
-    // React gap: the Subject adapter rewrites `subject` from subject codes only and drops this field's value
-    test.fixme();
-
     await restoreDatabaseSnapshot();
 
     const metadata = new MetadataSettings(page);

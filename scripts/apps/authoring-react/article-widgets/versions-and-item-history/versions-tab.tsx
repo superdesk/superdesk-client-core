@@ -25,6 +25,7 @@ import {compareAuthoringEntities} from '../../compare-articles/compare-articles'
 import {previewAuthoringEntity} from '../../preview-article-modal';
 import {getArticleAdapter} from '../../article-adapter';
 import {SelectFilterable} from 'core/ui/components/select-filterable';
+import {isNewArticleVersion} from './is-new-article-version';
 
 const loadingState: IState = {
     versions: 'loading',
@@ -130,6 +131,12 @@ export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponent
 
     componentDidMount() {
         this.initialize();
+    }
+
+    componentDidUpdate(prevProps: IArticleSideWidgetComponentType) {
+        if (isNewArticleVersion(prevProps.article, this.props.article)) {
+            this.initialize();
+        }
     }
 
     render() {

@@ -1,4 +1,5 @@
 import ng from 'core/services/ng';
+import {sdApi} from 'api';
 import {extensions} from 'appConfig';
 import {IArticle, ICustomFieldType, ITemplate, IVocabulary} from 'superdesk-api';
 
@@ -91,8 +92,6 @@ export function cleanData<T>(data: Partial<T>): Partial<T> {
  * is_public is set from the user - if the template is made as a desk template then is_public is true.
  */
 export function canEdit(template: ITemplate, isPublic: boolean): boolean {
-    const privileges = ng.get('privileges');
-
     if (template == null) {
         return false;
     } else if (template?.is_public && !isPublic) {
@@ -100,11 +99,11 @@ export function canEdit(template: ITemplate, isPublic: boolean): boolean {
         // create a copy of a template and don't modify the original one.
         return false;
     } else if (isPublic) {
-        return privileges.userHasPrivileges({content_templates: 1});
-    } else if (template?.user === ng.get('session').identity._id) {
+        return sdApi.user.hasPrivilege('content_templates');
+    } else if (template?.user === sdApi.user.getCurrentUserId()) {
         return true;
     } else {
-        return privileges.userHasPrivileges({personal_template: 1}); // can edit templates of other users
+        return sdApi.user.hasPrivilege('personal_template'); // can edit templates of other users
     }
 }
 

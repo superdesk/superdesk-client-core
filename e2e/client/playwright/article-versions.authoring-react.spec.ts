@@ -28,7 +28,7 @@ test.describe('article versions (authoring-react)', () => {
         await monitoring.executeActionOnMonitoringItem(monitoring.getArticleLocator('story 2'), 'Edit');
         await authoring.waitUntilOpen();
 
-        let panel = await openVersionsWidget(page);
+        const panel = await openVersionsWidget(page);
         const versionActions = panel.getByTestId('article-version-actions');
 
         await expect(versionActions.first()).toBeVisible();
@@ -38,10 +38,6 @@ test.describe('article versions (authoring-react)', () => {
         await authoring.replaceEditor3FieldText(slugline, 'story 2.1');
         await authoring.saveAndGetRequest();
 
-        // toggled shut and open, to tell a stale list from a missing version
-        await authoring.widgetTab('versioning').click();
-        await expect(panel).toBeHidden();
-        panel = await openVersionsWidget(page);
         await expect(versionActions).toHaveCount(versionsBefore + 1);
 
         await panel.getByRole('tab', {name: 'Item history'}).click();
@@ -58,8 +54,7 @@ test.describe('article versions (authoring-react)', () => {
     });
 });
 
-// React gap: the open Versions/History widget keeps its list after a save; angular adds the new version.
-test.fixme('the open versions widget lists the version a save creates', {
+test('the open versions widget lists the version a save creates', {
     annotation: [
         {type: 'confluence', description: '1310294128 partial'}, // Versioning
     ],

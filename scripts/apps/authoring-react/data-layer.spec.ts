@@ -1,10 +1,47 @@
 import {appConfig} from 'appConfig';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IFieldsAdapter, IVocabulary} from 'superdesk-api';
 import {
     authoringStorageIArticle,
     authoringStorageIArticleCorrect,
     getAuthoringStorageIArticleKillOrTakedown,
+    getProfileFields,
 } from './data-layer';
+
+describe('getProfileFields', () => {
+    it('skips a field that has neither an adapter nor a custom field type', () => {
+        spyOn(console, 'warn');
+
+        const fieldsAdapter = {
+            headline: {
+                getFieldV2: () => ({id: 'headline', name: 'Headline', fieldType: 'plain-text', fieldConfig: {}}),
+            },
+        } as unknown as IFieldsAdapter<IArticle>;
+
+        const customFields = [
+            {_id: 'custom_text', custom_field_type: 'plain-text', custom_field_config: {}},
+            {_id: 'regions', service: {all: 1}},
+        ] as unknown as Array<IVocabulary>;
+
+        const {header, content} = getProfileFields(
+            {
+                editor: {
+                    headline: {order: 1},
+                    company_codes: {order: 2},
+                    custom_text: {order: 3},
+                    regions: {order: 4},
+                },
+                schema: {},
+                customFields,
+            },
+            fieldsAdapter,
+            (fieldId) => fieldId,
+            () => 'content',
+        );
+
+        expect(header.size).toBe(0);
+        expect(content.keySeq().toArray()).toEqual(['headline', 'custom_text']);
+    });
+});
 
 describe('kill / correct / takedown authoring storage', () => {
     let overrideEdnoteInitial: boolean;

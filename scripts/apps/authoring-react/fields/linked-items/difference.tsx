@@ -29,7 +29,7 @@ export class Difference extends React.PureComponent<IProps> {
                     return (
                         <div>
                             {
-                                stats.removed.map((id, i) => (
+                                stats.removed.filter((id) => keyed[id] != null).map((id, i) => (
                                     <ArticleItemConcise
                                         key={i}
                                         article={keyed[id]}
@@ -39,7 +39,7 @@ export class Difference extends React.PureComponent<IProps> {
                             }
 
                             {
-                                value2Ids.map((id, i) => (
+                                value2Ids.filter((id) => keyed[id] != null).map((id, i) => (
                                     <ArticleItemConcise
                                         key={i}
                                         article={keyed[id]}

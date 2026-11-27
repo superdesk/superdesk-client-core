@@ -84,7 +84,7 @@ function convertWidth(width: string): number {
  * Converts `editor` and `schema` of a content profile to header and content fields.
  * Fields are ordered by `editor[fieldId].order`.
  */
-function getProfileFields<T>(
+export function getProfileFields<T>(
     {editor, schema, customFields}: IProfileConfig,
     fieldsAdapter: IFieldsAdapter<T>,
     getLabelForFieldId: (fieldId: string) => string,
@@ -121,15 +121,18 @@ function getProfileFields<T>(
 
         const fieldEditor = editor[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
         const fieldSchema = schema[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
+        const section = getSection(fieldId, editorItem);
 
         const commonConfigs: ICommonFieldConfig = {
             readOnly: fieldEditor.readonly === true,
-            required: fieldEditor.required === true,
+            // Profiles created by superdesk-core set `required` only in the schema. Angular's header marks
+            // required fields from the schema; its content area does not mark headline, abstract or body.
+            required: fieldEditor.required === true || (section === 'header' && fieldSchema.required === true),
             allow_toggling: fieldEditor.allow_toggling === true,
             width: convertWidth(fieldEditor.sdWidth),
         };
 
-        const fieldV2: IAuthoringFieldV2 = (() => {
+        const fieldV2: IAuthoringFieldV2 | null = (() => {
             if (fieldsAdapter.hasOwnProperty(fieldId)) { // main, hardcoded fields
                 const f: IAuthoringFieldV2 = fieldsAdapter[fieldId]
                     .getFieldV2(fieldEditor, fieldSchema, fieldExists);
@@ -143,6 +146,15 @@ function getProfileFields<T>(
                 };
             } else { // custom fields
                 const field = customFields.find(({_id}) => _id === fieldId);
+
+                if (field?.custom_field_type == null) {
+                    // A profile field with neither an adapter nor a custom field type (e.g. `company_codes` when its
+                    // vocabulary does not exist) can't be rendered; skipping it keeps the rest of the editor usable.
+                    // eslint-disable-next-line no-console
+                    console.warn(`Content profile field "${fieldId}" is not supported by authoring-react; skipping.`);
+
+                    return null;
+                }
 
                 const f: IAuthoringFieldV2 = {
                     id: fieldId,
@@ -158,7 +170,11 @@ function getProfileFields<T>(
             }
         })();
 
-        if (getSection(fieldId, editorItem) === 'header') {
+        if (fieldV2 == null) {
+            continue;
+        }
+
+        if (section === 'header') {
             headerFields = headerFields.set(fieldV2.id, fieldV2);
         } else {
             contentFields = contentFields.set(fieldV2.id, fieldV2);
@@ -464,7 +480,7 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
             doClose,
         );
     },
-    getUserPreferences: () => ng.get('preferencesService').get(),
+    getUserPreferences: () => sdApi.preferences.getAll(),
 };
 
 class AutoSaveKill implements IAuthoringAutoSave<IArticle> {

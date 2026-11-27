@@ -37,6 +37,7 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
         this.goToNextMatchingValue = this.goToNextMatchingValue.bind(this);
         this.goToPrevMatchingValue = this.goToPrevMatchingValue.bind(this);
         this.requestSelectionIndex = this.requestSelectionIndex.bind(this);
+        this.cancel = this.cancel.bind(this);
 
         this.isAwaitingSelectionIndex = false;
     }
@@ -63,6 +64,11 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
             replaceAllMatches: false,
         });
         setTimeout(callback);
+    }
+
+    cancel() {
+        highlightDistinctMatches({});
+        this.props.onClose();
     }
 
     componentDidMount(): void {
@@ -150,10 +156,7 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
                         <Button
                             style="hollow"
                             text={gettext('Cancel')}
-                            onClick={() => {
-                                highlightDistinctMatches({});
-                                this.props.onClose();
-                            }}
+                            onClick={this.cancel}
                         />
                         <Button
                             style="hollow"

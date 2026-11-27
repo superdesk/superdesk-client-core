@@ -86,9 +86,6 @@ test.describe('validate for publish macro (authoring-react)', {
     });
 
     test('closes the macros widget after a macro ran', async ({page}) => {
-        // React gap: angular closes the widget once a macro has run, authoring-react keeps it open
-        test.fixme();
-
         const authoring = await openArticle(page);
         const panel = await authoring.openWidgetByIcon('macros');
 

@@ -1,5 +1,7 @@
 import * as React from 'react';
 import {
+    IArticle,
+    IAttachmentsValueOperational,
     IEditorComponentProps,
     IEditor3ValueOperational,
     IEditor3Config,
@@ -32,6 +34,7 @@ import {
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {showModal} from '@sourcefabric/common';
 import {addEditorEventListener, dispatchEditorEvent} from '../../authoring-react-editor-events';
+import {setFindCriteria} from './find-and-replace';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
 import {EditorState} from 'draft-js';
 import {Select, Option} from 'superdesk-ui-framework/react';
@@ -40,6 +43,7 @@ import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {canAddArticleEmbed} from 'core/editor3/components/article-embed/can-add-article-embed';
 import {TextStatistics} from '../../../authoring/authoring/components/text-statistics';
 import {isSpacerTreeEmpty} from '@sourcefabric/common';
+import {ATTACHMENTS_FIELD_ID} from '../attachments';
 
 interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
@@ -71,10 +75,6 @@ export class Editor extends React.PureComponent<IProps, IState> {
 
         this.eventListenersToRemoveBeforeUnmounting = [];
         this.unmountAbortController = new AbortController();
-
-        this.getCharacterLimitPreference = this.getCharacterLimitPreference.bind(this);
-        this.syncPropsWithReduxStore = this.syncPropsWithReduxStore.bind(this);
-        this.initializeEditor = this.initializeEditor.bind(this);
     }
 
     getCharacterLimitPreference(): EditorLimit | null {
@@ -99,10 +99,28 @@ export class Editor extends React.PureComponent<IProps, IState> {
             limitConfig: this.getCharacterLimitPreference(),
             softLimitConfig: this.props.config.maxSoftLength,
             showFloatingCount: this.props.config.showFloatingCount ?? false,
-            item: {
-                language: this.props.language, // required for annotations to work
-            },
+            item: this.getItemForEditor(),
         }));
+    }
+
+    /**
+     * Without the attachments field in the profile, attachments added from the widget are kept on the article.
+     */
+    getAttachments(props: IProps): IArticle['attachments'] {
+        if (props.fieldsData.has(ATTACHMENTS_FIELD_ID)) {
+            const attachments = props.fieldsData.get(ATTACHMENTS_FIELD_ID) as IAttachmentsValueOperational | undefined;
+
+            return (attachments ?? []).map(({id}) => ({attachment: id}));
+        } else {
+            return props.item?.attachments ?? [];
+        }
+    }
+
+    getItemForEditor(): Partial<IArticle> {
+        return {
+            language: this.props.language, // required for annotations to work
+            attachments: this.getAttachments(this.props), // listed by the link dialog
+        };
     }
 
     /**
@@ -165,9 +183,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                     return;
                 }
 
-                this.props.value.store.dispatch(
-                    setHighlightCriteria({diff: {[text]: null}, caseSensitive}),
-                );
+                setFindCriteria(this.props.value.store, text, caseSensitive);
             }),
         );
 
@@ -306,6 +322,11 @@ export class Editor extends React.PureComponent<IProps, IState> {
             || this.props.language !== prevProps.language
         ) {
             this.syncPropsWithReduxStore();
+        } else if (
+            this.props.fieldsData.get(ATTACHMENTS_FIELD_ID) !== prevProps.fieldsData.get(ATTACHMENTS_FIELD_ID)
+            || this.props.item?.attachments !== prevProps.item?.attachments
+        ) {
+            this.props.value.store.dispatch(setExternalOptions({item: this.getItemForEditor()}));
         }
     }
 

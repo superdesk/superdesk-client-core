@@ -50,10 +50,9 @@ test.describe('find and replace widget (authoring-react)', () => {
         };
     }
 
-    // React gap: Find selects no match (angular selects the first), so Replace does nothing until Next is clicked.
-    test.fixme('Replace right after Find replaces the first occurrence', {
+    test('Replace right after Find replaces the first occurrence', {
         annotation: [
-            {type: 'confluence', description: '1310294123 partial'}, // Find and replace
+            {type: 'confluence', description: '1310294123 complete'}, // Find and replace
         ],
     }, async ({page}) => {
         await restoreDatabaseSnapshot();
@@ -71,7 +70,7 @@ test.describe('find and replace widget (authoring-react)', () => {
 
     test('replaces the selected occurrence, and the rest at once', {
         annotation: [
-            {type: 'confluence', description: '1310294123 partial'}, // Find and replace
+            {type: 'confluence', description: '1310294123 complete'}, // Find and replace
         ],
     }, async ({page}) => {
         await restoreDatabaseSnapshot();
@@ -80,8 +79,6 @@ test.describe('find and replace widget (authoring-react)', () => {
 
         await widget.getByLabel('Find', {exact: true}).fill('apple');
         await expect(matches).toHaveCount(3);
-
-        await widget.getByRole('button', {name: 'Next match'}).click();
         await expect(selectedMatch).toHaveCount(1);
         await expect(matches.nth(0)).toHaveCSS('background-color', SELECTED_MATCH_BACKGROUND);
 

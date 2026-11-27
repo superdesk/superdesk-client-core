@@ -10,6 +10,9 @@ interface IProps {
     onActioning: any;
     template: any;
     scopeApply: IScopeApply;
+
+    // a group of items the caller renders, shown last
+    extraItems?: Array<JSX.Element>;
 }
 
 export class ActionsMenu extends React.PureComponent<IProps> {
@@ -33,6 +36,7 @@ export class ActionsMenu extends React.PureComponent<IProps> {
                 scopeApply={this.props.scopeApply}
                 item={this.props.item}
                 onActioning={this.props.onActioning}
+                extraItems={this.props.extraItems}
                 target={icon}
             />,
             icon,

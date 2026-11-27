@@ -244,7 +244,15 @@ export class HighlightsPopup extends React.Component<IProps> {
     componentDidUpdate() {
         // Waiting one cycle allows the selection to be rendered in the browser
         // so that we can correctly retrieve its position.
-        setTimeout(() => this.shouldRender() ? this.renderCustom() : this.unmountCustom(), 0);
+        setTimeout(() => {
+            if (this.shouldRender()) {
+                this.renderCustom();
+            } else if (this.rendered || this.props.editorState.getSelection().getHasFocus()) {
+                // The popup placeholder is shared by all editors. One that didn't render the popup clears it
+                // only when the user moved into it, not when it re-renders while another editor is in use.
+                this.unmountCustom();
+            }
+        }, 0);
     }
 
     componentWillUnmount() {

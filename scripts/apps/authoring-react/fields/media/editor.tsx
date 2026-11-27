@@ -16,9 +16,16 @@ import {SUPERDESK_MEDIA_TYPES} from 'core/constants';
 import {notify} from 'core/notify/notify';
 import {maxItemsDefault} from './constants';
 import {validateWorkflow} from 'apps/relations/services/RelationsService';
-import {getSuperdeskType} from 'utils/dragging';
+import {getDroppedItem, getSuperdeskType} from 'utils/dragging';
 
 type IProps = IEditorComponentProps<IMediaValueOperational, IMediaConfig, IMediaUserPreferences>;
+
+interface IMediaKind {
+    allowed: boolean;
+    label: string;
+    mimePrefix: string;
+    superdeskTypes: Array<string>;
+}
 
 export class Editor extends React.PureComponent<IProps> {
     private mediaCarouselRef: MediaCarousel;
@@ -29,37 +36,39 @@ export class Editor extends React.PureComponent<IProps> {
         this.state = {
             previewEnabled: false,
         };
-
-        this.getMediaItems = this.getMediaItems.bind(this);
-        this.getAllowedMimeTypes = this.getAllowedMimeTypes.bind(this);
-        this.getMaxRemainingItemsCount = this.getMaxRemainingItemsCount.bind(this);
-        this.isMediaTypeAllowed = this.isMediaTypeAllowed.bind(this);
-        this.upload = this.upload.bind(this);
-        this.handleDragDrop = this.handleDragDrop.bind(this);
     }
 
     private getMediaItems(): IMediaValueOperational {
         return this.props.value ?? [];
     }
 
-    private getAllowedMimeTypes(): string {
+    private getAllowedMediaKinds(): Array<IMediaKind> {
         const {config} = this.props;
 
-        const acceptFileTypes = [];
+        return [
+            {
+                allowed: config.allowPicture,
+                label: gettext('image'),
+                mimePrefix: 'image/',
+                superdeskTypes: [SUPERDESK_MEDIA_TYPES.PICTURE, SUPERDESK_MEDIA_TYPES.GRAPHIC],
+            },
+            {
+                allowed: config.allowVideo,
+                label: gettext('video'),
+                mimePrefix: 'video/',
+                superdeskTypes: [SUPERDESK_MEDIA_TYPES.VIDEO],
+            },
+            {
+                allowed: config.allowAudio,
+                label: gettext('audio'),
+                mimePrefix: 'audio/',
+                superdeskTypes: [SUPERDESK_MEDIA_TYPES.AUDIO],
+            },
+        ].filter(({allowed}) => allowed === true);
+    }
 
-        if (config.allowPicture) {
-            acceptFileTypes.push('image/*');
-        }
-
-        if (config.allowAudio) {
-            acceptFileTypes.push('audio/*');
-        }
-
-        if (config.allowVideo) {
-            acceptFileTypes.push('video/*');
-        }
-
-        return acceptFileTypes.join(',');
+    private getAllowedMimeTypes(): string {
+        return this.getAllowedMediaKinds().map(({mimePrefix}) => mimePrefix + '*').join(',');
     }
 
     private getMaxRemainingItemsCount(): number | undefined {
@@ -75,27 +84,21 @@ export class Editor extends React.PureComponent<IProps> {
         return maxUploadsRemaining;
     }
 
-    private isMediaTypeAllowed(dropEvent?): boolean {
-        const type = dropEvent == null ? null : getSuperdeskType(dropEvent);
-        const {config} = this.props;
+    /** Mirrors angular's `isAllowedMediaType` in `ItemAssociationDirective`. */
+    private isMediaTypeAllowed(event): boolean {
+        const kinds = this.getAllowedMediaKinds();
+        const superdeskType = getSuperdeskType(event);
 
-        if (dropEvent != null) {
-            if (
-                type == null // if `dropEvent` is defined, `type` can't be null
-                || (
-                    (config.allowPicture !== true && type === SUPERDESK_MEDIA_TYPES.PICTURE)
-                    || (config.allowVideo !== true && type === SUPERDESK_MEDIA_TYPES.VIDEO)
-                    || (config.allowAudio !== true && type === SUPERDESK_MEDIA_TYPES.AUDIO)
-                )
-            ) {
-                return false;
-            }
+        if (superdeskType === 'Files') {
+            return Array.from(event.dataTransfer.files as FileList).every(
+                ({type}) => kinds.some(({mimePrefix}) => type.startsWith(mimePrefix)),
+            );
         }
 
-        return true;
+        return kinds.some(({superdeskTypes}) => superdeskTypes.includes(superdeskType));
     }
 
-    private upload(files: Array<File>): void {
+    private upload = (files: Array<File>): void => {
         const {config} = this.props;
         const mediaItems = this.getMediaItems();
         const maxUploadsRemaining: number | undefined = this.getMaxRemainingItemsCount();
@@ -105,8 +108,8 @@ export class Editor extends React.PureComponent<IProps> {
             uniqueUpload: maxUploadsRemaining === 1,
             maxUploads: maxUploadsRemaining, // accepts undefined
             allowPicture: config.allowPicture,
-            allowVideo: config.allowAudio,
-            allowAudio: config.allowVideo,
+            allowVideo: config.allowVideo,
+            allowAudio: config.allowAudio,
         };
 
         ng.get('superdesk').intent('upload', 'media', uploadData)
@@ -119,17 +122,18 @@ export class Editor extends React.PureComponent<IProps> {
                     this.mediaCarouselRef.goToPage(nextItems.length - 1);
                 }
             });
-    }
+    };
 
-    private handleDragDrop(event): void {
+    private handleDragDrop = (event): void => {
         const superdeskType = getSuperdeskType(event);
         const {config} = this.props;
+        const maxRemainingItemsCount = this.getMaxRemainingItemsCount();
 
         if (superdeskType == null) {
             return;
         }
 
-        if (config.maxItems != null && this.getMaxRemainingItemsCount() < 1) {
+        if (config.maxItems != null && maxRemainingItemsCount < 1) {
             notify.error(
                 gettext(
                     'Item not added. Maximum limit of {{n}} items exceeded.',
@@ -140,25 +144,21 @@ export class Editor extends React.PureComponent<IProps> {
             return;
         }
 
+        if (superdeskType === 'Files' && event.dataTransfer.files.length > maxRemainingItemsCount) {
+            notify.error(
+                maxRemainingItemsCount === 1
+                    ? gettext('Select at most 1 file to upload.')
+                    : gettext('Select at most {{maxUploads}} files to upload.', {maxUploads: maxRemainingItemsCount}),
+            );
+
+            return;
+        }
+
         if (!this.isMediaTypeAllowed(event)) {
-            const allowedMediaTypes = [];
-
-            if (config.allowPicture) {
-                allowedMediaTypes.push(gettext('image'));
-            }
-
-            if (config.allowAudio) {
-                allowedMediaTypes.push(gettext('audio'));
-            }
-
-            if (config.allowVideo) {
-                allowedMediaTypes.push(gettext('video'));
-            }
-
             notify.error(
                 gettext(
                     'Only the following media types are allowed: {{types}}',
-                    {types: allowedMediaTypes.join(', ')},
+                    {types: this.getAllowedMediaKinds().map(({label}) => label).join(', ')},
                 ),
             );
 
@@ -168,37 +168,48 @@ export class Editor extends React.PureComponent<IProps> {
         if (superdeskType === 'Files') {
             this.upload(Array.from(event.dataTransfer.files));
         } else {
-            const mediaItems = this.getMediaItems();
-            const __item: IArticle = JSON.parse(event.dataTransfer.getData(superdeskType));
-
-            if (mediaItems.find((mediaItem) => mediaItem._id === __item._id) != null) {
-                notify.error(gettext('This item is already added'));
-
-                return;
-            }
-
-            const workflowValidation = validateWorkflow(
-                __item,
-                {
-                    in_progress: config.allowedWorkflows.inProgress,
-                    published: config.allowedWorkflows.published,
-                },
-            );
-
-            if (workflowValidation.result !== true) {
-                notify.error(workflowValidation.error);
-                return;
-            }
-
-            const nextItems = mediaItems.concat(__item);
-
-            this.props.onChange(nextItems);
-
-            if (this.mediaCarouselRef != null) {
-                this.mediaCarouselRef.goToPage(nextItems.length - 1);
-            }
+            // the drag payload is a snapshot taken when the drag started, so its lock may be stale
+            ng.get('content').dropItem(getDroppedItem(event)).then(this.addItem);
         }
-    }
+    };
+
+    private addItem = (item: IArticle): void => {
+        const {config} = this.props;
+        const mediaItems = this.getMediaItems();
+
+        if (item.lock_user != null) {
+            notify.error(gettext('Item is locked. Cannot associate media item.'));
+
+            return;
+        }
+
+        if (mediaItems.find((mediaItem) => mediaItem._id === item._id) != null) {
+            notify.error(gettext('This item is already added'));
+
+            return;
+        }
+
+        const workflowValidation = validateWorkflow(
+            item,
+            {
+                in_progress: config.allowedWorkflows.inProgress,
+                published: config.allowedWorkflows.published,
+            },
+        );
+
+        if (workflowValidation.result !== true) {
+            notify.error(workflowValidation.error);
+            return;
+        }
+
+        const nextItems = mediaItems.concat(item);
+
+        this.props.onChange(nextItems);
+
+        if (this.mediaCarouselRef != null) {
+            this.mediaCarouselRef.goToPage(nextItems.length - 1);
+        }
+    };
 
     render() {
         const Container = this.props.container;

@@ -14,6 +14,9 @@ import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {TimeElem} from 'apps/search/components';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
+import {TextWithMentions} from 'apps/users/components';
+import {getRangeAndTextForStyleInRawState} from 'core/editor3/helpers/highlights';
+import {ContentState, convertToRaw} from 'draft-js';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Inline comments');
@@ -26,43 +29,94 @@ interface IState {
     selectedTab: IInlineCommentsTab;
 }
 
+interface IInlineCommentReply {
+    authorId: IUser['_id'];
+    msg: string;
+    date: string | Date;
+}
+
 interface IInlineComment {
     author: string;
     authorId: IUser['_id'];
     msg: string;
-    commentedText: string;
-    date: string;
+    commentedText?: string;
+    date: string | Date;
     email: string;
-    replies: Array<any>;
+    replies: Array<IInlineCommentReply>;
     resolutionInfo?: {
         resolverUserId: string;
-        date: string;
+        date: string | Date;
     };
 }
 
 const COMMENTS_WIDGET_ID = 'inline-comments-widget-generic';
 
-class Comment extends React.PureComponent<{comment: IInlineComment}> {
-    render() {
-        const {comment} = this.props;
-        const user =
-            store.getState().entities.users[comment.authorId];
+/**
+ * Comments of a field that are not resolved yet. Unlike resolved ones, they do not store
+ * the text they were made on, so it is read from the highlighted range.
+ */
+export function getUnresolvedCommentsFromContentState(contentState: ContentState): Array<IInlineComment> {
+    const highlights = getCustomMetadataFromContentState(contentState, getHighlightsConfig().COMMENT.type);
 
-        return (
-            <Card>
-                <Spacer h gap="8" justifyContent="start" noGrow data-test-id="inline-comment">
-                    <UserAvatar user={user} />
+    if (highlights.length < 1) {
+        return [];
+    }
 
-                    <div>
-                        <strong>{user.display_name}</strong>:
-                        &nbsp;
-                        {comment.msg}
+    const rawContentState = convertToRaw(contentState);
 
-                        <div>
-                            <TimeElem date={comment.date} />
-                        </div>
-                    </div>
-                </Spacer>
+    return highlights.map(({styleName, obj}) => ({
+        ...(obj.data as IInlineComment),
+        commentedText: getRangeAndTextForStyleInRawState(rawContentState, styleName).highlightedText,
+    }));
+}
+
+function getUserName(userId: IUser['_id']): string {
+    const user: IUser | undefined = store.getState().entities.users[userId];
+
+    return user?.display_name || user?.username || '';
+}
+
+function CommentMessage({authorId, msg, date}: {authorId: IUser['_id']; msg: string; date: string | Date}) {
+    return (
+        <Spacer h gap="8" justifyContent="start" noGrow>
+            <UserAvatar user={store.getState().entities.users[authorId]} />
+
+            <div>
+                <strong>{getUserName(authorId)}:</strong>
+                &nbsp;
+                <TextWithMentions message={msg} />
+
+                <div>
+                    <TimeElem date={date} />
+                </div>
+            </div>
+        </Spacer>
+    );
+}
+
+function Comment({comment}: {comment: IInlineComment}) {
+    return (
+        <Card>
+            <div data-test-id="inline-comment">
+                <CommentMessage authorId={comment.authorId} msg={comment.msg} date={comment.date} />
+
+                {
+                    (comment.replies ?? []).length > 0 && (
+                        <Spacer v gap="8" style={{paddingBlockStart: 8, paddingInlineStart: 16}}>
+                            {
+                                comment.replies.map((reply, i) => (
+                                    <div key={i} data-test-id="inline-comment-reply">
+                                        <CommentMessage
+                                            authorId={reply.authorId}
+                                            msg={reply.msg}
+                                            date={reply.date}
+                                        />
+                                    </div>
+                                ))
+                            }
+                        </Spacer>
+                    )
+                }
 
                 {
                     comment.commentedText != null && (
@@ -86,9 +140,18 @@ class Comment extends React.PureComponent<{comment: IInlineComment}> {
                         </div>
                     )
                 }
-            </Card>
-        );
-    }
+
+                {
+                    comment.resolutionInfo != null && (
+                        <div data-test-id="resolution" style={{paddingBlockStart: 10}}>
+                            {`${gettext('Resolved by')} ${getUserName(comment.resolutionInfo.resolverUserId)} `}
+                            <TimeElem date={comment.resolutionInfo.date} />
+                        </div>
+                    )
+                }
+            </div>
+        </Card>
+    );
 }
 
 export class InlineCommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
@@ -135,10 +198,7 @@ export class InlineCommentsWidget<T> extends React.PureComponent<IProps<T>, ISta
 
             return {
                 fieldId: field.id,
-                comments: getCustomMetadataFromContentState(
-                    value.contentState,
-                    getHighlightsConfig().COMMENT.type,
-                ).map((item) => item.obj.data as IInlineComment),
+                comments: getUnresolvedCommentsFromContentState(value.contentState),
             };
         }).filter(({comments}) => comments.length > 0);
     }

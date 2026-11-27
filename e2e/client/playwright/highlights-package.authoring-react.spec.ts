@@ -130,6 +130,23 @@ test.describe('highlights package (authoring-react)', () => {
         await expect(preview.locator('[onerror]')).toHaveCount(0);
     });
 
+    test('offers Export as a primary action between Save and minimize, as angular does', async ({page}) => {
+        await restoreDatabaseSnapshot();
+
+        await createHighlightsPackage(page);
+
+        const toolbar = page.getByTestId('authoring');
+        const exportButton = toolbar.getByTestId('export-highlight');
+        const [save, exported, minimize] = await Promise.all(
+            [toolbar.getByTestId('save'), exportButton, toolbar.getByTestId('minimize')]
+                .map(async (button) => (await button.boundingBox())?.x ?? NaN),
+        );
+
+        expect(save).toBeLessThan(exported);
+        expect(exported).toBeLessThan(minimize);
+        await expect(exportButton).toHaveClass(/btn--primary/);
+    });
+
     test('exports a highlights package that has not been saved yet', async ({page}) => {
         await restoreDatabaseSnapshot();
 

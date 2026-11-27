@@ -1,4 +1,4 @@
-import ng from 'core/services/ng';
+import {sdApi} from 'api';
 import React from 'react';
 import {OrderedMap} from 'immutable';
 import {
@@ -111,7 +111,7 @@ function getTemplateEditViewAuthoringStorage(article: IArticle): IAuthoringStora
             ? getArticleContentProfile(item, fieldsAdapter)
             : Promise.resolve(getProfilelessTemplateContentProfile(fieldsAdapter)),
         closeAuthoring: () => null, // no UI button; not possible to close since it's embedded in another view
-        getUserPreferences: () => ng.get('preferencesService').get(),
+        getUserPreferences: () => sdApi.preferences.getAll(),
     };
 
     return authoringStorageTemplateEditView;

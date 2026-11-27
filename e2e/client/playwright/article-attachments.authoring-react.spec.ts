@@ -14,10 +14,9 @@ import {getStorageState} from './utils/storage-state';
  * (the "Attachments" side widget and the content-profile `attachments` field) staying in sync,
  * and the attachments reaching the saved, published and linked item.
  *
- * The angular spec reaches the `attachments` field through `legacy`'s "Plain text" profile, which
- * authoring-react cannot open (it also enables `company_codes`, a field authoring-react has no
- * adapter for). Here "test sports story" is moved to `main`'s stock "Text" profile instead, the
- * only other profile that enables the field; switching the profile is one atomic UI action.
+ * The angular spec reaches the `attachments` field through `legacy`'s "Plain text" profile. Here
+ * "test sports story" is moved to `main`'s stock "Text" profile instead, the only `main` profile
+ * that enables the field.
  */
 test.use({storageState: getStorageState({}, {authoringReact: true})});
 
@@ -310,10 +309,9 @@ test.describe('attachments in the NINJS output (authoring-react)', () => {
         await expectNinjsAttachments(page, [PUBLIC_ATTACHMENT.title]);
     });
 
-    // React gap: on a profile without the `attachments` field the widget lists the uploads but the save drops them.
-    test.fixme('attachments added from the widget on a profile without the field are saved and published', {
+    test('attachments added from the widget on a profile without the field are saved and published', {
         annotation: [
-            {type: 'confluence', description: '1326285069 partial'}, // Attachments in NINJS output
+            {type: 'confluence', description: '1326285069 complete'}, // Attachments in NINJS output
         ],
     }, async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'publishing'});
@@ -332,10 +330,9 @@ test.describe('attachments in the NINJS output (authoring-react)', () => {
 });
 
 test.describe('linking article body text to an attachment (authoring-react)', () => {
-    // React gap: the link dialog's Attachment tab is always empty; editor3 gets only `{language}` as its item.
-    test.fixme('the link dialog lists public attachments only and inserts a link that persists', {
+    test('the link dialog lists public attachments only and inserts a link that persists', {
         annotation: [
-            {type: 'confluence', description: '1326285066 partial'}, // Link to attachment
+            {type: 'confluence', description: '1326285066 complete'}, // Link to attachment
         ],
     }, async ({page}) => {
         await restoreDatabaseSnapshot();
@@ -347,19 +344,7 @@ test.describe('linking article body text to an attachment (authoring-react)', ()
 
         await opened.field.attach([PUBLIC_ATTACHMENT, INTERNAL_ATTACHMENT]);
 
-        // Home/End move by visual line, so the typed text is selected character by character
-        await body.getByRole('textbox').click();
-        await page.keyboard.press('ControlOrMeta+End');
-        await page.keyboard.type(linkText);
-
-        for (let i = 0; i < linkText.length; i++) {
-            await page.keyboard.press('Shift+ArrowLeft');
-        }
-
-        await body.getByTestId('toolbar').getByRole('button', {name: 'Link (Ctrl+K)'}).click();
-        await page.getByRole('button', {name: 'Attachment', exact: true}).click();
-
-        const attachmentTab = page.getByTestId('link-attachments');
+        const attachmentTab = await authoring.openAttachmentLinkDialog('body_html', linkText);
         const publicRow = attachmentTab.getByTestId('link-attachment-item')
             .and(page.locator(`[data-test-value="${PUBLIC_ATTACHMENT.title}"]`));
 
@@ -384,5 +369,26 @@ test.describe('linking article body text to an attachment (authoring-react)', ()
 
         await expect(body.locator('a[data-attachment]')).toHaveText(linkText);
         await expect(body.locator('a[data-attachment]')).toHaveAttribute('title', PUBLIC_ATTACHMENT.title);
+    });
+
+    test('the link dialog lists attachments added from the widget on a profile without the field', {
+        annotation: [
+            {type: 'confluence', description: '1326285066 complete'}, // Link to attachment
+        ],
+    }, async ({page}) => {
+        await restoreDatabaseSnapshot();
+
+        const {authoring, widget} = await openSportsArticleWidget(page);
+
+        await widget.attach([PUBLIC_ATTACHMENT]);
+        await authoring.widgetTab('attachments').click();
+        await expect(page.getByTestId('authoring-widget-panel')).toBeHidden();
+
+        const attachmentTab = await authoring.openAttachmentLinkDialog('body_html', 'attachment link');
+
+        await expect(
+            attachmentTab.getByTestId('link-attachment-item')
+                .and(page.locator(`[data-test-value="${PUBLIC_ATTACHMENT.title}"]`)),
+        ).toBeVisible();
     });
 });

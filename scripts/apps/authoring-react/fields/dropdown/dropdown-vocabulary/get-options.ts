@@ -6,7 +6,8 @@ import {keyBy} from 'lodash';
 import {IVocabulary, IVocabularyItem, ITreeWithLookup, IDropdownConfigVocabulary, IDropdownOption} from 'superdesk-api';
 
 function getOptionsDefault(vocabularyId: IVocabulary['_id']): Array<IVocabularyItem> {
-    return sdApi.vocabularies.getAll().get(vocabularyId).items;
+    // a profile can enable a field whose vocabulary does not exist (e.g. `language` without `languages`)
+    return sdApi.vocabularies.getAll().get(vocabularyId)?.items ?? [];
 }
 
 export function getOptions(
