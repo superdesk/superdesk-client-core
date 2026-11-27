@@ -174,6 +174,17 @@ export function editorStateChangeMiddlewares(state, editorState: EditorState, co
 }
 
 /**
+ * Draft's `replaceEntityData` and `mergeEntityData` change the entity in place and return the same
+ * ContentState, so an entity-only edit is invisible to consumers that detect changes by reference.
+ * Returns the same content as a new object.
+ */
+function withNewContentReference(editorState: EditorState): EditorState {
+    return EditorState.set(editorState, {
+        currentContent: editorState.getCurrentContent().asMutable().asImmutable(),
+    });
+}
+
+/**
  * @ngdoc method
  * @name onChange
  * @param {Object} state
@@ -199,11 +210,7 @@ export const onChange = (
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
     if (force && !contentChanged && !skipOnChange) {
-        // Draft's `replaceEntityData` and `mergeEntityData` mutate the entity in place and return the
-        // same ContentState, so a fresh reference is needed for consumers detecting changes by reference.
-        editorStateNext = EditorState.set(editorStateNext, {
-            currentContent: editorStateNext.getCurrentContent().asMutable().asImmutable(),
-        });
+        editorStateNext = withNewContentReference(editorStateNext);
     }
 
     if (!skipOnChange && (contentChanged || force)) {
