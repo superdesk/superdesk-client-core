@@ -477,7 +477,7 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
             doClose,
         );
     },
-    getUserPreferences: () => ng.get('preferencesService').get(),
+    getUserPreferences: () => sdApi.preferences.getAll(),
 };
 
 class AutoSaveKill implements IAuthoringAutoSave<IArticle> {

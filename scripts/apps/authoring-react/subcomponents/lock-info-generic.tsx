@@ -3,19 +3,17 @@
 import React from 'react';
 import {IUser, ILockInfo, IPropsLockInfoHttp, IBaseRestApiResponse, IPropsLockInfo} from 'superdesk-api';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
-import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {store} from 'core/data';
 import {httpRequestJsonLocal} from 'core/helpers/network';
+import {sdApi} from 'api';
 
 export function isLockedInCurrentSession<T extends ILockInfo>(entity: T): boolean {
     if (entity._lock !== true) {
         return false;
     }
 
-    const currentSessionId = ng.get('session').sessionId;
-
-    return entity._lock_session === currentSessionId;
+    return entity._lock_session === sdApi.user.getSessionId();
 }
 
 export function isLockedInOtherSession<T extends ILockInfo>(entity: T): boolean {
@@ -23,9 +21,7 @@ export function isLockedInOtherSession<T extends ILockInfo>(entity: T): boolean 
         return false;
     }
 
-    const currentSessionId = ng.get('session').sessionId;
-
-    return entity._lock_session !== currentSessionId;
+    return entity._lock_session !== sdApi.user.getSessionId();
 }
 
 export class LockInfo<T extends ILockInfo & IBaseRestApiResponse> extends React.PureComponent<IPropsLockInfo<T>> {

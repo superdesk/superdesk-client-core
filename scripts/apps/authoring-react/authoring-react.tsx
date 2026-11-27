@@ -781,7 +781,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
 
                 if (
                     state.initialized
-                    && isUnlockedFromAnotherSession(state.itemOriginal, data.extra, ng.get('session').sessionId)
+                    && isUnlockedFromAnotherSession(state.itemOriginal, data.extra, sdApi.user.getSessionId())
                 ) {
                     this.patchLockFields(state, {
                         lock_session: null,

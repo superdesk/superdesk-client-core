@@ -15,6 +15,10 @@ function getCurrentUserId(): string {
     return session?.identity?._id;
 }
 
+function getSessionId(): string {
+    return ng.get('session').sessionId;
+}
+
 function isLoggedIn() {
     const session = ng.get('session');
 
@@ -40,6 +44,7 @@ export const user = {
     hasPrivilege,
     isLoggedIn,
     getCurrentUserId,
+    getSessionId,
     getAll,
     getUniqueClientId,
 };
