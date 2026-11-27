@@ -55,9 +55,7 @@ class LockInfoComponent extends React.PureComponent<IProps, IState> {
                         <button
                             className="locked-info__button"
                             data-test-id="unlock"
-                            onClick={() => {
-                                this.props.unlock();
-                            }}
+                            onClick={this.props.unlock}
                         >
                             {gettext('Unlock')}
                         </button>
